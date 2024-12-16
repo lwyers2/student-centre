@@ -1,11 +1,8 @@
-const express = require('express');
-const app = express();
+const app = require('./app') // Import app.js
+const config = require('./utils/config') // Get port from config
+const { info } = require('./utils/logger')
 
-app.get('/', (req, res) => {
-  res.send('Hello from the Backend!');
-});
-
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
+// Start the server
+app.listen(config.PORT, () => {
+  info(`Server running on port ${config.PORT}`)
+})

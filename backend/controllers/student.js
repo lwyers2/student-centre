@@ -8,13 +8,13 @@ studentsRouter.get('/', async (request, response) => {
       attributes: ['forename', 'surname', 'email'],
       include: {
         model: Course,
-        attributes: ['title', 'year', 'code'],
+        attributes: ['title', 'years', 'code'],
         through: { attributes: [] },
       } // Specify the fields you want
-    });
-    response.json(students);
+    })
+    response.json(students)
   } catch (error) {
-    response.status(500).json({ error: 'Failed to fetch students' });
+    response.status(500).json({ error: 'Failed to fetch students' })
   }
 })
 

@@ -3,8 +3,8 @@ const app = express()
 require('express-async-errors') // Make async route handlers work
 const cors = require('cors')
 const middleware = require('./utils/middleware')
-const logger = require('./utils/logger')
 const studentsRouter = require('./controllers/student')
+const coursesRouter = require('./controllers/course')
 
 
 // Initialize Sequelize and connect to DB
@@ -20,6 +20,7 @@ app.use(middleware.requestLogger)
 
 // Routes 
 app.use('/api/students', studentsRouter)
+app.use('/api/courses', coursesRouter)
 
 // Error handling middleware
 app.use(middleware.unknownEndpoint)

@@ -1,13 +1,12 @@
 const { DataTypes } = require('sequelize')
 const db = require('../utils/db')
 
-//Define Course model
 const Course = db.define('Course', {
   title: {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  year: {
+  years: {
     type: DataTypes.INTEGER,
     allowNull: false,
   },
@@ -18,7 +17,7 @@ const Course = db.define('Course', {
 },
   {
     tableName: 'course',
-    timeStamps: false
+    timestamps: false
   }
 )
 

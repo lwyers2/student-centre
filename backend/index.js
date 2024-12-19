@@ -1,3 +1,4 @@
+require('./models/associations')
 const app = require('./app') // Import app.js
 const config = require('./utils/config') // Get port from config
 const { info } = require('./utils/logger')
@@ -6,3 +7,4 @@ const { info } = require('./utils/logger')
 app.listen(config.PORT, () => {
   info(`Server running on port ${config.PORT}`)
 })
+

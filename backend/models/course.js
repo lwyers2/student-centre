@@ -11,8 +11,8 @@ const Course = db.define('Course', {
     allowNull: false,
   },
   code: {
-    type:DataTypes.STRING,
-    allowNull: false
+    type: DataTypes.STRING,
+    allowNull: false,
   },
 },
   {

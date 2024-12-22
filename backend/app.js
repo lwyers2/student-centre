@@ -5,6 +5,8 @@ const cors = require('cors')
 const middleware = require('./utils/middleware')
 const studentsRouter = require('./controllers/student')
 const coursesRouter = require('./controllers/course')
+const modulesRouter = require('./controllers/module')
+const classificationsRouter = require('./controllers/classification')
 
 
 // Initialize Sequelize and connect to DB
@@ -21,6 +23,8 @@ app.use(middleware.requestLogger)
 // Routes 
 app.use('/api/students', studentsRouter)
 app.use('/api/courses', coursesRouter)
+app.use('/api/modules', modulesRouter)
+app.use('/api/classifications', classificationsRouter)
 
 // Error handling middleware
 app.use(middleware.unknownEndpoint)

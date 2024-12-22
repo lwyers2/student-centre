@@ -1,20 +1,37 @@
 const coursesRouter = require('express').Router()
 const Course = require('../models/course')
 const User = require('../models/user')
+const Module = require('../models/module')
+const QualificationLevel = require('../models/qualification-level')
 
 coursesRouter.get('/', async (request, response) => {
   try {
     const courses = await Course.findAll({
       attributes: ['title', 'years', 'code'],
-      include: {
+      include: [
+      {
         model: User,
         attributes: ['forename', 'surname', 'email'],
         through: {attributes: [] },
+      }, 
+      {
+        model: Module,
+        as: 'modules',
+        attributes: ['title', 'semester'],
+      },
+      {
+        model: QualificationLevel,
+        as: 'qualification_level',
+        attributes: ['qualification'],
       }
+    ],
     })
   response.json(courses)
   } catch (error) {
-    response.status(500).json({error: 'failed to fetch courses'})
+    console.log(error)
+    response.status(500).json({error: 'failed to fetch courses',
+      details: error.message,
+    })
   }
 })
 

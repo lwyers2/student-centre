@@ -2,7 +2,7 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
-  entry: './src/index.js', // Entry point of your application
+  entry: './src/index.jsx', // Entry point of your application
   output: {
     path: path.resolve(__dirname, 'dist'), // Output directory
     filename: 'bundle.js', // Output bundle file
@@ -27,17 +27,24 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.js$/, // Match JavaScript files
+        test: /\.(js|jsx)$/, // Match JavaScript and JSX files
         exclude: /node_modules/, // Exclude node_modules
         use: {
-          loader: 'babel-loader', // Use Babel to transpile JS files
+          loader: 'babel-loader', // Use Babel to transpile JS and JSX files
         },
       },
       {
         test: /\.css$/, // Match CSS files
-        use: ['style-loader', 'css-loader'], // Handle CSS with loaders
+        use: ['style-loader', 'css-loader', 'postcss-loader'],
+      },
+      {
+        test: /\.(png|jpe?g|gif|svg)$/, // Match image files
+        type: 'asset/resource', // Use Webpack's asset module
       },
     ],
+  },
+  resolve: {
+    extensions: ['.js', '.jsx'], // Automatically resolve these extensions
   },
   plugins: [
     new HtmlWebpackPlugin({

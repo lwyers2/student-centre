@@ -10,8 +10,8 @@ INSERT INTO school (id, school_name) VALUES
 (2, 'School of Arts'),
 (3, 'Business School');
 
--- Insert into course_level table
-INSERT INTO course_level (id, level_id, qualification) VALUES
+-- Insert into qualification_level table
+INSERT INTO qualification_level (id, level_id, qualification) VALUES
 (1,1,'DipHE'),
 (2,1,'LLB'),
 (3,1,'BA'),
@@ -56,7 +56,7 @@ INSERT INTO student (id, forename, surname, student_code, email) VALUES
 (9, 'Carissa', 'Weird', 'S00008', 'carissa.weird@email.com');
 
 -- Insert into course table
-INSERT INTO course (id, title, school_id, years, course_level_id, code) VALUES
+INSERT INTO course (id, title, school_id, years, qualification_id, code) VALUES
 (1, 'Computer Science', 1, 3, 4,'CS001'),
 (2, 'Mechanical Engineering', 1, 3, 4, 'ME001'),
 (3, 'Graphic Design', 2, 3, 3, 'GD001'),

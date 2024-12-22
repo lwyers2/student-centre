@@ -5,6 +5,8 @@ const Module = require('./module')
 const Classification = require('./classification')
 const QualificationLevel = require('./qualification-level')
 const Level = require('./level')
+const School = require('./school')
+const Role = require('./role')
 
 Student.belongsToMany(Course, {
   through: 'student_course',
@@ -41,6 +43,40 @@ Course.belongsToMany(User, {
   foreignKey: 'course_id',
   otherKey: 'user_id',
 })
+
+User.belongsToMany(Module, {
+  through: 'user_module',
+  foreignKey: 'user_id',
+  otherKey: 'module_id',
+})
+
+Module.belongsToMany(User, {
+  through: 'user_module',
+  foreignKey: 'module_id',
+  otherKey: 'user_id',
+})
+
+User.belongsToMany(School, {
+  through: 'user_school',
+  foreignKey: 'user_id',
+  otherKey: 'school_id',
+})
+
+School.belongsToMany(User, {
+  through: 'user_school',
+  foreignKey: 'school_id',
+  otherKey: 'user_id',
+})
+
+User.belongsTo(Role, {
+  foreignKey: 'role_id',
+  as: 'role',
+})
+
+Role.hasMany(User, {
+  foreignKey: 'role_id'
+})
+
 
 Module.belongsTo(Course, {
   foreignKey: 'course_id',

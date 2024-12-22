@@ -14,11 +14,30 @@ const User = db.define('User', {
     type: DataTypes.STRING,
     allowNull: false,
   },
+  password: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  date_created: {
+    type: DataTypes.DATE,
+    allowNull: false,
+  },
+  date_updated: {
+    type: DataTypes.DATE,
+    allowNull: false,
+  },
+  active: {
+    type: DataTypes.BOOLEAN,
+    allowNull: false
+  },
+  token: {
+    type: DataTypes.STRING,
+  },
 },
-  { 
-    tableName: 'user',
-    timeStamps: false
-  }
+{
+  tableName: 'user',
+  timestamps: false
+}
 )
 
-module.exports = User;
+module.exports = User

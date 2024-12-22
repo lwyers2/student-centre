@@ -1,6 +1,5 @@
 const coursesRouter = require('express').Router()
 const Course = require('../models/course')
-const User = require('../models/user')
 const Module = require('../models/module')
 const QualificationLevel = require('../models/qualification-level')
 
@@ -9,11 +8,6 @@ coursesRouter.get('/', async (request, response) => {
     const courses = await Course.findAll({
       attributes: ['title', 'years', 'code'],
       include: [
-      {
-        model: User,
-        attributes: ['forename', 'surname', 'email'],
-        through: {attributes: [] },
-      }, 
       {
         model: Module,
         as: 'modules',

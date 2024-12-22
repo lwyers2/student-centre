@@ -1,26 +1,24 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import HomePage from './pages/HomePage';
-import Dashboard from './pages/Dashboard';
-import axios from 'axios'
-
-export const fetchUsers = () => async (dispatch) => {
-  try {
-    const response = await axios.get('http://localhost:5000/api/users');
-    dispatch({ type: 'SET_USERS', payload: response.data });
-  } catch (error) {
-    console.error(error);
-  }
-};
+import React, { useEffect } from 'react';
+import axios from 'axios';
 
 function App() {
+  useEffect(() => {
+    // Make the API request to the backend
+    axios
+      .get('/api/users')  // Adjust URL if necessary
+      .then((response) => {
+        console.log(response.data);  // Log the API response data to the console
+      })
+      .catch((error) => {
+        console.error('Error fetching data:', error);  // Handle any errors
+      });
+  }, []);  // Empty dependency array ensures this runs only once on mount
+
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-      </Routes>
-    </Router>
+    <div>
+      <h1>Welcome to My App</h1>
+      <p>Check the console for the API response</p>
+    </div>
   );
 }
 

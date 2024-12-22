@@ -7,6 +7,7 @@ const studentsRouter = require('./controllers/student')
 const coursesRouter = require('./controllers/course')
 const modulesRouter = require('./controllers/module')
 const classificationsRouter = require('./controllers/classification')
+const usersRouter = require('./controllers/user')
 
 
 // Initialize Sequelize and connect to DB
@@ -24,6 +25,7 @@ app.use(middleware.requestLogger)
 app.use('/api/students', studentsRouter)
 app.use('/api/courses', coursesRouter)
 app.use('/api/modules', modulesRouter)
+app.use('/api/users', usersRouter)
 app.use('/api/classifications', classificationsRouter)
 
 // Error handling middleware

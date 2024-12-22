@@ -13,8 +13,16 @@ module.exports = {
   devServer: {
     static: './dist', // Serve files from the output directory
     open: true, // Open the browser automatically
-    port: 3000, // Specify the development server port
+    port: 3001, // Specify the development server port
     hot: true, // Enable hot module replacement
+    proxy: [
+      {
+        context: ['/api'], // Match paths starting with '/api'
+        target: 'http://localhost:3000', // Backend server
+        changeOrigin: true, // Change the origin header
+        secure: false, // Allow HTTP for backend
+      },
+    ],
   },
   module: {
     rules: [

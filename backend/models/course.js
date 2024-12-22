@@ -23,4 +23,4 @@ const Course = db.define('Course', {
 
 
 
-module.exports = Course;
+module.exports = Course

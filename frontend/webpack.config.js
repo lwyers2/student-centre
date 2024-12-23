@@ -23,6 +23,7 @@ module.exports = {
         secure: false, // Allow HTTP for backend
       },
     ],
+    historyApiFallback: true,
   },
   module: {
     rules: [

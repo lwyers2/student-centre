@@ -27,7 +27,7 @@ Module.belongsToMany(Student, {
 })
 
 Course.belongsToMany(Student, {
-  through: 'student_course', 
+  through: 'student_course',
   foreignKey: 'course_id',
   otherKey: 'student_id',
 })
@@ -110,4 +110,4 @@ Level.hasMany(Classification, {
 
 
 
-module.exports = { Student, Course, User , Module, QualificationLevel, Classification, Level}
+module.exports = { Student, Course, User , Module, QualificationLevel, Classification, Level }

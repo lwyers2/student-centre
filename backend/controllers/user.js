@@ -11,7 +11,7 @@ usersRouter.get('/', async (request, response) => {
       attributes: ['forename', 'surname', 'email', 'password', 'date_created', 'date_updated', 'active', 'token'],
       include: [
         {
-          model: Course, 
+          model: Course,
           attributes: ['title', 'years', 'code'],
           through: { attributes: [] },
         },

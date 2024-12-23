@@ -15,12 +15,10 @@ const Course = db.define('Course', {
     allowNull: false,
   },
 },
-  {
-    tableName: 'course',
-    timestamps: false
-  }
+{
+  tableName: 'course',
+  timestamps: false
+}
 )
-
-
 
 module.exports = Course

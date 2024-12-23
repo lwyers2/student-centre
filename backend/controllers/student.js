@@ -19,9 +19,9 @@ studentsRouter.get('/', async (request, response) => {
           through: { attributes: ['result'] }, // Exclude join table details
         },
       ],
-    });
+    })
 
-    response.json(students);
+    response.json(students)
   } catch (error) {
     console.error(error) // Log detailed error for debugging
     response.status(500).json({
@@ -31,4 +31,4 @@ studentsRouter.get('/', async (request, response) => {
   }
 })
 
-module.exports = studentsRouter;
+module.exports = studentsRouter

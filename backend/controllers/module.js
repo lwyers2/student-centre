@@ -14,7 +14,7 @@ moduleRouter.get('/', async (request, response) => {
     })
     response.json(modules)
   } catch (error) {
-    response.status(500).json({error: 'failed to fetch modules'})
+    response.status(500).json({ error: 'failed to fetch modules' })
   }
 })
 

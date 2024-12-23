@@ -8,22 +8,22 @@ coursesRouter.get('/', async (request, response) => {
     const courses = await Course.findAll({
       attributes: ['title', 'years', 'code'],
       include: [
-      {
-        model: Module,
-        as: 'modules',
-        attributes: ['title', 'semester'],
-      },
-      {
-        model: QualificationLevel,
-        as: 'qualification_level',
-        attributes: ['qualification'],
-      }
-    ],
+        {
+          model: Module,
+          as: 'modules',
+          attributes: ['title', 'semester'],
+        },
+        {
+          model: QualificationLevel,
+          as: 'qualification_level',
+          attributes: ['qualification'],
+        }
+      ],
     })
-  response.json(courses)
+    response.json(courses)
   } catch (error) {
     console.log(error)
-    response.status(500).json({error: 'failed to fetch courses',
+    response.status(500).json({ error: 'failed to fetch courses',
       details: error.message,
     })
   }

@@ -1,16 +1,14 @@
-const { DataTypes } = require('sequelize');
-const db = require('../utils/db');
+const { DataTypes } = require('sequelize')
+const db = require('../utils/db')
 
 const Level = db.define('Level', {
-  
-    level: DataTypes.INTEGER,
-    allowNull: false,
- 
+  level: DataTypes.INTEGER,
+  allowNull: false,
 },
 {
-  tableName: 'level', 
+  tableName: 'level',
   timestamps: false,
 }
-);
+)
 
-module.exports = Level;
+module.exports = Level

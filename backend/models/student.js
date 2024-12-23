@@ -16,12 +16,12 @@ const Student = db.define('Student', {
     allowNull: false,
   },
 },
-  {
-    tableName: 'student',
-    timestamps: false
-  }
+{
+  tableName: 'student',
+  timestamps: false
+}
 )
 
 
 
-module.exports = Student;
+module.exports = Student

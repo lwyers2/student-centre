@@ -17,7 +17,7 @@ classificationsRouter.get('/', async (request, response) => {
     response.json(classifications)
   } catch (error) {
     console.log(error)
-    response.status(500).json({error: 'failed to fetch classifications',
+    response.status(500).json({ error: 'failed to fetch classifications',
       details: error.message,
     })
   }

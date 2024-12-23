@@ -21,7 +21,7 @@ app.use(express.static('dist'))
 app.use(express.json())
 app.use(middleware.requestLogger)
 
-// Routes 
+// Routes
 app.use('/api/students', studentsRouter)
 app.use('/api/courses', coursesRouter)
 app.use('/api/modules', modulesRouter)

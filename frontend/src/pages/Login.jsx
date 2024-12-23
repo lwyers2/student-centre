@@ -1,14 +1,14 @@
-import React , { useState } from 'react';
+import React , { useState } from 'react'
 import LoginForm from '../components/LoginForm'
 
 
 const Login = () => {
 
   return (
-      <LoginForm  />
-    )
-  }
+    <LoginForm  />
+  )
+}
 
 
 
-export default Login;
+export default Login

@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 
 const UploadRecords = () => {
   return (
@@ -6,7 +6,7 @@ const UploadRecords = () => {
       <h1 className="text-2xl font-bold">Upload Student Records</h1>
       {/* Add form or file upload logic here */}
     </div>
-  );
-};
+  )
+}
 
-export default UploadRecords;
+export default UploadRecords

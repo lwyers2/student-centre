@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 
 const Meetings = () => {
   return (
@@ -6,7 +6,7 @@ const Meetings = () => {
       <h1 className="text-2xl font-bold">Meetings</h1>
       {/* Add meeting details or scheduling logic here */}
     </div>
-  );
-};
+  )
+}
 
-export default Meetings;
+export default Meetings

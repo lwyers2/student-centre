@@ -1,5 +1,5 @@
-const path = require('path');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
+const path = require('path')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 module.exports = {
   entry: './src/index.jsx', // Entry point of your application
@@ -52,4 +52,4 @@ module.exports = {
       template: './public/index.html', // Template for the HTML file
     }),
   ],
-};
+}

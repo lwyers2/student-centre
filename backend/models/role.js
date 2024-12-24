@@ -5,7 +5,12 @@ const Role = db.define('Role', {
   name: {
     type: DataTypes.STRING,
     allowNull: false
-  }
+  },
+  id: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    primaryKey: true
+  },
 },
 {
   tableName: 'role',

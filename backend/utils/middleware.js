@@ -1,4 +1,6 @@
 const logger = require('./logger')
+const jwt = require('jsonwebtoken')
+const Token = require('../models/token')
 
 const requestLogger = (request, response, next) => {
   logger.info('Method:', request.method)
@@ -28,8 +30,34 @@ const errorHandler = (error, request, response, next) => {
   next(error)
 }
 
+const tokenVerification = async (request, response, next) => {
+  const authHeader = request.headers.authorisation
+
+  if(!authHeader || !authHeader.startsWith('Bearer ')) {
+    return response.status(401).json({ error: 'Missing or invalid token' })
+  }
+
+  const token = authHeader.split(' ')[1]
+
+  try {
+    const storedToken = await Token.findOne({ where: { token }})
+    if(!storedToken || new Date(storedToken.expres_at) < new Date()) {
+      return response.status(401).json({ error: 'Token expired or invalid' })
+    }
+
+    const decodedToken = jwt.verify(token, process.env.SECRET)
+    request.user = decodedToken
+
+    next()
+  } catch (error) {
+    console.error('Token verification error:', error)
+    response.status(401).json({ error: 'Token expired or invalid '})
+  }
+}
+
 module.exports = {
   requestLogger,
   unknownEndpoint,
-  errorHandler
+  errorHandler,
+  tokenVerification
 }

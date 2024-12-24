@@ -1,4 +1,5 @@
 const usersRouter = require('express').Router()
+const bcrypt = require('bcrypt')
 const Course = require('../models/course')
 const Module = require('../models/module')
 const School = require('../models/school')
@@ -41,5 +42,48 @@ usersRouter.get('/', async (request, response) => {
     })
   }
 })
+
+usersRouter.post('/', async (request, response) => {
+  const { forename, surname, email, password, active, token, roleName } = request.body
+
+  const saltRounds = 10
+  const passwordHash = await bcrypt.hash(password, saltRounds)
+
+  if (!forename || !surname || !email || !password || !roleName) {
+    return response.status(400).json({ error: 'Missing required fields' })
+  }
+
+  try {
+    // Find the role by name
+    const role = await Role.findOne({ where: { name: roleName } })
+    console.log(`${role.id}: role, ${roleName}: rolename`)
+    if (!role) {
+      return response.status(404).json({ error: 'Role not found' })
+    }
+
+    // Create the new user with role_id
+    const now = new Date()
+    const newUser = await User.create({
+      forename,
+      surname,
+      email,
+      password: passwordHash,
+      date_created: now,
+      date_updated: now,
+      active: active ?? true,
+      token,
+      role_id: role.id // Explicitly set the role_id
+    })
+
+    response.status(201).json(newUser)
+  } catch (error) {
+    console.error(error)
+    response.status(500).json({
+      error: 'Failed to create user',
+      details: error.message
+    })
+  }
+})
+
 
 module.exports = usersRouter

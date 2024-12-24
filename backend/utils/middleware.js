@@ -31,9 +31,9 @@ const errorHandler = (error, request, response, next) => {
 }
 
 const tokenVerification = async (request, response, next) => {
-  const authHeader = request.headers.authorisation
+  const authHeader = request.headers.authorization
 
-  if(!authHeader || !authHeader.startsWith('Bearer ')) {
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
     return response.status(401).json({ error: 'Missing or invalid token' })
   }
 
@@ -41,7 +41,7 @@ const tokenVerification = async (request, response, next) => {
 
   try {
     const storedToken = await Token.findOne({ where: { token } })
-    if(!storedToken || new Date(storedToken.expres_at) < new Date()) {
+    if (!storedToken || new Date(storedToken.expires_at) < new Date()) {
       return response.status(401).json({ error: 'Token expired or invalid' })
     }
 
@@ -50,10 +50,11 @@ const tokenVerification = async (request, response, next) => {
 
     next()
   } catch (error) {
-    console.error('Token verification error:', error)
-    response.status(401).json({ error: 'Token expired or invalid ' })
+    console.error('Token verification error:', error.message || error)
+    return response.status(500).json({ error: 'Internal server error' })
   }
 }
+
 
 module.exports = {
   requestLogger,

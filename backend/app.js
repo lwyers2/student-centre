@@ -9,6 +9,7 @@ const modulesRouter = require('./controllers/module')
 const classificationsRouter = require('./controllers/classification')
 const usersRouter = require('./controllers/user')
 const loginRouter = require('./controllers/login')
+const protectedRouter = require('./controllers/protected')
 
 
 // Initialize Sequelize and connect to DB
@@ -29,6 +30,7 @@ app.use('/api/modules', modulesRouter)
 app.use('/api/users', usersRouter)
 app.use('/api/classifications', classificationsRouter)
 app.use('/api/login', loginRouter)
+app.use('/api/protected', protectedRouter)
 
 // Error handling middleware
 app.use(middleware.unknownEndpoint)

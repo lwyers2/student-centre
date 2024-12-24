@@ -40,7 +40,7 @@ const tokenVerification = async (request, response, next) => {
   const token = authHeader.split(' ')[1]
 
   try {
-    const storedToken = await Token.findOne({ where: { token }})
+    const storedToken = await Token.findOne({ where: { token } })
     if(!storedToken || new Date(storedToken.expres_at) < new Date()) {
       return response.status(401).json({ error: 'Token expired or invalid' })
     }
@@ -51,7 +51,7 @@ const tokenVerification = async (request, response, next) => {
     next()
   } catch (error) {
     console.error('Token verification error:', error)
-    response.status(401).json({ error: 'Token expired or invalid '})
+    response.status(401).json({ error: 'Token expired or invalid ' })
   }
 }
 

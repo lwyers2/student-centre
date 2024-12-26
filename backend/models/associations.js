@@ -37,13 +37,15 @@ User.belongsToMany(Course, {
   foreignKey: 'user_id',
   otherKey: 'course_id',
   timestamps: false,
+  as: 'courses',
 })
 
 Course.belongsToMany(User, {
   through: 'user_course',
   foreignKey: 'course_id',
   otherKey: 'user_id',
-  timestamps: false
+  timestamps: false,
+  as: 'courses'
 })
 
 User.belongsToMany(Module, {
@@ -51,6 +53,7 @@ User.belongsToMany(Module, {
   foreignKey: 'user_id',
   otherKey: 'module_id',
   timestamps: false,
+  as: 'modules'
 })
 
 Module.belongsToMany(User, {
@@ -58,6 +61,7 @@ Module.belongsToMany(User, {
   foreignKey: 'module_id',
   otherKey: 'user_id',
   timestamps: false,
+  as: 'modules'
 })
 
 User.belongsToMany(School, {

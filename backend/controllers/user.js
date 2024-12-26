@@ -91,17 +91,18 @@ usersRouter.get('/:user', async (request, response) => {
 
     const userData = await User.findOne({
       where: { id: userId },
-      attributes: [],
+      attributes: ['id'],
       include: [
         {
           model: Course,
           attributes: ['title', 'years', 'code' ],
           through: [ {} ],
-        },
-        {
-          model: Module,
-          attributes: ['title', 'semester', 'code'],
-          through: [ {} ],
+          include:
+            [{
+              model: Module,
+              as: 'modules',
+            }],
+          as: 'courses'
         },
       ],
     })

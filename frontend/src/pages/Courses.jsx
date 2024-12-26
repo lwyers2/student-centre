@@ -1,12 +1,16 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import userService from '../services/user'
 import { useNavigate } from 'react-router-dom'
+import Course from '../components/Course'
 
 const Courses = () => {
   // Access the user data from the Redux store
   const user = useSelector(state => state.user)  // Assuming user data is stored in state.user
   const navigate = useNavigate()
+
+  const [userData, setUserData] = useState('')
+  const [courses, setCourses] = useState()
 
   useEffect (() => {
     if(!user) {
@@ -14,18 +18,48 @@ const Courses = () => {
     }
   }, [user, navigate])
 
+  useEffect(() => {
+    const id = user.id
+    userService.getUser(id)
+      .then(initialUserData => {
+        setUserData(initialUserData)
+        setCourses(initialUserData.courses)
+      })
+  }, [user.id])
+
+  if(!user.id) {
+    return <div>loading....</div>
+  }
+
+  if(!courses) {
+    return <div>loading... courses</div>
+  }
+
+
+
+
+
+
 
   return (
-    <div>
-      <h1>Your Courses</h1>
+    <div className="p-2 my-4 scroll-mt-20">
+      <h2 className="text-4xl font-bold text-center sm:text-5xl mb-6 text-slate-900 dark:text-white">Your Courses</h2>
       {user ? (
-        <div>
-          <p>User ID: {user.id}</p>
-          <p>User Name: {user.forename} {user.surname}</p>
-        </div>
+        <></>
       ) : (
         <p>Please log in to view your courses.</p>
       )}
+      {courses ? (
+        <>
+          {courses.map(course => (
+            <Course key={course.title} course={course}/>
+          ))}
+        </>
+      ) : (
+        <div> no courses</div>
+      )
+
+      }
     </div>
   )
 }

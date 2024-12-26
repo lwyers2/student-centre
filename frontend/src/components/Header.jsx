@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import { logoutUser } from '../redux/actions'
@@ -16,6 +16,7 @@ const Header = () => {
     try{
       dispatch(logoutUser())
       localStorage.removeItem('loggedUser')
+      navigate('/')
     } catch (err) {
       console.log(err)
     }

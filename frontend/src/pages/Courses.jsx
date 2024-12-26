@@ -1,19 +1,18 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import userService from '../services/user'
+import { useNavigate } from 'react-router-dom'
 
 const Courses = () => {
   // Access the user data from the Redux store
   const user = useSelector(state => state.user)  // Assuming user data is stored in state.user
-  console.log(user.user)
+  const navigate = useNavigate()
 
-  useEffect(() => {
-    if (user) {
-      console.log('User data:', user)
-    } else {
-      console.error('User is not logged in or user ID is missing.')
+  useEffect (() => {
+    if(!user) {
+      navigate('/')
     }
-  }, [user])
+  }, [user, navigate])
 
 
   return (

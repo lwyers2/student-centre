@@ -2,10 +2,10 @@ import React , { useState } from 'react'
 import LoginForm from '../components/LoginForm'
 
 
-const Login = ({ onLogin }) => {
+const Login = () => {
 
   return (
-    <LoginForm  onLogin={onLogin} />
+    <LoginForm />
   )
 }
 

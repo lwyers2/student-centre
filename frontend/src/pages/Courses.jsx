@@ -1,20 +1,33 @@
-import React, { useState, useEffect } from 'react'
-import Header from '../components/Header'
+import React, { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import userService from '../services/user'
 
 const Courses = () => {
-  const [user, setUser] = useState(null)
+  // Access the user data from the Redux store
+  const user = useSelector(state => state.user)  // Assuming user data is stored in state.user
+  console.log(user.user)
 
   useEffect(() => {
-    const loggedUser = JSON.parse(localStorage.getItem(loggedUser))
-    if(loggedUser) {
-      setUser(loggedUser)
+    if (user) {
+      console.log('User data:', user)
+    } else {
+      console.error('User is not logged in or user ID is missing.')
     }
-  }, [])
+  }, [user])
 
 
-
-  return(
-    <div>This is the courses page</div>
+  return (
+    <div>
+      <h1>Your Courses</h1>
+      {user ? (
+        <div>
+          <p>User ID: {user.id}</p>
+          <p>User Name: {user.forename} {user.surname}</p>
+        </div>
+      ) : (
+        <p>Please log in to view your courses.</p>
+      )}
+    </div>
   )
 }
 

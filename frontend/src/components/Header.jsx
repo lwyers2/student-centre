@@ -1,8 +1,26 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import { useSelector, useDispatch } from 'react-redux'
+import { logoutUser } from '../redux/actions'
+import { useNavigate } from 'react-router-dom'
 import logo from '../img/queens-university-belfast-logo.png'
 
-const Header = ({ user, onLogout }) => {
+
+const Header = () => {
+  const user = useSelector(state => state.user)
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+
+  const handleLogout =  (event) => {
+    event.preventDefault()
+    try{
+      dispatch(logoutUser())
+      localStorage.removeItem('loggedUser')
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
   return(
     <header className="qub-red text-white top-0 z-10 w-full sticky">
       <div className="mx-auto p-2 flex justify-between items-center w-full">
@@ -23,14 +41,14 @@ const Header = ({ user, onLogout }) => {
           <nav id="mobile-menu"
             className="hidden sm:block space-x-8 text-xl pr-6"
             aria-label="main">
-            {user? (
+            {user ? (
               <>
                 <Link to="/upload-records" className="hover:opacity-60">Upload Records</Link>
                 <Link to="/view-courses" className="hover:opacity-60">View Courses</Link>
                 <Link to="/meetings" className="hover:opacity-60">Meetings</Link>
                 <Link to="/admin" className="hover:opacity-60">Admin</Link>
                 <button
-                  onClick={onLogout}
+                  onClick={handleLogout}
                   className="hover:opacity-60 "
                 >Log Out</button>
               </>

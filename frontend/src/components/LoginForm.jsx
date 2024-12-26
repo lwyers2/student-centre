@@ -1,19 +1,23 @@
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
 import loginService from '../services/login'
+import { setUser } from '../redux/actions'
 
-const LoginForm = ( { onLogin } ) => {
+const LoginForm = ( ) => {
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState(null)
+  const dispatch = useDispatch()
   const navigate = useNavigate()
 
   const handleSubmit = async (event) => {
     event.preventDefault()
     try {
       const user = await loginService.login({ email, password }) // Call API
-      onLogin(user) // Update login state in App
+      dispatch(setUser(user)) // Update login state in App
+      localStorage.setItem('loggedUser', JSON.stringify(user))
       navigate('/') // Redirect to home page
     } catch (err) {
       setError('Invalid email or password')

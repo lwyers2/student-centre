@@ -1,6 +1,9 @@
 import React from 'react'
+import { useSelector } from 'react-redux'
 
-const Hero = ( { user } ) => {
+const Hero = () => {
+  const user = useSelector(state => state.user)
+  console.log(user)
   return (
     <>
       <section id="hero" className="flex flex-col-reverse justify-center sm:flex-row p-6 items-center gap-8 mb-12 scroll-mt-40">

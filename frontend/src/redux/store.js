@@ -1,20 +1,10 @@
-import { configureStore } from '@reduxjs/toolkit'
-import { combineReducers } from 'redux'
+import { createStore } from 'redux'
+import  rootReducer  from './reducers'
 
-// Example Reducer (replace with actual reducers)
-const exampleReducer = (state = {}, action) => {
-  switch (action.type) {
-  case 'SET_DATA':
-    return { ...state, data: action.payload }
-  default:
-    return state
-  }
-}
 
-const rootReducer = combineReducers({
-  example: exampleReducer,
-})
+const storedUser = JSON.parse(localStorage.getItem('loggedUser'))
+const initialState = storedUser ? { user: storedUser } : { user: null }
 
-const store = configureStore({ reducer: rootReducer })
+const store = createStore(rootReducer, initialState)
 
 export default store

@@ -1,6 +1,6 @@
-import React from 'react'
-import { useState, useEffect } from 'react'
+import React , { useState, useEffect } from 'react'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
 import Header from './components/Header'
 import Hero from './components/Hero'
 import Tools from './components/Tools'
@@ -10,31 +10,24 @@ import Meetings from './pages/Meetings'
 import Admin from './pages/Admin'
 import Login from './pages/Login'
 import ResetPassword from './pages/ResetPassword'
+import { setUser } from './redux/actions'
 
 const App = () => {
-  const [user, setUser] = useState(null)
+  const dispatch = useDispatch()
+  const user = useSelector(state  => state.user)
 
   useEffect(() => {
     const loggedUser = JSON.parse(localStorage.getItem('loggedUser'))
     if(loggedUser) {
-      setUser(loggedUser)
+      dispatch(setUser(loggedUser))
     }
-  }, [])
+  }, [dispatch])
 
-  const handleLogin = (user) => {
-    setUser(user)
-    localStorage.setItem('loggedUser', JSON.stringify(user))
-  }
-
-  const handleLogout = () => {
-    setUser(null)
-    localStorage.removeItem('loggedUser')
-  }
 
   return (
     <Router>
       <div className="min-h-screen bg-slate-50 dark:bg-black dark:text-white flex flex-col">
-        <Header user={user} onLogout={handleLogout}/>
+        <Header/>
         <main className="max-w-4xl mx-auto flex-grow w-full">
           <Routes>
             <Route path="/" element=
@@ -50,7 +43,7 @@ const App = () => {
             <Route path="/view-courses" element={<Courses />} />
             <Route path="/meetings" element={<Meetings />} />
             <Route path="/admin" element={<Admin />} />
-            <Route path="/login" element={<Login onLogin={handleLogin}/>} />
+            <Route path="/login" element={<Login />} />
             <Route path="/reset-password" element={<ResetPassword/>} />
           </Routes>
 

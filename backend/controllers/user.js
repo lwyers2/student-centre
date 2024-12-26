@@ -9,7 +9,7 @@ const User = require('../models/user')
 usersRouter.get('/', async (request, response) => {
   try {
     const users = await User.findAll({
-      attributes: ['forename', 'surname', 'email', 'password', 'date_created', 'date_updated', 'active', 'token'],
+      attributes: ['id', 'forename', 'surname', 'email', 'password', 'date_created', 'date_updated', 'active', 'token'],
       include: [
         {
           model: Course,

@@ -85,5 +85,35 @@ usersRouter.post('/', async (request, response) => {
   }
 })
 
+usersRouter.get('/:user', async (request, response) => {
+  try {
+    const userId = request.params.user
+
+    const userData = await User.findOne({
+      where: { id: userId },
+      attributes: [],
+      include: [
+        {
+          model: Course,
+          attributes: ['title', 'years', 'code' ],
+          through: [ {} ],
+        },
+        {
+          model: Module,
+          attributes: ['title', 'semester', 'code'],
+          through: [ {} ],
+        },
+      ],
+    })
+
+    if(!userData) {
+      return response.status(404).json({ error: 'User not found' })
+    }
+    response.json(userData)
+  } catch (error) {
+    console.error(error)
+    response.status(500).json({ error: 'Internal server error' })
+  }
+})
 
 module.exports = usersRouter

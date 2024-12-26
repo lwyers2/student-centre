@@ -5,14 +5,13 @@ import Header from './components/Header'
 import Hero from './components/Hero'
 import Tools from './components/Tools'
 import UploadRecords from './pages/UploadRecords'
-import ViewRecords from './pages/ViewRecords'
+import Courses from './pages/Courses'
 import Meetings from './pages/Meetings'
 import Admin from './pages/Admin'
 import Login from './pages/Login'
 import ResetPassword from './pages/ResetPassword'
-import loginService from './services/login'
 
-function App() {
+const App = () => {
   const [user, setUser] = useState(null)
 
   useEffect(() => {
@@ -48,7 +47,7 @@ function App() {
               }
             />
             <Route path="/upload-records" element={<UploadRecords />} />
-            <Route path="/view-records" element={<ViewRecords />} />
+            <Route path="/view-courses" element={<Courses />} />
             <Route path="/meetings" element={<Meetings />} />
             <Route path="/admin" element={<Admin />} />
             <Route path="/login" element={<Login onLogin={handleLogin}/>} />

@@ -29,4 +29,6 @@ coursesRouter.get('/', async (request, response) => {
   }
 })
 
+
+
 module.exports = coursesRouter

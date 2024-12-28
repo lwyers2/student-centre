@@ -11,25 +11,29 @@ const Role = require('./role')
 Student.belongsToMany(Course, {
   through: 'student_course',
   foreignKey: 'student_id',
-  otherKey: 'course_id'
+  otherKey: 'course_id',
+  timestamps: false,
 })
 
 Student.belongsToMany(Module, {
   through: 'student_module',
   foreignKey: 'student_id',
   otherKey: 'module_id',
+  timestamps: false,
 })
 
 Module.belongsToMany(Student, {
   through: 'student_module',
   foreignKey: 'module_id',
-  otherKey: 'student_id'
+  otherKey: 'student_id',
+  timestamps: false,
 })
 
 Course.belongsToMany(Student, {
   through: 'student_course',
   foreignKey: 'course_id',
   otherKey: 'student_id',
+  timestamps: false,
 })
 
 User.belongsToMany(Course, {
@@ -52,16 +56,14 @@ User.belongsToMany(Module, {
   through: 'user_module',
   foreignKey: 'user_id',
   otherKey: 'module_id',
-  timestamps: false,
-  as: 'modules'
+  timestamps: false
 })
 
 Module.belongsToMany(User, {
   through: 'user_module',
   foreignKey: 'module_id',
   otherKey: 'user_id',
-  timestamps: false,
-  as: 'modules'
+  timestamps: false
 })
 
 User.belongsToMany(School, {

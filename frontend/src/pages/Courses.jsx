@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 import userService from '../services/user'
 import { useNavigate } from 'react-router-dom'
 import Course from '../components/Course'
@@ -9,7 +9,6 @@ const Courses = () => {
   const user = useSelector(state => state.user)  // Assuming user data is stored in state.user
   const navigate = useNavigate()
 
-  const [userData, setUserData] = useState('')
   const [courses, setCourses] = useState()
 
   useEffect (() => {
@@ -22,10 +21,11 @@ const Courses = () => {
     const id = user.id
     userService.getUser(id)
       .then(initialUserData => {
-        setUserData(initialUserData)
         setCourses(initialUserData.courses)
       })
   }, [user.id])
+
+
 
   if(!user.id) {
     return <div>loading....</div>
@@ -34,12 +34,6 @@ const Courses = () => {
   if(!courses) {
     return <div>loading... courses</div>
   }
-
-
-
-
-
-
 
   return (
     <div className="p-2 my-4 scroll-mt-20">

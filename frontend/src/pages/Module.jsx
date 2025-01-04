@@ -15,7 +15,7 @@ const Module = () => {
       .then(response => {
         console.log('Module data fetched:', response)
         setModule(response)
-        setStudents(response.Students)
+        setStudents(response.students)
       })
       .catch(error => {
         console.error('Error fetching module:', error)

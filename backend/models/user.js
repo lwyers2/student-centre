@@ -18,6 +18,10 @@ const User = db.define('User', {
   email: {
     type: DataTypes.STRING,
     allowNull: false,
+    //Will add validation at some point
+    // validate: {
+    //   isEmail: true
+    // }
   },
   password: {
     type: DataTypes.STRING,
@@ -26,10 +30,12 @@ const User = db.define('User', {
   date_created: {
     type: DataTypes.DATE,
     allowNull: false,
+    defaultValue: DataTypes.NOW,
   },
   date_updated: {
     type: DataTypes.DATE,
     allowNull: false,
+    defaultValue: DataTypes.NOW,
   },
   active: {
     type: DataTypes.BOOLEAN,

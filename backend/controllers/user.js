@@ -9,17 +9,19 @@ const User = require('../models/user')
 usersRouter.get('/', async (request, response) => {
   try {
     const users = await User.findAll({
-      attributes: ['id', 'forename', 'surname', 'email', 'password', 'date_created', 'date_updated', 'active', 'token'],
+      attributes: ['id', 'forename', 'surname', 'email', 'active', 'date_created', 'date_updated'],
       include: [
         {
           model: Course,
-          attributes: ['title', 'years', 'code'],
-          through: { attributes: [] },
-        },
-        {
-          model: Module,
-          attributes: ['title', 'semester', 'code'],
-          through: { attributes: [] },
+          attributes: ['id', 'title', 'years', 'code'],
+          include: [
+            {
+              model: Module,
+              as: 'modules',
+              attributes: ['id', 'title', 'semester', 'code'],
+            },
+          ],
+          as: 'courses',
         },
         {
           model: School,
@@ -29,16 +31,44 @@ usersRouter.get('/', async (request, response) => {
         {
           model: Role,
           as: 'role',
-          attributes: ['name']
+          attributes: ['name'],
         },
-      ]
+      ],
     })
-    response.json(users)
+
+    // Formatting response so that each piece easier to inceract with front end
+    const formattedUsers = users.map((user) => ({
+      id: user.id,
+      forename: user.forename,
+      surname: user.surname,
+      email: user.email,
+      active: user.active,
+      date_created: user.date_created,
+      date_updated: user.date_updated,
+      courses: user.courses?.map((course) => ({
+        id: course.id,
+        title: course.title,
+        years: course.years,
+        code: course.code,
+        modules: course.modules?.map((module) => ({
+          id: module.id,
+          title: module.title,
+          semester: module.semester,
+          code: module.code,
+        })),
+      })),
+      school: user.schools?.map((school) => ({
+        school_name: school.school_name,
+      }))[0], //There is only one school per user at the minute. This might change
+      role: user.role ? { name: user.role.name } : null,
+    }))
+
+    response.json(formattedUsers)
   } catch (error) {
-    console.error(error)
+    console.error('Failed to fetch users:', error.message, { stack: error.stack })
     response.status(500).json({
-      error: 'failed to fetch users',
-      details: error.message
+      error: 'Failed to fetch users',
+      details: error.message,
     })
   }
 })
@@ -89,9 +119,9 @@ usersRouter.get('/:user', async (request, response) => {
   try {
     const userId = request.params.user
 
-    const userData = await User.findOne({
+    const user = await User.findOne({
       where: { id: userId },
-      attributes: ['id'],
+      attributes: ['id', 'forename', 'surname', 'email', 'active', 'date_created', 'date_updated'],
       include: [
         {
           model: Course,
@@ -104,13 +134,42 @@ usersRouter.get('/:user', async (request, response) => {
             }],
           as: 'courses'
         },
+        {
+          model: Role,
+          as: 'role',
+          attributes: ['name'],
+        },
       ],
     })
 
-    if(!userData) {
+    //Same structure as above. Might re-add role and school in if needed.
+    const formattedUser = {
+      id: user.id,
+      forename: user.forename,
+      surname: user.surname,
+      email: user.email,
+      active: user.active,
+      date_created: user.date_created,
+      date_updated: user.date_updated,
+      courses: user.courses?.map((course) => ({
+        id: course.id,
+        title: course.title,
+        years: course.years,
+        code: course.code,
+        modules: course.modules?.map((module) => ({
+          id: module.id,
+          title: module.title,
+          semester: module.semester,
+          code: module.code,
+        })),
+      })),
+      role: user.role? { name: user.role.name } : null,
+    }
+
+    if(!formattedUser) {
       return response.status(404).json({ error: 'User not found' })
     }
-    response.json(userData)
+    response.json(formattedUser)
   } catch (error) {
     console.error(error)
     response.status(500).json({ error: 'Internal server error' })

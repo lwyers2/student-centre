@@ -32,11 +32,13 @@ modulesRouter.get('/:module', async (request, response) => {
           model: Student,
           attributes: ['id', 'forename', 'surname', 'email', 'student_code'],
           through: { attributes: ['result'] },
+          as: 'students'
         },
         {
           model: User,
           attributes: ['id', 'email'],
-          through: [ { } ]
+          through: [ { } ],
+          as: 'users'
         }
       ]
     })

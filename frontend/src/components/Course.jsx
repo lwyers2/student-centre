@@ -7,11 +7,11 @@ const Course = ({ course }) => {
   const tableData = {
     labels: { title: `${course.title} ${course.code} ${course.years} years` },
     content: {
-      headers: ['Title', 'QSIS Year', 'Code', 'Cats', 'Semester'], // Table headers
+      headers: ['Title', 'qsis_year', 'Code', 'CATs', 'Semester'], // Table headers
       data: modules.map((module) => ({
         id: module.id, // Unique ID for each row
         title: module.title,
-        'qsis year': module.QSIS_year,
+        'qsis_year': module.qsis_year,
         code: module.code,
         cats: module.CATs,
         semester: module.semester,

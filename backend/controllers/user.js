@@ -18,7 +18,7 @@ usersRouter.get('/', async (request, response) => {
             {
               model: Module,
               as: 'modules',
-              attributes: ['id', 'title', 'semester', 'code'],
+              attributes: ['id', 'title', 'semester', 'code', 'QSIS_year', 'CATs'],
             },
           ],
           as: 'courses',
@@ -55,6 +55,8 @@ usersRouter.get('/', async (request, response) => {
           title: module.title,
           semester: module.semester,
           code: module.code,
+          qsis_year: module.QSIS_year,
+          CATs: module.CATs,
         })),
       })),
       school: user.schools?.map((school) => ({
@@ -161,6 +163,8 @@ usersRouter.get('/:user', async (request, response) => {
           title: module.title,
           semester: module.semester,
           code: module.code,
+          qsis_year: module.QSIS_year,
+          CATs: module.CATs,
         })),
       })),
       role: user.role? { name: user.role.name } : null,

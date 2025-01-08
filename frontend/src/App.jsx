@@ -30,7 +30,7 @@ const App = () => {
     <Router>
       <div className="min-h-screen bg-slate-50 dark:bg-black dark:text-white flex flex-col">
         <Header/>
-        <main className="max-w-4xl mx-auto flex-grow w-full">
+        <main className="mx-auto flex-grow w-full">
           <Routes>
             <Route path="/" element=
               {

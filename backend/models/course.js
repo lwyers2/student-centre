@@ -14,6 +14,14 @@ const Course = db.define('Course', {
     type: DataTypes.STRING,
     allowNull: false,
   },
+  part_time: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+  },
+  course_coordinator: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
 },
 {
   tableName: 'course',

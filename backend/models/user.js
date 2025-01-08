@@ -41,7 +41,10 @@ const User = db.define('User', {
     type: DataTypes.BOOLEAN,
     allowNull: false
   },
-  token: {
+  prefix: {
+    type: DataTypes.STRING,
+  },
+  job_title: {
     type: DataTypes.STRING,
   },
 },

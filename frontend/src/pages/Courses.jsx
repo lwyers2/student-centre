@@ -36,7 +36,7 @@ const Courses = () => {
   }
 
   return (
-    <div className="p-2 my-4 scroll-mt-20">
+    <div className="w-auto p-2 my-4 scroll-mt-20">
       <h2 className="text-4xl font-bold text-center sm:text-5xl mb-6 text-slate-900 dark:text-white">Your Courses</h2>
       {user ? (
         <></>
@@ -45,6 +45,37 @@ const Courses = () => {
       )}
       {courses ? (
         <>
+          {// Ive added the below above courses for now. I'll want to create a component that I can add states into. Will do it dynamically where it gets the years so I can add into other views.
+          }
+          <div className="border border-solid border-slate-900 dark:border-slate-600 bg-white dark:bg-gray-900 p-8 rounded-3xl shadow-xl mb-5">
+            <h3>filter</h3>
+            <div className="flex items-center justify-between mb-4">
+              <button
+                onClick="filter"
+                className="bg-slate-500 text-white font-semibold px-3 py-1 rounded hover:bg-slate-400"
+              >
+              2024/2025
+              </button>
+              <button
+                onClick="filter"
+                className="bg-slate-500 text-white font-semibold px-3 py-1 rounded hover:bg-slate-400"
+              >
+              2026/2027
+              </button>
+              <button
+                onClick="filter"
+                className="bg-slate-500 text-white font-semibold px-3 py-1 rounded hover:bg-slate-400"
+              >
+              2027/2028
+              </button>
+              <button
+                onClick="filter"
+                className="bg-slate-500 text-white font-semibold px-3 py-1 rounded hover:bg-slate-400"
+              >
+              2028/2029
+              </button>
+            </div>
+          </div>
           {courses.map(course => (
             <Course key={course.title} course={course}/>
           ))}

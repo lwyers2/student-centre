@@ -16,11 +16,19 @@ studentsRouter.get('/', async (request, response) => {
         },
         {
           model: Module,
-          attributes: ['id','title', 'semester', 'code', 'course_id'],
+          attributes: ['id', 'title', 'semester', 'code'],
           as: 'modules',
           through: {
-            attributes: ['result'],  //Result for each module
+            attributes: ['result'],
           },
+          include: [
+            {
+              model: Course,
+              attributes: ['id'],
+              through: { attributes: [] },
+              as: 'course',
+            },
+          ],
         },
       ],
     })
@@ -36,21 +44,23 @@ studentsRouter.get('/', async (request, response) => {
       surname: student.surname,
       student_code: student.student_code,
       email: student.email,
-      courses: student.courses.map(course => ({
+      courses: student.courses.map((course) => ({
         id: course.id,
         title: course.title,
         years: course.years,
         code: course.code,
         modules: student.modules
-          .filter(module => module.course_id === course.id)
-          .map(module => ({
+          .filter((module) =>
+            module.course.some((c) => c.id === course.id)
+          )
+          .map((module) => ({
             id: module.id,
             title: module.title,
             semester: module.semester,
             code: module.code,
             result: module.student_module
               ? module.student_module.dataValues.result
-              : 'Pending'
+              : 'Pending',
           })),
       }))
     }))
@@ -77,11 +87,19 @@ studentsRouter.get('/:student', async (request, response) => {
         },
         {
           model: Module,
-          attributes: ['id','title', 'semester', 'code', 'course_id'],
+          attributes: ['id', 'title', 'semester', 'code'],
           as: 'modules',
           through: {
-            attributes: ['result'],  //Result for each module
+            attributes: ['result'],
           },
+          include: [
+            {
+              model: Course,
+              attributes: ['id'],
+              through: { attributes: [] },
+              as: 'course',
+            },
+          ],
         },
       ],
     })
@@ -106,15 +124,17 @@ studentsRouter.get('/:student', async (request, response) => {
         years: course.years,
         code: course.code,
         modules: student.modules
-          .filter(module => module.course_id === course.id)
-          .map(module => ({
+          .filter((module) =>
+            module.course.some((c) => c.id === course.id)
+          )
+          .map((module) => ({
             id: module.id,
             title: module.title,
             semester: module.semester,
             code: module.code,
             result: module.student_module
               ? module.student_module.dataValues.result
-              : 'Pending'
+              : 'Pending',
           })),
       }))
     }

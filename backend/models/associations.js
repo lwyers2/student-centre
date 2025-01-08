@@ -110,7 +110,7 @@ Role.hasMany(User, {
 //Module -> Course
 Module.belongsToMany(Course, {
   through: 'module_course',
-  foreignKey: 'modue_id',
+  foreignKey: 'module_id',
   timestamps: false,
   as:  'course',
 })

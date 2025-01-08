@@ -46,14 +46,16 @@ const Student = () => {
               <div key={course.id} className="mb-4">
                 <p className="font-semibold text-lg">{course.title}</p>
                 {course.modules.map(module => (
-                  <p key={module.code}>{module.title}</p>
+                  <>
+                    <p key={module.code}>{module.title} ({module.code})</p>
+                    <p>Result: {module.result}</p>
+                  </>
                 ))}
               </div>
             ))
           ) : (
             <p>No courses available</p>
           )}
-          <h3 className="text-3xl font-bold text-left sm:text-1xl mb-6 text-slate-900 dark:text-white">Modules</h3>
           <h3 className="text-3xl font-bold text-left sm:text-1xl mb-6 text-slate-900 dark:text-white">Meetings</h3>
         </>
       ) : (

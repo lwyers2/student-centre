@@ -1,7 +1,16 @@
 const logger = require('./logger')
 const jwt = require('jsonwebtoken')
 const Token = require('../models/token')
+const Role = require('../models/role')
+const User = require('../models/user')
+
 const { ValidationError, UniqueConstraintError, DatabaseError, ConnectionError } = require('sequelize')
+
+const roleMap = {
+  'Admin': 1,
+  'Teacher': 2,
+  'Super User': 3,
+}
 
 const requestLogger = (request, response, next) => {
   logger.info('Method:', request.method)
@@ -74,13 +83,36 @@ const tokenVerification = async (request, response, next) => {
   const token = authHeader.split(' ')[1]
 
   try {
-    const storedToken = await Token.findOne({ where: { token } })
+    const storedToken = await Token.findOne({
+      where: { token },
+      include: {
+        model: User,
+        as: 'user',
+        attributes: ['id', 'email', 'role_id'],
+        include: {
+          model: Role,
+          as: 'role',
+          attributes: ['id', 'name'],
+        }
+      }
+    })
     if (!storedToken || new Date(storedToken.expires_at) < new Date()) {
       return response.status(401).json({ error: 'Token expired or invalid' })
     }
 
     const decodedToken = jwt.verify(token, process.env.SECRET)
-    request.user = decodedToken
+
+    if (!storedToken.user) {
+      return response.status(401).json({ error: 'User not associated with token' })
+    }
+
+    request.user = {
+      id: storedToken.user.id,
+      email: storedToken.user.email,
+      role_id: storedToken.user.role_id,
+      role_name: storedToken.user.role,
+      ...decodedToken,
+    }
 
     next()
   } catch (error) {
@@ -89,10 +121,24 @@ const tokenVerification = async (request, response, next) => {
   }
 }
 
+const roleAuthorisation = (allowedRoles) => {
+  //mapping roles as a const above so that can enter role name in for better readability
+  const allowedRoleIds = allowedRoles.map((role) => roleMap[role] || role )
+  return (req, res, next) => {
+    //using includes as there are pages where multiple roles can access
+    if(req.user && allowedRoleIds.includes(req.user.role_id)) {
+      next()
+    } else {
+      return res.status(403).json({ error: 'Access denied: insufficient permissions' })
+    }
+  }
+}
+
 
 module.exports = {
   requestLogger,
   unknownEndpoint,
   errorHandler,
-  tokenVerification
+  tokenVerification,
+  roleAuthorisation
 }

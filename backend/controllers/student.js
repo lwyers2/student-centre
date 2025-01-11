@@ -19,7 +19,7 @@ studentsRouter.get('/', async (request, response) => {
           attributes: ['id', 'title', 'semester', 'code'],
           as: 'modules',
           through: {
-            attributes: ['result'],
+            attributes: ['result', 'flagged'],
           },
           include: [
             {
@@ -61,6 +61,7 @@ studentsRouter.get('/', async (request, response) => {
             result: module.student_module
               ? module.student_module.dataValues.result
               : 'Pending',
+            flagged: module.student_module.dataValues.flagged,
           })),
       }))
     }))
@@ -90,7 +91,7 @@ studentsRouter.get('/:student', async (request, response) => {
           attributes: ['id', 'title', 'semester', 'code'],
           as: 'modules',
           through: {
-            attributes: ['result'],
+            attributes: ['result', 'flagged'],
           },
           include: [
             {
@@ -135,6 +136,7 @@ studentsRouter.get('/:student', async (request, response) => {
             result: module.student_module
               ? module.student_module.dataValues.result
               : 'Pending',
+            flagged: module.student_module.dataValues.flagged,
           })),
       }))
     }

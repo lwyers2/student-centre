@@ -8,7 +8,10 @@ const Student = () => {
   const params = useParams()
   const [student, setStudent] = useState(null)
   const [courses, setCourses] = useState([])
+  const [showSection, setShowSection] = useState(true)
   const user = useSelector(state => state.user)
+
+  const toggle = () => setShowSection(!showSection)
 
   useEffect(() => {
     studentService.getStudent(params.id)
@@ -27,6 +30,7 @@ const Student = () => {
   }
 
   console.log(student)
+  console.log(courses)
 
   return (
     <div className="p-2 my-4 scroll-mt-20">
@@ -37,27 +41,46 @@ const Student = () => {
         <p>Please log in to view student details.</p>
       )}
       {student ? (
-        <>
-          <h3 className="text-3xl font-bold text-left sm:text-xl mb-6 text-slate-900 dark:text-white">
-            Courses
-          </h3>
-          {courses.length > 0 ? (
-            courses.map(course => (
-              <div key={course.id} className="mb-4">
-                <p className="font-semibold text-lg">{course.title}</p>
-                {course.modules.map(module => (
-                  <>
-                    <p key={module.code}>{module.title} ({module.code})</p>
-                    <p>Result: {module.result}</p>
-                  </>
-                ))}
-              </div>
-            ))
-          ) : (
-            <p>No courses available</p>
-          )}
-          <h3 className="text-3xl font-bold text-left sm:text-1xl mb-6 text-slate-900 dark:text-white">Meetings</h3>
-        </>
+
+        <div className="border border-solid border-slate-900 dark:border-slate-600 bg-white dark:bg-gray-900 p-8 rounded-3xl shadow-xl mb-5">
+          <div className=" items-center justify-between mb-4">
+            <h3 className="text-3xl font-bold text-left sm:text-xl mb-6 text-slate-900 dark:text-white">
+            Results
+            </h3>
+            {courses.length > 0 ?
+              (
+                courses.map(course => (
+                  <div key={course.id} className="mb-4">
+                    <p key={course.title} className="font-semibold text-lg"><u>{course.title}</u></p>
+                    {course.modules.map(module => (
+                      <>
+                        {module.flagged === 0 ?
+                          (
+                            <>
+                              <p key={module.code}>{module.title} ({module.code})</p>
+                              <p key={module.code + module.result}>Result: {module.result}</p>
+                            </>
+                          )
+                          :
+                          (
+                            <>
+                              <p key={module.code} className='text-red-600'>{module.title} ({module.code})</p>
+                              <p key={module.code + module.result} className='text-red-600'>Result: {module.result}</p>
+                            </>
+                          )
+                        }
+                      </>
+                    ))}
+                  </div>
+                ))
+              )
+              :
+              (
+                <p>No courses available</p>
+              )}
+          </div>
+        </div>
+
       ) : (
         <div> no student details</div>
       )

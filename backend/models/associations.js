@@ -3,11 +3,77 @@ const Course = require('./course')
 const User = require('./user')
 const Module = require('./module')
 const Classification = require('./classification')
-const QualificationLevel = require('./qualification-level')
+const QualificationLevel = require('./qualificationLevel')
 const Level = require('./level')
 const School = require('./school')
 const Role = require('./role')
 const Token = require('./token')
+const CourseYear = require('./courseYear')
+const ModuleYear = require('./moduleYear')
+const Semester = require('./semester')
+
+//Course -> Course_Year
+Course.hasMany(CourseYear, {
+  foreignKey: 'course_id',
+  timestamps: false,
+  as: 'courseYears',
+})
+
+CourseYear.belongsTo(Course, {
+  foreignKey: 'course_id',
+  timestamps: false,
+  as: 'course'
+})
+
+
+//User -> Course
+User.belongsToMany(Course, {
+  through: 'user_course',
+  foreignKey: 'user_id',
+  otherKey: 'course_id',
+  timestamps: false,
+  as: 'all_courses',
+})
+
+Course.belongsToMany(User, {
+  through: 'user_course',
+  foreignKey: 'course_id',
+  otherKey: 'user_id',
+  timestamps: false,
+  as: 'users'
+})
+
+
+//CourseYear -> User (course-cordinator)
+
+User.hasMany(Course, {
+  foreignKey: 'course_coordinator',
+  timestamps: false,
+  as: 'course_years'
+})
+
+CourseYear.belongsTo(User, {
+  foreignKey: 'course_coordinator',
+  timestamp: false,
+  as: 'courseCoordinator'
+})
+
+
+
+//Module -> Course
+Module.belongsToMany(Course, {
+  through: 'module_course',
+  foreignKey: 'module_id',
+  timestamps: false,
+  as:  'course',
+})
+
+Course.belongsToMany(Module, {
+  through: 'module_course',
+  foreignKey: 'course_id',
+  timestamps: false,
+  as: 'modules'
+})
 
 //Student -> Course
 Student.belongsToMany(Course, {
@@ -49,22 +115,7 @@ Module.belongsToMany(Student, {
   as: 'students',
 })
 
-//User -> Course
-User.belongsToMany(Course, {
-  through: 'user_course',
-  foreignKey: 'user_id',
-  otherKey: 'course_id',
-  timestamps: false,
-  as: 'courses',
-})
 
-Course.belongsToMany(User, {
-  through: 'user_course',
-  foreignKey: 'course_id',
-  otherKey: 'user_id',
-  timestamps: false,
-  as: 'users'
-})
 
 //User -> Module
 User.belongsToMany(Module, {
@@ -108,20 +159,7 @@ Role.hasMany(User, {
 })
 
 
-//Module -> Course
-Module.belongsToMany(Course, {
-  through: 'module_course',
-  foreignKey: 'module_id',
-  timestamps: false,
-  as:  'course',
-})
 
-Course.belongsToMany(Module, {
-  through: 'module_course',
-  foreignKey: 'course_id',
-  timestamps: false,
-  as: 'modules'
-})
 
 //Course -> QualificationLevel
 Course.belongsTo(QualificationLevel, {

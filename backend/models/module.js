@@ -18,10 +18,6 @@ const Module = db.define('Module', {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  semester: {
-    type: DataTypes.ENUM('SPRING', 'AUTUMN', 'FULL'),
-    allowNull: false,
-  },
 },
 {
   tableName: 'module',

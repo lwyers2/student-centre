@@ -5,6 +5,8 @@ const Module = require('../models/module')
 const School = require('../models/school')
 const Role = require('../models/role')
 const User = require('../models/user')
+const QualificationLevel = require('../models/qualificationLevel')
+const CourseYear = require('../models/courseYear')
 
 usersRouter.get('/', async (request, response) => {
   try {
@@ -117,66 +119,122 @@ usersRouter.post('/', async (request, response) => {
   }
 })
 
-usersRouter.get('/:user', async (request, response) => {
-  try {
-    const userId = request.params.user
+// usersRouter.get('/:user', async (request, response) => {
+//   try {
+//     const userId = request.params.user
 
+//     const user = await User.findOne({
+//       where: { id: userId },
+//       attributes: ['id', 'forename', 'surname', 'email', 'active', 'date_created', 'date_updated'],
+//       include: [
+//         {
+//           model: Course,
+//           attributes: ['title', 'years', 'code' ],
+//           through: [ {} ],
+//           include:
+//             [{
+//               model: Module,
+//               as: 'modules',
+//             }],
+//           as: 'courses'
+//         },
+//         {
+//           model: Role,
+//           as: 'role',
+//           attributes: ['name'],
+//         },
+//       ],
+//     })
+
+//     //Same structure as above. Might re-add role and school in if needed.
+//     const formattedUser = {
+//       id: user.id,
+//       forename: user.forename,
+//       surname: user.surname,
+//       email: user.email,
+//       active: user.active,
+//       date_created: user.date_created,
+//       date_updated: user.date_updated,
+//       courses: user.courses?.map((course) => ({
+//         id: course.id,
+//         title: course.title,
+//         years: course.years,
+//         code: course.code,
+//         modules: course.modules?.map((module) => ({
+//           id: module.id,
+//           title: module.title,
+//           semester: module.semester,
+//           code: module.code,
+//           qsis_year: module.QSIS_year,
+//           CATs: module.CATs,
+//         })),
+//       })),
+//       role: user.role? { name: user.role.name } : null,
+//     }
+
+//     if(!formattedUser) {
+//       return response.status(404).json({ error: 'User not found' })
+//     }
+//     response.json(formattedUser)
+//   } catch (error) {
+//     console.error(error)
+//     response.status(500).json({ error: 'Internal server error' })
+//   }
+// })
+
+
+usersRouter.get('/:user/courses', async (request, response) => {
+  const userId  = request.params.user
+
+  try {
     const user = await User.findOne({
       where: { id: userId },
-      attributes: ['id', 'forename', 'surname', 'email', 'active', 'date_created', 'date_updated'],
+      attributes: ['id', 'prefix', 'forename', 'surname'], // Include any relevant user attributes
       include: [
         {
           model: Course,
-          attributes: ['title', 'years', 'code' ],
-          through: [ {} ],
-          include:
-            [{
-              model: Module,
-              as: 'modules',
-            }],
-          as: 'courses'
-        },
-        {
-          model: Role,
-          as: 'role',
-          attributes: ['name'],
+          as: 'all_courses',
+          attributes: ['id', 'title', 'years', 'code', 'part_time'],
+          through: { attributes: [] }, // Exclude join table details
+          include: [
+            {
+              model: QualificationLevel,
+              as: 'qualification_level',
+              attributes: ['qualification'],
+            },
+            {
+              model: CourseYear,
+              as: 'courseYears',
+              attributes: ['id', 'year_start', 'year_end'],
+              include: [
+                {
+                  model: Course,
+                  as: 'course', // Ensure this alias matches your association
+                  attributes: ['title', 'years', 'code', 'part_time'],
+                },
+                {
+                  model: User,
+                  as: 'courseCoordinator',
+                  attributes: ['forename', 'surname']
+                }
+              ],
+            },
+          ],
         },
       ],
     })
 
-    //Same structure as above. Might re-add role and school in if needed.
-    const formattedUser = {
-      id: user.id,
-      forename: user.forename,
-      surname: user.surname,
-      email: user.email,
-      active: user.active,
-      date_created: user.date_created,
-      date_updated: user.date_updated,
-      courses: user.courses?.map((course) => ({
-        id: course.id,
-        title: course.title,
-        years: course.years,
-        code: course.code,
-        modules: course.modules?.map((module) => ({
-          id: module.id,
-          title: module.title,
-          semester: module.semester,
-          code: module.code,
-          qsis_year: module.QSIS_year,
-          CATs: module.CATs,
-        })),
-      })),
-      role: user.role? { name: user.role.name } : null,
-    }
-
-    if(!formattedUser) {
+    if (!user) {
       return response.status(404).json({ error: 'User not found' })
     }
-    response.json(formattedUser)
+
+    response.json(user)
   } catch (error) {
     console.error(error)
-    response.status(500).json({ error: 'Internal server error' })
+    response.status(500).json({
+      error: 'Failed to fetch courses for user',
+      details: error.message,
+    })
   }
 })
 

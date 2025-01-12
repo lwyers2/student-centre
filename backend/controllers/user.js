@@ -189,13 +189,13 @@ usersRouter.get('/:user/courses', async (request, response) => {
   try {
     const user = await User.findOne({
       where: { id: userId },
-      attributes: ['id', 'prefix', 'forename', 'surname'], // Include any relevant user attributes
+      attributes: ['id', 'prefix', 'forename', 'surname'],
       include: [
         {
           model: Course,
           as: 'all_courses',
           attributes: ['id', 'title', 'years', 'code', 'part_time'],
-          through: { attributes: [] }, // Exclude join table details
+          through: { attributes: [] },
           include: [
             {
               model: QualificationLevel,
@@ -209,7 +209,7 @@ usersRouter.get('/:user/courses', async (request, response) => {
               include: [
                 {
                   model: Course,
-                  as: 'course', // Ensure this alias matches your association
+                  as: 'course',
                   attributes: ['title', 'years', 'code', 'part_time'],
                 },
                 {

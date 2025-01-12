@@ -17,17 +17,12 @@ coursesRouter.get('/', async (request, response) => {
         },
         {
           model: CourseYear,
-          as: 'courseYears',
-          attributes: ['id', 'course_id', 'year_start', 'year_end', 'course_coordinator'],
+          as: 'course_years',
+          attributes: ['id', 'year_start', 'year_end'],
           include: [
             {
-              model: Course,
-              as: 'course', // Ensure this alias matches your association
-              attributes: ['title', 'years', 'code', 'part_time'],
-            },
-            {
               model: User,
-              as: 'courseCoordinator',
+              as: 'course_co-ordinator',
               attributes: ['forename', 'surname']
             }
           ],

@@ -204,7 +204,7 @@ usersRouter.get('/:user/courses', async (request, response) => {
             },
             {
               model: CourseYear,
-              as: 'courseYears',
+              as: 'course_years',
               attributes: ['id', 'year_start', 'year_end'],
               include: [
                 {
@@ -214,7 +214,7 @@ usersRouter.get('/:user/courses', async (request, response) => {
                 },
                 {
                   model: User,
-                  as: 'courseCoordinator',
+                  as: 'course_co-ordinator',
                   attributes: ['forename', 'surname']
                 }
               ],

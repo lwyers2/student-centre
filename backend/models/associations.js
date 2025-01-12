@@ -16,7 +16,7 @@ const Semester = require('./semester')
 Course.hasMany(CourseYear, {
   foreignKey: 'course_id',
   timestamps: false,
-  as: 'courseYears',
+  as: 'course_years',
 })
 
 CourseYear.belongsTo(Course, {
@@ -55,7 +55,7 @@ User.hasMany(Course, {
 CourseYear.belongsTo(User, {
   foreignKey: 'course_coordinator',
   timestamp: false,
-  as: 'courseCoordinator'
+  as: 'course_co-ordinator'
 })
 
 

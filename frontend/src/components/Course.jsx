@@ -2,19 +2,20 @@ import React, { useState } from 'react'
 import Table from './Table'
 
 const Course = ({ course }) => {
-  const modules = course.modules
+  const course_years = course.course_years
+
+  const courseSchedule = course.part_time === 0 ? 'FY' : 'PT'
+
 
   const tableData = {
-    labels: { title: `${course.title} ${course.code} ${course.years} years` },
+    labels: { title: `${course.title} (${course.qualification_level.qualification}) ${course.code}/${courseSchedule}` },
     content: {
-      headers: ['Title', 'qsis_year', 'Code', 'CATs', 'Semester'], // Table headers
-      data: modules.map((module) => ({
-        id: module.id, // Unique ID for each row
-        title: module.title,
-        'qsis_year': module.qsis_year,
-        code: module.code,
-        cats: module.CATs,
-        semester: module.semester,
+      headers: ['year_start', 'year_end', 'course_co-ordinator'], // Table headers
+      data: course_years.map((course_year) => ({
+        id: course_year.id, // Unique ID for each row
+        year_start: course_year.year_start,
+        year_end: course_year.year_end,
+        'course_co-ordinator': course_year['course_co-ordinator'].forename + ' ' + course_year['course_co-ordinator'].surname,
       })),
       view: '/module', // Base path for "View" links
     },

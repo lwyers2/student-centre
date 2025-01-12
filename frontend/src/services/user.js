@@ -11,4 +11,9 @@ const getUser = async id => {
   return response.data
 }
 
-export default { getAll, getUser }
+const getUserCourse = async id => {
+  const response = await axios.get(`${baseUrl}/${id}/courses`)
+  return response.data
+}
+
+export default { getAll, getUser, getUserCourse }

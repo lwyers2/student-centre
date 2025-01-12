@@ -10,6 +10,7 @@ const Courses = () => {
   const navigate = useNavigate()
 
   const [courses, setCourses] = useState()
+  const [userData, setUserData] = useState()
 
   useEffect (() => {
     if(!user) {
@@ -17,14 +18,18 @@ const Courses = () => {
     }
   }, [user, navigate])
 
+  console.log(user)
+
   useEffect(() => {
     const id = user.id
-    userService.getUser(id)
+    userService.getUserCourse(id)
       .then(initialUserData => {
-        setCourses(initialUserData.courses)
+        setUserData(initialUserData)
+        setCourses(initialUserData.all_courses)
       })
   }, [user.id])
 
+  console.log(courses)
 
 
   if(!user.id) {
@@ -48,36 +53,44 @@ const Courses = () => {
           {// Ive added the below above courses for now. I'll want to create a component that I can add states into. Will do it dynamically where it gets the years so I can add into other views.
           }
           <div className="border border-solid border-slate-900 dark:border-slate-600 bg-white dark:bg-gray-900 p-8 rounded-3xl shadow-xl mb-5">
-            <h3>filter</h3>
+            <div className="flex items-center justify-between mb-4">
+              <h3 className= "text-3xl font-bold text-left  mb-6 text-slate-900 dark:text-white">Search</h3>
+              <button className="bg-slate-500 text-white font-semibold px-3 py-1 rounded hover:bg-slate-400">View</button>
+            </div>
+            <div className="mb-4">
+              <input className="" type="text" />
+            </div>
+          </div>
+          <div className="border border-solid border-slate-900 dark:border-slate-600 bg-white dark:bg-gray-900 p-8 rounded-3xl shadow-xl mb-5">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className= "text-3xl font-bold text-left  mb-6 text-slate-900 dark:text-white">Filters</h3>
+              <button className="bg-slate-500 text-white font-semibold px-3 py-1 rounded hover:bg-slate-400">View</button>
+            </div>
             <div className="flex items-center justify-between mb-4">
               <button
                 onClick="filter"
                 className="bg-slate-500 text-white font-semibold px-3 py-1 rounded hover:bg-slate-400"
               >
-              2024/2025
+              Date
               </button>
               <button
                 onClick="filter"
                 className="bg-slate-500 text-white font-semibold px-3 py-1 rounded hover:bg-slate-400"
               >
-              2026/2027
+              Level
               </button>
               <button
                 onClick="filter"
                 className="bg-slate-500 text-white font-semibold px-3 py-1 rounded hover:bg-slate-400"
               >
-              2027/2028
-              </button>
-              <button
-                onClick="filter"
-                className="bg-slate-500 text-white font-semibold px-3 py-1 rounded hover:bg-slate-400"
-              >
-              2028/2029
+              FT/PT
               </button>
             </div>
           </div>
           {courses.map(course => (
-            <Course key={course.title} course={course}/>
+            <>
+              <Course key={course.id} course={course}/>
+            </>
           ))}
         </>
       ) : (

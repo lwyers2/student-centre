@@ -238,4 +238,8 @@ usersRouter.get('/:user/courses', async (request, response) => {
   }
 })
 
+// usersRouter.get('/:user/modules', async (request, response) => {
+
+// })
+
 module.exports = usersRouter

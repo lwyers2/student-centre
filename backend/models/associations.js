@@ -9,8 +9,47 @@ const School = require('./school')
 const Role = require('./role')
 const Token = require('./token')
 const CourseYear = require('./courseYear')
-const ModuleYear = require('./moduleYear')
+const ModuleYear = require('./module_year')
+const ModuleCourse = require('./module_course')
 const Semester = require('./semester')
+
+
+// Module ->  Course
+Module.belongsToMany(Course, {
+  through: ModuleCourse,
+  foreignKey: 'module_id',
+  otherKey: 'course_id',
+  as: 'courses',
+})
+
+Course.belongsToMany(Module, {
+  through: ModuleCourse,
+  foreignKey: 'course_id',
+  otherKey: 'module_id',
+  as: 'modules',
+})
+
+// ModuleCourse -> ModuleYear
+ModuleCourse.belongsTo(ModuleYear, {
+  foreignKey: 'module_year_id',
+  as: 'module_year',
+})
+
+ModuleYear.hasMany(ModuleCourse, {
+  foreignKey: 'module_year_id',
+  as: 'module_courses',
+})
+
+// ModuleCourse -> Course
+ModuleCourse.belongsTo(Course, {
+  foreignKey: 'course_id',
+  as: 'course',
+})
+
+Course.hasMany(ModuleCourse, {
+  foreignKey: 'course_id',
+  as: 'module_courses',
+})
 
 //Course -> Course_Year
 Course.hasMany(CourseYear, {
@@ -59,20 +98,35 @@ CourseYear.belongsTo(User, {
 })
 
 
-
-//Module -> Course
-Module.belongsToMany(Course, {
-  through: 'module_course',
+//Module -> Module_year
+Module.hasMany(ModuleYear, {
   foreignKey: 'module_id',
   timestamps: false,
-  as:  'course',
+  as: 'module_years',
 })
 
-Course.belongsToMany(Module, {
-  through: 'module_course',
-  foreignKey: 'course_id',
+ModuleYear.belongsTo(Module, {
+  foreignKey: 'module_id',
+  timestamps: false,
+  as: 'module',
+})
+
+
+//User -> Module
+User.belongsToMany(Module, {
+  through: 'user_module',
+  foreignKey: 'user_id',
+  otherKey: 'module_id',
   timestamps: false,
   as: 'modules'
+})
+
+Module.belongsToMany(User, {
+  through: 'user_module',
+  foreignKey: 'module_id',
+  otherKey: 'user_id',
+  timestamps: false,
+  as: 'users',
 })
 
 //Student -> Course
@@ -81,7 +135,7 @@ Student.belongsToMany(Course, {
   foreignKey: 'student_id',
   otherKey: 'course_id',
   timestamps: false,
-  as: 'courses',
+  as: 'student_courses',
 })
 
 Course.belongsToMany(Student, {
@@ -101,7 +155,7 @@ Student.belongsToMany(Module, {
   foreignKey: 'student_id',
   otherKey: 'module_id',
   timestamps: false,
-  as: 'modules'
+  as: 'student_modules'
 })
 
 Module.belongsToMany(Student, {
@@ -117,22 +171,7 @@ Module.belongsToMany(Student, {
 
 
 
-//User -> Module
-User.belongsToMany(Module, {
-  through: 'user_module',
-  foreignKey: 'user_id',
-  otherKey: 'module_id',
-  timestamps: false,
-  as: 'modules'
-})
 
-Module.belongsToMany(User, {
-  through: 'user_module',
-  foreignKey: 'module_id',
-  otherKey: 'user_id',
-  timestamps: false,
-  as: 'users',
-})
 
 //User -> School
 User.belongsToMany(School, {

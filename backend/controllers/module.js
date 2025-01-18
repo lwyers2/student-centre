@@ -1,15 +1,15 @@
 const modulesRouter = require('express').Router()
 const Course = require('../models/course')
 const Module = require('../models/module')
-const Student = require('../models/student')
 const User = require('../models/user')
 const ModuleYear = require('../models/module_year')
 const ModuleCourse = require('../models/module_course')
+const Semester = require('../models/semester')
 
 modulesRouter.get('/', async (request, response) => {
   try {
     const modules = await Module.findAll({
-      attributes: ['id', 'title', 'code', 'CATs', 'semester'],
+      attributes: ['id', 'title', 'code', 'CATs', 'year'],
       include: [
         {
           model: ModuleYear,
@@ -26,7 +26,18 @@ modulesRouter.get('/', async (request, response) => {
                   as: 'course', // Alias for Course
                   attributes: ['id', 'title'],
                 },
+
               ],
+            },
+            {
+              model: User,
+              as: 'module_co-ordinator',
+              attributes: ['forename', 'surname']
+            },
+            {
+              model: Semester,
+              as: 'semester',
+              attributes: ['id', 'name']
             },
           ],
         },

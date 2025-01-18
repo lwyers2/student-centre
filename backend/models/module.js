@@ -6,7 +6,7 @@ const Module = db.define('Module', {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  QSIS_year: {
+  year: {
     type: DataTypes.INTEGER,
     allowNull: false,
   },

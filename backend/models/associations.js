@@ -97,6 +97,34 @@ CourseYear.belongsTo(User, {
   as: 'course_co-ordinator'
 })
 
+//ModuleYear -> User (module-cordinator)
+
+User.hasMany(Module, {
+  foreignKey: 'module_coordinator_id',
+  timestamps: false,
+  as: 'module_years'
+})
+
+ModuleYear.belongsTo(User, {
+  foreignKey: 'module_coordinator_id',
+  timestamp: false,
+  as: 'module_co-ordinator'
+})
+
+//ModuleYear -> Semester
+
+Semester.hasMany(ModuleYear, {
+  foreignKey: 'semester_id',
+  timestamps: false,
+  as: 'module_years'
+})
+
+ModuleYear.belongsTo(Semester, {
+  foreignKey: 'semester_id',
+  timestamp: false,
+  as: 'semester'
+})
+
 
 //Module -> Module_year
 Module.hasMany(ModuleYear, {

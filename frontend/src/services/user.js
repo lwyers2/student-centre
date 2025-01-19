@@ -11,14 +11,14 @@ const getUser = async id => {
   return response.data
 }
 
-const getUserCourse = async id => {
+const getAllUserCourses = async id => {
   const response = await axios.get(`${baseUrl}/${id}/courses`)
   return response.data
 }
 
-const getUserModule = async id => {
-  const response = await axios.get(`${baseUrl}/${id}/modules`)
+const getUserModulesCourseYear = async (id, courseYearID) => {
+  const response = await axios.get(`${baseUrl}/${id}/modules/${courseYearID}`)
   return response.data
 }
 
-export default { getAll, getUser, getUserCourse, getUserModule }
+export default { getAll, getUser, getAllUserCourses, getUserModulesCourseYear }

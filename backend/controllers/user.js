@@ -190,20 +190,40 @@ usersRouter.get('/:user/modules/:courseyear', async (request, response) => {
       include: [
         {
           model: Module,
-          as: 'modules', // Alias for User -> Module association
+          as: 'modules',
           attributes: ['id', 'title', 'code', 'CATs', 'year'],
-          through: { attributes: [] }, // Omit join table attributes
+          through: { attributes: [] },
           include: [
             {
               model: ModuleYear,
-              as: 'module_years', // Alias for Module -> ModuleYear association
+              as: 'module_years',
               attributes: ['id', 'year_start', 'semester_id'],
               include: [
                 {
                   model: ModuleCourse,
-                  as: 'module_courses', // Alias for ModuleYear -> ModuleCourse association
-                  attributes: [], // Omit join table attributes
-                  where: { course_year_id: courseYearId }, // Filter by course_year_id
+                  as: 'module_courses',
+                  attributes: ['id'],
+                  where: { course_year_id: courseYearId },
+                  include: [
+                    {
+                      model: Course,
+                      as: 'course',
+                      attributes: ['id', 'title', 'code'],
+                      include: [
+                        {
+                          model: CourseYear,
+                          as: 'course_years',
+                          attributes: ['id'],
+                          where: { id: courseYearId},
+                        },
+                        {
+                          model: QualificationLevel,
+                          as: 'qualification_level',
+                          attributes: ['qualification'],
+                        }
+                      ]
+                    },
+                  ]
                 },
                 {
                   model: User,
@@ -226,7 +246,35 @@ usersRouter.get('/:user/modules/:courseyear', async (request, response) => {
       return response.status(404).json({ error: 'User not found' })
     }
 
-    response.json(user)
+
+    const formattedUser = {
+      user: {
+        id: user.id,
+        prefix: user.prefix,
+        forename: user.forename,
+        surname: user.surname,
+      },
+      course: {
+        id: user['modules'][0]['module_years'][0]['module_courses'][0]['course']['id'],
+        title: user['modules'][0]['module_years'][0]['module_courses'][0]['course']['title'],
+        code: user['modules'][0]['module_years'][0]['module_courses'][0]['course']['code'],
+        qualification: user['modules'][0]['module_years'][0]['module_courses'][0]['course']['qualification_level']['qualification'],
+        modules: user.modules
+          .map((module) => ({
+            id: module.id,
+            title: module.title,
+            code: module.code,
+            CATs: module.CATs,
+            year: module.year,
+            module_year_id: module['module_years'][0]['id'],
+            year_start: module['module_years'][0]['year_start'],
+            module_coordinator: module['module_years'][0]['module_co-ordinator']['forename'] + ' ' + module['module_years'][0]['module_co-ordinator']['surname'],
+            semester: module['module_years'][0]['semester']['name'],
+          }))
+      }
+    }
+
+    response.json(formattedUser)
   } catch (error) {
     console.error(error)
     response.status(500).json({ error: 'Failed to fetch modules for the user' })

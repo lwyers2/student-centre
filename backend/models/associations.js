@@ -97,6 +97,7 @@ CourseYear.belongsTo(User, {
   as: 'course_co-ordinator'
 })
 
+
 //ModuleYear -> User (module-cordinator)
 
 User.hasMany(Module, {

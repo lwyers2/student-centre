@@ -18,18 +18,16 @@ const Courses = () => {
     }
   }, [user, navigate])
 
-  console.log(user)
 
   useEffect(() => {
     const id = user.id
-    userService.getUserCourse(id)
+    userService.getAllUserCourses(id)
       .then(initialUserData => {
         setUserData(initialUserData)
         setCourses(initialUserData.all_courses)
       })
   }, [user.id])
 
-  console.log(courses)
 
 
   if(!user.id) {

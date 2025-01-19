@@ -17,7 +17,7 @@ const Course = ({ course }) => {
         year_end: course_year.year_end,
         'course_co-ordinator': course_year['course_co-ordinator'].forename + ' ' + course_year['course_co-ordinator'].surname,
       })),
-      view: '/module', // Base path for "View" links
+      view: '/modules', // Base path for "View" links
     },
   }
 

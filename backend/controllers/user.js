@@ -208,13 +208,13 @@ usersRouter.get('/:user/modules/:courseyear', async (request, response) => {
                     {
                       model: Course,
                       as: 'course',
-                      attributes: ['id', 'title', 'code'],
+                      attributes: ['id', 'title', 'code', 'part_time', 'years'],
                       include: [
                         {
                           model: CourseYear,
                           as: 'course_years',
-                          attributes: ['id'],
-                          where: { id: courseYearId},
+                          attributes: ['id', 'year_start', 'year_end'],
+                          where: { id: courseYearId },
                         },
                         {
                           model: QualificationLevel,
@@ -259,6 +259,10 @@ usersRouter.get('/:user/modules/:courseyear', async (request, response) => {
         title: user['modules'][0]['module_years'][0]['module_courses'][0]['course']['title'],
         code: user['modules'][0]['module_years'][0]['module_courses'][0]['course']['code'],
         qualification: user['modules'][0]['module_years'][0]['module_courses'][0]['course']['qualification_level']['qualification'],
+        year_start: user['modules'][0]['module_years'][0]['module_courses'][0]['course']['course_years'][0]['year_start'],
+        year_end: user['modules'][0]['module_years'][0]['module_courses'][0]['course']['course_years'][0]['year_end'],
+        part_time: user['modules'][0]['module_years'][0]['module_courses'][0]['course']['part_time'] === 0 ? 'FY' : 'PT',
+        years: user['modules'][0]['module_years'][0]['module_courses'][0]['course']['years'],
         modules: user.modules
           .map((module) => ({
             id: module.id,

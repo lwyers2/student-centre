@@ -5,7 +5,11 @@ const User = require('../models/user')
 const ModuleYear = require('../models/module_year')
 const ModuleCourse = require('../models/module_course')
 const Semester = require('../models/semester')
+const CourseYear = require('../models/courseYear')
+const QualificationLevel = require('../models/qualificationLevel')
+const Student = require('../models/student')
 
+//Will eventually need to include all students and users
 modulesRouter.get('/', async (request, response) => {
   try {
     const modules = await Module.findAll({
@@ -18,16 +22,27 @@ modulesRouter.get('/', async (request, response) => {
           include: [
             {
               model: ModuleCourse,
-              as: 'module_courses', // Alias from association
-              attributes: ['course_id', 'course_year_id'],
+              as: 'module_courses',
+              attributes: ['id'],
               include: [
                 {
                   model: Course,
-                  as: 'course', // Alias for Course
-                  attributes: ['id', 'title'],
+                  as: 'course',
+                  attributes: ['id', 'title', 'code', 'part_time', 'years'],
+                  include: [
+                    {
+                      model: CourseYear,
+                      as: 'course_years',
+                      attributes: ['id', 'year_start', 'year_end'],
+                    },
+                    {
+                      model: QualificationLevel,
+                      as: 'qualification_level',
+                      attributes: ['qualification'],
+                    }
+                  ]
                 },
-
-              ],
+              ]
             },
             {
               model: User,
@@ -50,36 +65,66 @@ modulesRouter.get('/', async (request, response) => {
   }
 })
 
-// modulesRouter.get('/modules/:module-year', async (request, response) => {
-//   try{
-//     const moduleId = request.params.module
+modulesRouter.get('/module-year/:moduleYear', async (request, response) => {
 
-//     const moduleData = await Module.findOne({
-//       where: { id: moduleId },
-//       attributes: ['id', 'title', 'QSIS_year', 'code', 'CATs', 'semester'],
-//       include : [
-//         {
-//           model: Student,
-//           attributes: ['id', 'forename', 'surname', 'email', 'student_code'],
-//           through: { attributes: ['result'] },
-//           as: 'students'
-//         },
-//         {
-//           model: User,
-//           attributes: ['id', 'email'],
-//           through: [ { } ],
-//           as: 'users'
-//         }
-//       ]
-//     })
-//     if(!moduleData) {
-//       return response.status(404).json({ error: 'Module not found' })
-//     }
-//     response.json(moduleData)
-//   } catch(error) {
-//     console.error(error)
-//     response.status(500).json({ error: 'Internal server error' })
-//   }
-// })
+  const moduleYearId = request.params.moduleYear
+
+  try {
+    const module = await Module.findOne({
+      attributes: ['id', 'title', 'code', 'CATs', 'year'],
+      include: [
+        {
+          model: ModuleYear,
+          as: 'module_years',
+          attributes: ['id', 'year_start', 'semester_id'],
+          where: { id: moduleYearId },
+          include: [
+            {
+              model: Semester,
+              as: 'semester',
+              attributes: ['id', 'name']
+            }
+          ]
+        },
+        {
+          model: Student,
+          as: 'students',
+          through: {
+            attributes: ['result', 'resit', 'flagged'], // Include extra attributes from the join table if needed
+            where: { module_year_id: moduleYearId }, // Apply filter to the join table, not directly on Student
+          }
+        }
+      ]
+    })
+    if(!module) {
+      return response.status(404).json({ error: 'Module not found' })
+    }
+
+    const formattedModule = {
+      module: {
+        id: module.id,
+        title: module.title,
+        code: module.code,
+        year: module.year,
+        year_start: module['module_years'][0]['year_start'],
+        semester: module['module_years'][0]['semester']['name'],
+      },
+      students: module.students.map((student) => ({
+        id: student.id,
+        forename: student.forename,
+        surname: student.surname,
+        email: student.email,
+        exam_results: student.student_module,
+        // resit: student.student_module.resit,
+        // flagged: student.student_module.flagged,
+      }))
+    }
+
+    response.json(formattedModule)
+  } catch(error) {
+    console.error(error)
+    response.status(500).json({ error: 'Internal server error' })
+  }
+})
 
 module.exports = modulesRouter

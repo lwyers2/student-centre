@@ -7,8 +7,8 @@ const Role = require('../models/role')
 const User = require('../models/user')
 const QualificationLevel = require('../models/qualificationLevel')
 const CourseYear = require('../models/courseYear')
-const ModuleYear = require('../models/module_year')
-const ModuleCourse = require('../models/module_course')
+const ModuleYear = require('../models/moduleYear')
+const ModuleCourse = require('../models/moduleCourse')
 const Semester = require('../models/semester')
 
 usersRouter.get('/', async (request, response) => {

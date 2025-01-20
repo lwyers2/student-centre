@@ -9,9 +9,10 @@ const School = require('./school')
 const Role = require('./role')
 const Token = require('./token')
 const CourseYear = require('./courseYear')
-const ModuleYear = require('./module_year')
-const ModuleCourse = require('./module_course')
+const ModuleYear = require('./moduleYear')
+const ModuleCourse = require('./moduleCourse')
 const Semester = require('./semester')
+const StudentModule = require('./studentModule')
 
 
 // Module ->  Course
@@ -176,30 +177,31 @@ Course.belongsToMany(Student, {
 })
 
 //Student -> Module, will have unique false in case student needs to retake module. Could have multiple results
+// Define Many-to-Many relationship between Student and Module
 Student.belongsToMany(Module, {
-  through: {
-    model: 'student_module',
-    unique: false,
-  },
-  foreignKey: 'student_id',
-  otherKey: 'module_id',
+  through: StudentModule,      // Junction table
+  as: 'student_modules',       // Alias used for including this relation in queries
+  foreignKey: 'student_id',    // The foreign key in the junction table for Student
   timestamps: false,
-  as: 'student_modules'
 })
 
 Module.belongsToMany(Student, {
-  through: {
-    model: 'student_module',
-    unique: false,
-  },
-  foreignKey: 'module_id',
-  otherKey: 'student_id',
+  through: StudentModule,      // Junction table
+  as: 'module_students',       // Reverse relation alias (optional)
+  foreignKey: 'module_id',     // The foreign key in the junction table for Module
   timestamps: false,
-  as: 'students',
 })
 
+// Define the Many-to-One relationship from StudentModule -> ModuleYear
+StudentModule.belongsTo(ModuleYear, {
+  foreignKey: 'module_year_id',
+  as: 'module_year',  // Alias to access module year data
+})
 
-
+ModuleYear.hasMany(StudentModule, {
+  foreignKey: 'module_year_id',
+  as: 'student_module_years', // Alias for related StudentModule records
+})
 
 
 //User -> School
@@ -260,4 +262,16 @@ User.hasMany(Token, {
 })
 
 
-module.exports = { Student, Course, User , Module, QualificationLevel, Classification, Level, Token }
+module.exports =
+{
+  Student,
+  Course,
+  User ,
+  Module,
+  QualificationLevel,
+  Classification,
+  Level,
+  Token,
+  StudentModule,
+  ModuleYear
+}

@@ -15,6 +15,10 @@ const Student = db.define('Student', {
     type: DataTypes.STRING,
     allowNull: false,
   },
+  student_code: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  }
 },
 {
   tableName: 'student',

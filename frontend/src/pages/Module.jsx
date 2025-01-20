@@ -11,17 +11,16 @@ const Module = () => {
   const user = useSelector(state => state.user)
 
   useEffect(() => {
-    moduleService.getModule(params.id)
+    moduleService.getModuleFromModuleYear(params.id)
       .then(response => {
         console.log('Module data fetched:', response)
-        setModule(response)
+        setModule(response.module)
         setStudents(response.students)
       })
       .catch(error => {
         console.error('Error fetching module:', error)
       })
   }, [params.id])
-
 
 
   if (!module) {
@@ -35,14 +34,13 @@ const Module = () => {
   const tableData = {
     labels: { title: 'Students' },
     content: {
-      headers: [ 'student_code', 'email', 'forename', 'surname','result'], // Table headers
+      headers: [ 'email', 'forename', 'surname','result'], // Table headers
       data: students.map((student) => ({
         id: student.id, // Unique ID for each row
-        student_code: student.student_code,
         email: student.email,
         forename: student.forename,
         surname: student.surname,
-        result: student.student_module.result,
+        result: student.exam_results.result,
       })),
       view: '/student', // Base path for "View" links
     },
@@ -52,7 +50,7 @@ const Module = () => {
     <div className="p-2 my-4 scroll-mt-20">
       <div>
         {module ? (
-          <h2 className="text-4xl font-bold text-center sm:text-5xl mb-6 text-slate-900 dark:text-white">{module.title} ({module.code}) {module.QSIS_year}</h2>
+          <h2 className="text-4xl font-bold text-center sm:text-5xl mb-6 text-slate-900 dark:text-white">{module.title} ({module.code}) {module.year_start}</h2>
         ): (
           <p>Module not found</p>
         )

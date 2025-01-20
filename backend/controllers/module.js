@@ -89,6 +89,7 @@ modulesRouter.get('/module-year/:moduleYear', async (request, response) => {
         {
           model: Student,
           as: 'students',
+          attributes: ['id', 'forename', 'surname', 'email', 'student_code'],
           through: {
             attributes: ['result', 'resit', 'flagged'], // Include extra attributes from the join table if needed
             where: { module_year_id: moduleYearId }, // Apply filter to the join table, not directly on Student
@@ -110,13 +111,12 @@ modulesRouter.get('/module-year/:moduleYear', async (request, response) => {
         semester: module['module_years'][0]['semester']['name'],
       },
       students: module.students.map((student) => ({
+        student_code: student.student_code,
         id: student.id,
         forename: student.forename,
         surname: student.surname,
         email: student.email,
         exam_results: student.student_module,
-        // resit: student.student_module.resit,
-        // flagged: student.student_module.flagged,
       }))
     }
 

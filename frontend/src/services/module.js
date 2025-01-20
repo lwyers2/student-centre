@@ -11,4 +11,9 @@ const getModule = async id => {
   return response.data
 }
 
-export default { getAll, getModule }
+const getModuleFromModuleYear = async id => {
+  const response = await axios.get(`${baseUrl}/module-year/${id}`)
+  return response.data
+}
+
+export default { getAll, getModule, getModuleFromModuleYear }

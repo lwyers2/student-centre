@@ -178,31 +178,50 @@ Course.belongsToMany(Student, {
 
 //Student -> Module, will have unique false in case student needs to retake module. Could have multiple results
 // Define Many-to-Many relationship between Student and Module
-Student.belongsToMany(Module, {
-  through: StudentModule,      // Junction table
-  as: 'student_modules',       // Alias used for including this relation in queries
-  foreignKey: 'student_id',    // The foreign key in the junction table for Student
-  timestamps: false,
-})
+// Student.belongsToMany(Module, {
+//   through: 'student_module',      // Junction table
+//   as: 'student_modules',       // Alias used for including this relation in queries
+//   foreignKey: 'student_id',    // The foreign key in the junction table for Student
+//   timestamps: false,
+// })
 
-Module.belongsToMany(Student, {
-  through: StudentModule,      // Junction table
-  as: 'module_students',       // Reverse relation alias (optional)
-  foreignKey: 'module_id',     // The foreign key in the junction table for Module
-  timestamps: false,
-})
+// Module.belongsToMany(Student, {
+//   through: 'student_module',      // Junction table
+//   as: 'module_students',       // Reverse relation alias (optional)
+//   foreignKey: 'module_id',     // The foreign key in the junction table for Module
+//   timestamps: false,
+// })
 
 // Define the Many-to-One relationship from StudentModule -> ModuleYear
-StudentModule.belongsTo(ModuleYear, {
-  foreignKey: 'module_year_id',
-  as: 'module_year',  // Alias to access module year data
+Student.belongsToMany(ModuleYear, {
+  through: 'student_module',
+  timestamps: false,
+  foreignKey: 'student_id',
+  as: 'student_module_years',  // Alias to access module year data
 })
 
-ModuleYear.hasMany(StudentModule, {
+ModuleYear.belongsToMany(Student, {
+  through: 'student_module',
+  timestamps: false,
   foreignKey: 'module_year_id',
-  as: 'student_module_years', // Alias for related StudentModule records
+  as: 'module_years', // Alias for related StudentModule records
 })
 
+
+
+Student.belongsToMany(CourseYear, {
+  through: 'student_course',
+  as: 'student_course_years',
+  foreignKey: 'student_id',
+  timestamps: false,
+})
+
+CourseYear.belongsToMany(Student, {
+  through: 'student_course',
+  as: 'course_year_students',
+  foreignKey: 'course_year_id',
+  timestamps: false,
+})
 
 //User -> School
 User.belongsToMany(School, {

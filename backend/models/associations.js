@@ -176,21 +176,21 @@ Course.belongsToMany(Student, {
   as: 'students',
 })
 
-//Student -> Module, will have unique false in case student needs to retake module. Could have multiple results
+// Student -> Module, will have unique false in case student needs to retake module. Could have multiple results
 // Define Many-to-Many relationship between Student and Module
-// Student.belongsToMany(Module, {
-//   through: 'student_module',      // Junction table
-//   as: 'student_modules',       // Alias used for including this relation in queries
-//   foreignKey: 'student_id',    // The foreign key in the junction table for Student
-//   timestamps: false,
-// })
+Student.belongsToMany(Module, {
+  through: 'student_module',      // Junction table
+  as: 'student_modules',       // Alias used for including this relation in queries
+  foreignKey: 'student_id',    // The foreign key in the junction table for Student
+  timestamps: false,
+})
 
-// Module.belongsToMany(Student, {
-//   through: 'student_module',      // Junction table
-//   as: 'module_students',       // Reverse relation alias (optional)
-//   foreignKey: 'module_id',     // The foreign key in the junction table for Module
-//   timestamps: false,
-// })
+Module.belongsToMany(Student, {
+  through: 'student_module',      // Junction table
+  as: 'module_students',       // Reverse relation alias (optional)
+  foreignKey: 'module_id',     // The foreign key in the junction table for Module
+  timestamps: false,
+})
 
 // Define the Many-to-One relationship from StudentModule -> ModuleYear
 Student.belongsToMany(ModuleYear, {
@@ -207,20 +207,20 @@ ModuleYear.belongsToMany(Student, {
   as: 'module_years', // Alias for related StudentModule records
 })
 
-//Student -> ModuleCourse
-Student.belongsToMany(ModuleCourse, {
-  through: StudentModule,
-  foreignKey: 'student_id',
-  otherKey: 'module_year_id', // Or the appropriate key linking StudentModule to ModuleCourse
-  as: 'student_module_courses',
-})
+// //Student -> ModuleCourse
+// Student.belongsToMany(ModuleCourse, {
+//   through: StudentModule,
+//   foreignKey: 'student_id',
+//   otherKey: 'module_year_id', // Or the appropriate key linking StudentModule to ModuleCourse
+//   as: 'student_module_courses',
+// })
 
-ModuleCourse.belongsToMany(Student, {
-  through: StudentModule,
-  foreignKey: 'module_year_id', // Or the appropriate key linking ModuleCourse to StudentModule
-  otherKey: 'student_id',
-  as: 'module_course_students',
-})
+// ModuleCourse.belongsToMany(Student, {
+//   through: StudentModule,
+//   foreignKey: 'module_year_id', // Or the appropriate key linking ModuleCourse to StudentModule
+//   otherKey: 'student_id',
+//   as: 'module_course_students',
+// })
 
 Student.belongsToMany(CourseYear, {
   through: 'student_course',

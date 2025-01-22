@@ -105,7 +105,7 @@ studentsRouter.get('/:student', async (request, response) => {
       id: student.id,
       email: student.email,
       student_code: student.student_code,
-      forename: student.forname,
+      forename: student.forename,
       surname: student.surname,
       courses: studentCourseYears.map((studentCourseYear) => ({
         course_year_id: studentCourseYear.id,

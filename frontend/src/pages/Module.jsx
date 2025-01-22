@@ -34,10 +34,11 @@ const Module = () => {
   const tableData = {
     labels: { title: 'Students' },
     content: {
-      headers: [ 'email', 'forename', 'surname','result'], // Table headers
+      headers: [ 'student_code', 'forename', 'surname', 'email', 'result'], // Table headers
       data: students.map((student) => ({
         id: student.id, // Unique ID for each row
         email: student.email,
+        student_code: student.student_code,
         forename: student.forename,
         surname: student.surname,
         result: student.exam_results.result,

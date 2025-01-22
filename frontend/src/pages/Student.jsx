@@ -16,8 +16,7 @@ const Student = () => {
   useEffect(() => {
     studentService.getStudent(params.id)
       .then(response => {
-        setStudent(response.student)
-        setCourses(response.courses)
+        setStudent(response)
       })
       .catch(error => {
         console.error('Error fetching module: ', error)
@@ -30,7 +29,7 @@ const Student = () => {
   }
 
   console.log(student)
-  console.log(courses)
+
 
   return (
     <div className="p-2 my-4 scroll-mt-20">

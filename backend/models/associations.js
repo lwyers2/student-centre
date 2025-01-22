@@ -207,7 +207,20 @@ ModuleYear.belongsToMany(Student, {
   as: 'module_years', // Alias for related StudentModule records
 })
 
+//Student -> ModuleCourse
+Student.belongsToMany(ModuleCourse, {
+  through: StudentModule,
+  foreignKey: 'student_id',
+  otherKey: 'module_year_id', // Or the appropriate key linking StudentModule to ModuleCourse
+  as: 'student_module_courses',
+})
 
+ModuleCourse.belongsToMany(Student, {
+  through: StudentModule,
+  foreignKey: 'module_year_id', // Or the appropriate key linking ModuleCourse to StudentModule
+  otherKey: 'student_id',
+  as: 'module_course_students',
+})
 
 Student.belongsToMany(CourseYear, {
   through: 'student_course',

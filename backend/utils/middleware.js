@@ -4,7 +4,7 @@ const Token = require('../models/token')
 const Role = require('../models/role')
 const User = require('../models/user')
 
-const { ValidationError, UniqueConstraintError, DatabaseError, ConnectionError } = require('sequelize')
+const { SequelizeConnectionTimedOutError, SequelizeConnectionRefusedError, TimeoutError, ValidationError, UniqueConstraintError, DatabaseError, ConnectionError, ForeignKeyConstraintError } = require('sequelize')
 
 const roleMap = {
   'Admin': 1,
@@ -54,6 +54,38 @@ const errorHandler = (error, request, response) => {
     return response.status(503).json({
       error: 'Database Connection Error',
       message: 'Failed to connect to the database. Please try again later.',
+    })
+  }
+
+  // If foreign key is not conformed to
+  if (error instanceof ForeignKeyConstraintError) {
+    return response.status(400).json({
+      error: 'Foreign Key Constraint Error',
+      message: `A foreign key constraint was violated: ${error.message}`,
+    })
+  }
+
+  //Time out db connection (malformed query/heavy load)
+  if (error instanceof TimeoutError) {
+    return response.status(408).json({
+      error: 'Timeout Error',
+      message: 'The request timed out. Please try again later.',
+    })
+  }
+
+  //connection to db refused (server down or network issues)
+  if (error instanceof SequelizeConnectionRefusedError) {
+    return response.status(503).json({
+      error: 'Connection Refused',
+      message: 'Database connection was refused. Please check your database configuration.',
+    })
+  }
+
+  //Connection time out
+  if (error instanceof SequelizeConnectionTimedOutError) {
+    return response.status(408).json({
+      error: 'Connection Timeout',
+      message: 'The connection to the database timed out. Please try again later.',
     })
   }
 

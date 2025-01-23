@@ -8,6 +8,9 @@ const CourseYear = require('../models/courseYear')
 const ModuleYear = require('../models/moduleYear')
 const Semester = require('../models/semester')
 const ModuleCourse = require('../models/moduleCourse')
+const studentService = require('../services/student')
+const { param } = require('express-validator')
+
 
 studentsRouter.get('/', async (request, response) => {
   try {
@@ -29,152 +32,17 @@ studentsRouter.get('/', async (request, response) => {
   }
 })
 
-studentsRouter.get('/:student', async (request, response) => {
 
-  const studentId = request.params.student
-
-  try{
-    const student = await Student.findOne({
-      where: { id: studentId },
-      attributes: ['id','forename', 'surname', 'student_code', 'email'],
-      include: [
-        {
-          model: ModuleYear,
-          as: 'student_module_years',
-          attributes: ['id', 'year_start', 'module_coordinator_id'],
-          through: { attributes: ['result', 'resit', 'flagged'] },
-          include: [
-            {
-              model: Semester,
-              as: 'semester',
-              attributes: ['name']
-            },
-            {
-              model: User,
-              as: 'module_co-ordinator',
-              attributes: ['prefix', 'forename', 'surname']
-            },
-            {
-              model: Module,
-              as: 'module',
-              attributes: ['title', 'id', 'code', 'CATs', 'year']
-            },
-            {
-              model: ModuleCourse,
-              as: 'module_courses',
-              attributes: ['course_year_id'],
-            }
-          ]
-        },
-        {
-          model: CourseYear,
-          as: 'student_course_years',
-          attributes: ['id', 'year_start', 'year_end'],
-          include: [
-            {
-              model: Course,
-              as: 'course',
-              attributes: ['id','title', 'years', 'code', 'part_time'],
-              include: [
-                {
-                  model: QualificationLevel,
-                  as: 'qualification_level',
-                  attributes: ['qualification'],
-                },
-              ],
-            },
-            {
-              model: User,
-              as: 'course_co-ordinator',
-              attributes: ['forename', 'surname']
-            }
-          ],
-        },
-      ],
-      //logging: console.log,
-    })
-
-    if(!student) {
-      return response.status(404).json({ error: 'Student not found' })
-    }
-
-    const studentCourseYears = student.student_course_years
-    const studentModuleYears = student.student_module_years
-
-    const formattedStudent = {
-      id: student.id,
-      email: student.email,
-      student_code: student.student_code,
-      forename: student.forename,
-      surname: student.surname,
-      courses: studentCourseYears.map((studentCourseYear) => {
-        // Grouping logic for modules by `module_year`
-        const groupedModules = studentModuleYears
-          .filter((studentModuleYear) => {
-            // Filter the module_courses based on the course_year_id
-            return studentModuleYear.module_courses.some(
-              (moduleCourse) => moduleCourse.course_year_id === studentCourseYear.id
-            )
-          })
-          .reduce((acc, studentModuleYear) => {
-            const year = studentModuleYear.module.year // Extract the module_year
-            if (!acc[year]) {
-              acc[year] = [] // Initialize array for this year if it doesn't exist
-            }
-            acc[year].push({
-              module_year_id: studentModuleYear.id,
-              year_start: studentModuleYear.year_start,
-              module_coordinator_id: studentModuleYear.module_coordinator_id,
-              semester: studentModuleYear.semester.name,
-              module_coordinator:
-                studentModuleYear['module_co-ordinator'].prefix +
-                ' ' +
-                studentModuleYear['module_co-ordinator'].forename +
-                ' ' +
-                studentModuleYear['module_co-ordinator'].surname,
-              title: studentModuleYear.module.title,
-              module_id: studentModuleYear.module.id,
-              code: studentModuleYear.module.code,
-              CATs: studentModuleYear.module.CATs,
-              year: studentModuleYear.module.year,
-              student_module: studentModuleYear.student_module,
-            })
-            return acc
-          }, {})
-
-        // Transform the groupedModules object into an array of { module_year, modules }
-        const groupedModulesArray = Object.entries(groupedModules).map(
-          ([module_year, modules]) => ({
-            module_year: Number(module_year),
-            modules,
-          })
-        )
-
-        return {
-          course_year_id: studentCourseYear.id,
-          course_id: studentCourseYear.course.id,
-          year_start: studentCourseYear.year_start,
-          year_end: studentCourseYear.year_end,
-          title: studentCourseYear.course.title,
-          years: studentCourseYear.course.years,
-          code: studentCourseYear.course.code,
-          part_time: studentCourseYear.course.part_time ? 'PT' : 'FY',
-          qualification: studentCourseYear.course.qualification_level.qualification,
-          course_coordinator:
-            studentCourseYear['course_co-ordinator'].forename +
-            ' ' +
-            studentCourseYear['course_co-ordinator'].surname,
-          module_years: groupedModulesArray,
-        }
-      }),
-    }
-
-    response.json(formattedStudent)
-  } catch (error) {
-    console.error(error)
-    response.status(500).json({ error: 'Failed to fetch modules for the user' })
+studentsRouter.get(
+  '/:student',
+  param('student').isUUID().withMessage('Invalid student ID format'), //Ensures the student id is a uuid
+  async (req, res, next) => {
+    const studentId = req.params.student
+    const student = await studentService.getAllStudentData(studentId)
+    if (!student) return res.status(404).json({ error: 'Student not found' })
+    res.json(student)
   }
-})
+)
 
 studentsRouter.get('/:student/courses', async (request, response) => {
   try {

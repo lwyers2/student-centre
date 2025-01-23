@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import Table from '../Table'
 
-const StudentCourse = ({ courses, student }) => {
+const StudentCourseModules = ({ courses, student }) => {
 
 
   const getFlagCount = (course) => {
@@ -41,4 +41,4 @@ const StudentCourse = ({ courses, student }) => {
   )
 }
 
-export default StudentCourse
+export default StudentCourseModules

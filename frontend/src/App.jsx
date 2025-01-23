@@ -13,6 +13,7 @@ import Module from './pages/Module'
 import ResetPassword from './pages/ResetPassword'
 import Student from './pages/Student/Student'
 import Modules from './pages/Modules'
+import StudentModules from './pages/Student/StudentModules'
 import { setUser } from './redux/actions'
 
 const App = () => {
@@ -51,6 +52,7 @@ const App = () => {
             <Route path="/module/:id" element={<Module />} />
             <Route path="/student/:id" element={<Student />}/>
             <Route path="/modules/:id" element={<Modules />} />
+            <Route path="student/:id/course/:courseYearId" element={<StudentModules />}/>
           </Routes>
 
         </main>

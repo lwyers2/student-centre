@@ -11,7 +11,7 @@ import Admin from './pages/Admin'
 import Login from './pages/Login'
 import Module from './pages/Module'
 import ResetPassword from './pages/ResetPassword'
-import Student from './pages/Student'
+import Student from './pages/Student/Student'
 import Modules from './pages/Modules'
 import { setUser } from './redux/actions'
 

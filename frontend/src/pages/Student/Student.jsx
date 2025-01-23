@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
-import studentService from '../services/student'
-import Table from '../components/Table'
-import StudentCourse from '../components/StudentView/StudentCourse'
+import studentService from '../../services/student'
+import Table from '../../components/Table'
+import StudentCourse from '../../components/StudentView/StudentCourse'
 
 const Student = () => {
   const params = useParams()

@@ -3,23 +3,41 @@ import Table from '../Table'
 
 const StudentCourse = ({ courses }) => {
 
+
+  const getFlagCount = (course) => {
+    let flagCount = 0
+
+    course.module_years.forEach((moduleYear) => {
+      moduleYear.modules.forEach((module) => {
+        if (module.student_module.flagged === 1) {
+          flagCount++
+        }
+      })
+    })
+
+    return flagCount
+  }
+
+
+  const tableData = {
+    labels: { title: 'View module results for Active Courses' },
+    content: {
+      headers: ['title', 'flags' ], // Table headers
+      data: courses.map((course) => ({
+        id: course.course_year_id, // Unique ID for each row
+        title : course.title,
+        flags: getFlagCount(course)
+      })),
+      view: '/student-modules', // Base path for "View" links
+    },
+  }
+
   return (
-    <>
-      <h2>Courses</h2>
-      {courses.map(course => (
-        <>
-          <div className="border border-solid border-slate-900 dark:border-slate-600 bg-white dark:bg-gray-900 p-8 rounded-3xl shadow-xl mb-5">
-            <div className=" items-center justify-between mb-4">
-              <p>{course.title} ({course.qualification}) {course.code} ({course.year_start}/{course.year_end})</p>
-              <p>Modules with Letter sent</p>
-                <p>Failing Modules</p>
-                <p>All Modules</p>
-                <p>Meetings</p>
-            </div>
-          </div>
-        </>
-      ))}
-    </>
+
+    <Table
+      labels={tableData.labels}
+      content={tableData.content}
+    />
   )
 }
 

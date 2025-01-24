@@ -42,6 +42,9 @@ export default [
         'error', { 'before': true, 'after': true },
       ],
       'no-console': 'off',
+      'no-unused-vars': [
+        'error', { 'argsIgnorePattern': '^_' } //for next
+      ],
     },
   },
   { 

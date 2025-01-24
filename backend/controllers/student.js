@@ -35,7 +35,7 @@ studentsRouter.get('/', async (request, response) => {
 studentsRouter.get(
   '/:student',
   param('student').isUUID().withMessage('Invalid student ID format'), //Ensures the student id is a uuid
-  async (req, res, next) => {
+  async (req, res, _next) => {
     const studentId = req.params.student
     const student = await studentService.getAllStudentData(studentId)
     if (!student) return res.status(404).json({ error: 'Student not found' })
@@ -43,73 +43,85 @@ studentsRouter.get(
   }
 )
 
-studentsRouter.get('/:student/courses', async (request, response) => {
-  try {
-    const studentId = request.params.student
 
-    const student = await Student.findOne({
-      where: { id: studentId },
-      attributes: ['id','forename', 'surname', 'student_code', 'email'],
-      include: [
-        {
-          model: CourseYear,
-          as: 'student_course_years',
-          attributes: ['id', 'year_start', 'year_end'],
-          include: [
-            {
-              model: Course,
-              as: 'course',
-              attributes: ['id','title', 'years', 'code', 'part_time'],
-              include: [
-                {
-                  model: QualificationLevel,
-                  as: 'qualification_level',
-                  attributes: ['qualification'],
-                },
-              ],
-            },
-            {
-              model: User,
-              as: 'course_co-ordinator',
-              attributes: ['forename', 'surname']
-            }
-          ],
-        },
-      ],
-    })
-
-    if (!student) {
-      return response.status(404).json({ error: 'Student not found' })
-    }
-
-    const studentCourseYears = student.student_course_years
-
-    const formattedStudent = {
-      id: student.id,
-      email: student.email,
-      student_code: student.student_code,
-      forename: student.forname,
-      surname: student.surname,
-      courses: studentCourseYears.map((studentCourseYear) => ({
-        course_year_id: studentCourseYear.id,
-        course_id: studentCourseYear.course.id,
-        year_start: studentCourseYear.year_start,
-        year_end: studentCourseYear.year_end,
-        title: studentCourseYear.course.title,
-        years: studentCourseYear.course.years,
-        code: studentCourseYear.course.code,
-        part_time: studentCourseYear.course.part_time? 'PT' : 'FY',
-        qualification: studentCourseYear.course.qualification_level.qualification,
-        course_coordinator: studentCourseYear['course_co-ordinator'].forename + ' ' + studentCourseYear['course_co-ordinator'].surname,
-      }))
-    }
-
-    response.json(formattedStudent)
-  } catch (error) {
-    console.error('Error fetching student data:', error)
-    response.status(500).json({ error: 'Internal server error' })
+studentsRouter.get(
+  '/:student/courses',
+  param('student').isUUID().withMessage('Invalid student ID format'), //Ensures the student id is a uuid
+  async (req, res, _next) => {
+    const studentId = req.params.student
+    const student = await studentService.getStudentCoursesData(studentId)
+    if (!student) return res.status(404).json({ error: 'Student not found' })
+    res.json(student)
   }
-})
+)
+
+// studentsRouter.get('/:student/courses', async (request, response) => {
+//   try {
+//     const studentId = request.params.student
+
+//     const student = await Student.findOne({
+//       where: { id: studentId },
+//       attributes: ['id','forename', 'surname', 'student_code', 'email'],
+//       include: [
+//         {
+//           model: CourseYear,
+//           as: 'student_course_years',
+//           attributes: ['id', 'year_start', 'year_end'],
+//           include: [
+//             {
+//               model: Course,
+//               as: 'course',
+//               attributes: ['id','title', 'years', 'code', 'part_time'],
+//               include: [
+//                 {
+//                   model: QualificationLevel,
+//                   as: 'qualification_level',
+//                   attributes: ['qualification'],
+//                 },
+//               ],
+//             },
+//             {
+//               model: User,
+//               as: 'course_co-ordinator',
+//               attributes: ['forename', 'surname']
+//             }
+//           ],
+//         },
+//       ],
+//     })
+
+//     if (!student) {
+//       return response.status(404).json({ error: 'Student not found' })
+//     }
+
+//     const studentCourseYears = student.student_course_years
+
+//     const formattedStudent = {
+//       id: student.id,
+//       email: student.email,
+//       student_code: student.student_code,
+//       forename: student.forname,
+//       surname: student.surname,
+//       courses: studentCourseYears.map((studentCourseYear) => ({
+//         course_year_id: studentCourseYear.id,
+//         course_id: studentCourseYear.course.id,
+//         year_start: studentCourseYear.year_start,
+//         year_end: studentCourseYear.year_end,
+//         title: studentCourseYear.course.title,
+//         years: studentCourseYear.course.years,
+//         code: studentCourseYear.course.code,
+//         part_time: studentCourseYear.course.part_time? 'PT' : 'FY',
+//         qualification: studentCourseYear.course.qualification_level.qualification,
+//         course_coordinator: studentCourseYear['course_co-ordinator'].forename + ' ' + studentCourseYear['course_co-ordinator'].surname,
+//       }))
+//     }
+
+//     response.json(formattedStudent)
+//   } catch (error) {
+//     console.error('Error fetching student data:', error)
+//     response.status(500).json({ error: 'Internal server error' })
+//   }
+// })
 
 
 studentsRouter.get('/:student/modules', async (request, response) => {

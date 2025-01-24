@@ -1,4 +1,4 @@
-function formatStudentData(student) {
+function formatAllStudentData(student) {
   const studentCourseYears = student.student_course_years
   const studentModuleYears = student.student_module_years
 
@@ -60,4 +60,4 @@ function formatStudentData(student) {
   }
 }
 
-module.exports = { formatStudentData }
+module.exports = { formatAllStudentData }

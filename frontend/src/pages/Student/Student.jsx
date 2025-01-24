@@ -16,7 +16,7 @@ const Student = () => {
   const toggle = () => setShowSection(!showSection)
 
   useEffect(() => {
-    studentService.getStudent(params.id)
+    studentService.getStudent(params.id, user.token)
       .then(response => {
         setStudent(response)
         setCourses(response.courses)
@@ -25,6 +25,7 @@ const Student = () => {
         console.error('Error fetching module: ', error)
       })
   }, [params.id])
+
 
 
   if(!student) {

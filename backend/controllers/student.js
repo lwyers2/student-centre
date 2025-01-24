@@ -2,6 +2,8 @@ const studentsRouter = require('express').Router()
 const studentService = require('../services/student')
 const { validateId } = require('../validators/validateId')
 const validate = require('../middleware/validate')
+const tokenVerification = require('../middleware/tokenVerification')
+const roleAuthorization = require('../middleware/roleAuthorization')
 
 
 studentsRouter.get('/', async (req, res, ) => {
@@ -20,6 +22,8 @@ studentsRouter.get(
   '/:student',
   validateId('student'),
   validate,
+  tokenVerification,
+  roleAuthorization(['Super User']),
   async (req, res, ) => {
     const studentId = req.params.student
     const student = await studentService.getAllStudentData(studentId)
@@ -37,6 +41,8 @@ studentsRouter.get(
   '/:student/courses',
   validateId('student'),
   validate,
+  tokenVerification,
+  roleAuthorization(['Super User']),
   async (req, res, ) => {
     const studentId = req.params.student
     const student = await studentService.getStudentCoursesData(studentId)
@@ -59,6 +65,8 @@ studentsRouter.get(
   '/:student/modules',
   validateId('student'),
   validate,
+  tokenVerification,
+  roleAuthorization(['Super User']),
   async (req, res,) => {
     const studentId = req.params.student
     const student = await studentService.getStudentModulesData(studentId)

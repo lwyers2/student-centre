@@ -6,8 +6,13 @@ const getAll = async credentials => {
   return response.data
 }
 
-const getStudent = async id => {
-  const response = await axios.get(`${baseUrl}/${id}`)
+const getStudent = async (id, token) => {
+  console.log(token)
+  const response = await axios.get(`${baseUrl}/${id}`, {
+    headers: {
+      'Authorization' : `Bearer ${token}`
+    }
+  })
   return response.data
 }
 

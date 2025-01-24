@@ -7,7 +7,6 @@ const QualificationLevel = require('../models/qualificationLevel')
 const CourseYear = require('../models/courseYear')
 const ModuleYear = require('../models/moduleYear')
 const Semester = require('../models/semester')
-const ModuleCourse = require('../models/moduleCourse')
 const studentService = require('../services/student')
 const { param } = require('express-validator')
 

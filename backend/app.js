@@ -2,7 +2,9 @@ const express = require('express')
 const app = express()
 require('express-async-errors') // Make async route handlers work
 const cors = require('cors')
-const middleware = require('./utils/middleware')
+const requestLogger  = require('./middleware/requestLogger')
+const errorHandler  = require('./middleware/errorHandler')
+const unknownEndpoint  = require('./middleware/unkownEndpoint')
 const studentsRouter = require('./controllers/student')
 const coursesRouter = require('./controllers/course')
 const modulesRouter = require('./controllers/module')
@@ -21,7 +23,7 @@ require('./utils/db') // This will call the connection function in db.js
 app.use(cors())
 app.use(express.static('dist'))
 app.use(express.json())
-app.use(middleware.requestLogger)
+app.use(requestLogger)
 
 // Routes
 app.use('/api/students', studentsRouter)
@@ -33,7 +35,7 @@ app.use('/api/login', loginRouter)
 app.use('/api/protected', protectedRouter)
 
 // Error handling middleware
-app.use(middleware.unknownEndpoint)
-app.use(middleware.errorHandler)
+app.use(unknownEndpoint)
+app.use(errorHandler)
 
 module.exports = app

@@ -1,8 +1,15 @@
 const { SequelizeConnectionTimedOutError, SequelizeConnectionRefusedError, TimeoutError, ValidationError, UniqueConstraintError, DatabaseError, ConnectionError, ForeignKeyConstraintError } = require('sequelize')
 
 
-const errorHandler = (error, request, response) => {
+const errorHandler = (error, request, response, _next) => {
   console.log('error:', error)
+
+  if (error.status) {
+    return response.status(error.status).json({
+      error: error.message || 'An error occurred',
+      details: error.details || undefined, // Include details if provided
+    })
+  }
 
   // Sequelize Validation Errors (for example, missing required fields or invalid data formats)
   if (error instanceof ValidationError) {
@@ -80,6 +87,7 @@ const errorHandler = (error, request, response) => {
     error: 'Internal Server Error',
     message: error.message || 'An unexpected error occurred.',
   })
+
 }
 
 module.exports = errorHandler

@@ -6,16 +6,19 @@ const tokenVerification = require('../middleware/tokenVerification')
 const roleAuthorization = require('../middleware/roleAuthorization')
 
 
-studentsRouter.get('/', async (req, res, ) => {
+studentsRouter.get('/',
+  tokenVerification,
+  roleAuthorization(['Super User']),
+  async (req, res, ) => {
 
-  const students = await studentService.getAllStudents()
-  if (!students) {
-    const error = new Error('Students not found')
-    error.status = 404
-    throw error
-  }
-  res.json(students)
-})
+    const students = await studentService.getAllStudents()
+    if (!students) {
+      const error = new Error('Students not found')
+      error.status = 404
+      throw error
+    }
+    res.json(students)
+  })
 
 
 studentsRouter.get(

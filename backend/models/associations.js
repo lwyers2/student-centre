@@ -241,26 +241,30 @@ User.belongsToMany(School, {
   through: 'user_school',
   foreignKey: 'user_id',
   otherKey: 'school_id',
+  timestamps: false,
+  as: 'school',
 })
 
 School.belongsToMany(User, {
   through: 'user_school',
   foreignKey: 'school_id',
   otherKey: 'user_id',
+  timestamps: false,
+  as: 'users',
 })
 
 //User -> Role
 User.belongsTo(Role, {
   foreignKey: 'role_id',
+  timestamps: false,
   as: 'role',
 })
 
 Role.hasMany(User, {
   foreignKey: 'role_id',
+  timestamps: false,
   as: 'users'
 })
-
-
 
 
 //Course -> QualificationLevel
@@ -305,5 +309,7 @@ module.exports =
   Level,
   Token,
   StudentModule,
-  ModuleYear
+  ModuleYear,
+  Role,
+  School,
 }

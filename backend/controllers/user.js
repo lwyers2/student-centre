@@ -1,5 +1,6 @@
 const usersRouter = require('express').Router()
 const bcrypt = require('bcrypt')
+const userService = require('../services/user')
 const Course = require('../models/course')
 const Module = require('../models/module')
 const School = require('../models/school')
@@ -11,73 +12,14 @@ const ModuleYear = require('../models/moduleYear')
 const ModuleCourse = require('../models/moduleCourse')
 const Semester = require('../models/semester')
 
-usersRouter.get('/', async (request, response) => {
-  try {
-    const users = await User.findAll({
-      attributes: ['id', 'forename', 'surname', 'email', 'active', 'date_created', 'date_updated'],
-      include: [
-        {
-          model: Course,
-          attributes: ['id', 'title', 'years', 'code'],
-          include: [
-            {
-              model: Module,
-              as: 'modules',
-              attributes: ['id', 'title', 'semester', 'code', 'QSIS_year', 'CATs'],
-            },
-          ],
-          as: 'courses',
-        },
-        {
-          model: School,
-          attributes: ['school_name'],
-          through: { attributes: [] },
-        },
-        {
-          model: Role,
-          as: 'role',
-          attributes: ['name'],
-        },
-      ],
-    })
-
-    // Formatting response so that each piece easier to inceract with front end
-    const formattedUsers = users.map((user) => ({
-      id: user.id,
-      forename: user.forename,
-      surname: user.surname,
-      email: user.email,
-      active: user.active,
-      date_created: user.date_created,
-      date_updated: user.date_updated,
-      courses: user.courses?.map((course) => ({
-        id: course.id,
-        title: course.title,
-        years: course.years,
-        code: course.code,
-        modules: course.modules?.map((module) => ({
-          id: module.id,
-          title: module.title,
-          semester: module.semester,
-          code: module.code,
-          qsis_year: module.QSIS_year,
-          CATs: module.CATs,
-        })),
-      })),
-      school: user.schools?.map((school) => ({
-        school_name: school.school_name,
-      }))[0], //There is only one school per user at the minute. This might change
-      role: user.role ? { name: user.role.name } : null,
-    }))
-
-    response.json(formattedUsers)
-  } catch (error) {
-    console.error('Failed to fetch users:', error.message, { stack: error.stack })
-    response.status(500).json({
-      error: 'Failed to fetch users',
-      details: error.message,
-    })
+usersRouter.get('/', async (req, res) => {
+  const users = await userService.getAllUsers()
+  if(!users) {
+    const error = new Error('Users not found')
+    error.status = 404
+    throw error
   }
+  res.json(users)
 })
 
 usersRouter.post('/', async (request, response) => {

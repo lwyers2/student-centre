@@ -7,6 +7,8 @@ const CourseYear = require('./courseYear')
 const ModuleYear = require('./moduleYear')
 const Semester = require('./semester')
 const ModuleCourse = require('./moduleCourse')
+const School = require('./School')
+const Role = require('./Role')
 
 //this clears up multiple require statements in services files
 
@@ -20,4 +22,6 @@ module.exports = {
   ModuleYear,
   Semester,
   ModuleCourse,
+  Role,
+  School,
 }

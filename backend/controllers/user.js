@@ -1,10 +1,12 @@
 const usersRouter = require('express').Router()
 const bcrypt = require('bcrypt')
 const userService = require('../services/user')
+const tokenVerification = require('../middleware/tokenVerification')
+const roleAuthorization = require('../middleware/roleAuthorization')
+const { validateId } = require('../validators/validateId')
+const validate = require('../middleware/validate')
 const Course = require('../models/course')
 const Module = require('../models/module')
-const School = require('../models/school')
-const Role = require('../models/role')
 const User = require('../models/user')
 const QualificationLevel = require('../models/qualificationLevel')
 const CourseYear = require('../models/courseYear')
@@ -12,112 +14,35 @@ const ModuleYear = require('../models/moduleYear')
 const ModuleCourse = require('../models/moduleCourse')
 const Semester = require('../models/semester')
 
-usersRouter.get('/', async (req, res) => {
-  const users = await userService.getAllUsers()
-  if(!users) {
-    const error = new Error('Users not found')
-    error.status = 404
-    throw error
-  }
-  res.json(users)
-})
-
-usersRouter.post('/', async (request, response) => {
-  const { forename, surname, email, password, active, token, roleName } = request.body
-
-  const saltRounds = 10
-  const passwordHash = await bcrypt.hash(password, saltRounds)
-
-  if (!forename || !surname || !email || !password || !roleName) {
-    return response.status(400).json({ error: 'Missing required fields' })
-  }
-
-  try {
-    // Find the role by name
-    const role = await Role.findOne({ where: { name: roleName } })
-    console.log(`${role.id}: role, ${roleName}: rolename`)
-    if (!role) {
-      return response.status(404).json({ error: 'Role not found' })
+usersRouter.get('/',
+  tokenVerification,
+  roleAuthorization,
+  async (req, res) => {
+    const users = await userService.getAllUsers()
+    if(!users) {
+      const error = new Error('Users not found')
+      error.status = 404
+      throw error
     }
+    res.json(users)
+  })
 
-    // Create the new user with role_id
-    const now = new Date()
-    const newUser = await User.create({
-      forename,
-      surname,
-      email,
-      password: passwordHash,
-      date_created: now,
-      date_updated: now,
-      active: active ?? true,
-      token,
-      role_id: role.id // Explicitly set the role_id
-    })
 
-    response.status(201).json(newUser)
-  } catch (error) {
-    console.error(error)
-    response.status(500).json({
-      error: 'Failed to create user',
-      details: error.message
-    })
-  }
-})
-
-usersRouter.get('/:user/courses', async (request, response) => {
-  const userId  = request.params.user
-
-  try {
-    const user = await User.findOne({
-      where: { id: userId },
-      attributes: ['id', 'prefix', 'forename', 'surname'],
-      include: [
-        {
-          model: Course,
-          as: 'all_courses',
-          attributes: ['id', 'title', 'years', 'code', 'part_time'],
-          through: { attributes: [] },
-          include: [
-            {
-              model: QualificationLevel,
-              as: 'qualification_level',
-              attributes: ['qualification'],
-            },
-            {
-              model: CourseYear,
-              as: 'course_years',
-              attributes: ['id', 'year_start', 'year_end'],
-              include: [
-                {
-                  model: Course,
-                  as: 'course',
-                  attributes: ['title', 'years', 'code', 'part_time'],
-                },
-                {
-                  model: User,
-                  as: 'course_co-ordinator',
-                  attributes: ['forename', 'surname']
-                }
-              ],
-            },
-          ],
-        },
-      ],
-    })
-
-    if (!user) {
-      return response.status(404).json({ error: 'User not found' })
+usersRouter.get(
+  '/:user/courses',
+  validateId('user'),
+  validate,
+  async (req, res) => {
+    const userId = req.params.user
+    const user = await userService.getUserCourses(userId)
+    if(!user) {
+      const error = new Error('User not found')
+      error.status = 404
+      throw error
     }
-
-    response.json(user)
-  } catch (error) {
-    console.error(error)
-    response.status(500).json({
-      error: 'Failed to fetch courses for user',
-      details: error.message,
-    })
+    res.json(user)
   }
-})
+)
 
 //we're getting all modules associated with a particular course year. For restful principles, I use modules as I'm getting module data then filtering on courseyear
 usersRouter.get('/:user/modules/:courseyear', async (request, response) => {
@@ -226,6 +151,52 @@ usersRouter.get('/:user/modules/:courseyear', async (request, response) => {
     response.status(500).json({ error: 'Failed to fetch modules for the user' })
   }
 })
+
+
+usersRouter.post('/', async (request, response) => {
+  const { forename, surname, email, password, active, token, roleName } = request.body
+
+  const saltRounds = 10
+  const passwordHash = await bcrypt.hash(password, saltRounds)
+
+  if (!forename || !surname || !email || !password || !roleName) {
+    return response.status(400).json({ error: 'Missing required fields' })
+  }
+
+  try {
+    // Find the role by name
+    const role = await Role.findOne({ where: { name: roleName } })
+    console.log(`${role.id}: role, ${roleName}: rolename`)
+    if (!role) {
+      return response.status(404).json({ error: 'Role not found' })
+    }
+
+    // Create the new user with role_id
+    const now = new Date()
+    const newUser = await User.create({
+      forename,
+      surname,
+      email,
+      password: passwordHash,
+      date_created: now,
+      date_updated: now,
+      active: active ?? true,
+      token,
+      role_id: role.id // Explicitly set the role_id
+    })
+
+    response.status(201).json(newUser)
+  } catch (error) {
+    console.error(error)
+    response.status(500).json({
+      error: 'Failed to create user',
+      details: error.message
+    })
+  }
+})
+
+
+
 
 
 module.exports = usersRouter

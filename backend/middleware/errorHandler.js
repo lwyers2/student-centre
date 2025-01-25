@@ -14,7 +14,7 @@ const errorHandler = (error, request, response, _next) => {
   if (error instanceof Error) {
     return response.status(500).json({
       message: error.message,
-      stack: error.stack,
+      status: error.status,
     })
   }
 

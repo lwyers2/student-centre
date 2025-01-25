@@ -3,6 +3,7 @@ const bcrypt = require('bcrypt')
 const userService = require('../services/user')
 const tokenVerification = require('../middleware/tokenVerification')
 const roleAuthorization = require('../middleware/roleAuthorization')
+const roleAndIdAuthorization = require('../middleware/roleAndIdAuthorization')
 const { validateId } = require('../validators/validateId')
 const validate = require('../middleware/validate')
 const Course = require('../models/course')
@@ -34,17 +35,9 @@ usersRouter.get(
   validateId('user'),
   validate,
   tokenVerification,
-  roleAuthorization(['Super User', 'Admin', 'Teacher']),
+  roleAndIdAuthorization(['Super User'], true),
   async (req, res) => {
     const userId = req.params.user
-    const { userId: authenticatedUserId, role } = req.user // Assuming `req.user` is populated by `tokenVerification`
-    console.log(req.user)
-    // Check if the authenticated user is a Super User or the same user
-    if (role !== 'Super User' && authenticatedUserId !== userId) {
-      const error = new Error('You are not authorized to view these courses')
-      error.status = 403
-      throw error
-    }
     const user = await userService.getUserCourses(userId)
     if(!user) {
       const error = new Error('User not found')

@@ -1,14 +1,18 @@
 const jwt = require('jsonwebtoken')
 const { Role, AuthenticationUser, User } = require('../models/')
 
-const tokenVerification = async (req, res) => {
+const tokenVerification = async (req, res, next) => {
   console.log('Request headers:', req.headers) // Print headers
   console.log('Request params:', req.params) // Print route params
   console.log('Request body:', req.body) // Print request body
   const authHeader = req.headers.authorization
 
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    return res.status(401).json({ error: 'Missing or invalid token' })
+    return res.status(401).json(
+      {
+        error: 'Missing or invalid token',
+        status: 401,
+      })
   }
 
   const token = authHeader.split(' ')[1]
@@ -33,18 +37,27 @@ const tokenVerification = async (req, res) => {
   })
 
   if (!storedToken) {
-    return res.status(401).json({ error: 'Token not found or invalid' })
+    return res.status(401).json(
+      { error: 'Token not found or invalid',
+        status: 401,
+      })
   }
 
   // Handle case where token is not found or expired
   if (new Date(storedToken.expires_at) < new Date()) {
-    return res.status(401).json({ error: 'Token expired or invalid' })
+    return res.status(401).json(
+      { error: 'Token expired or invalid',
+        status: 401,
+      })
   }
 
   const decodedToken = jwt.verify(token, process.env.SECRET)
 
   if (!storedToken.user) {
-    return res.status(401).json({ error: 'User not associated with token' })
+    return res.status(401).json(
+      { error: 'User not associated with token',
+        status: 401,
+      })
   }
 
   req.user = {
@@ -55,8 +68,8 @@ const tokenVerification = async (req, res) => {
     ...decodedToken,
   }
 
-  //no need to explicitly set next as express-async-errors
-  //next()
+  console.log('User set on request:', req.user)  // Debug line
+  next()
 
 }
 

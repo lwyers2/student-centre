@@ -1,17 +1,18 @@
 const modulesRouter = require('express').Router()
 const moduleService = require('../services/module')
-const Course = require('../models/course')
+const { validateId } = require('../validators/validateId')
+const validate = require('../middleware/validate')
+const tokenVerification = require('../middleware/tokenVerification')
+const roleAuthorization = require('../middleware/roleAuthorization')
 const Module = require('../models/module')
-const User = require('../models/user')
 const ModuleYear = require('../models/moduleYear')
-const ModuleCourse = require('../models/moduleCourse')
 const Semester = require('../models/semester')
-const CourseYear = require('../models/courseYear')
-const QualificationLevel = require('../models/qualificationLevel')
 const Student = require('../models/student')
 
 modulesRouter.get(
   '/',
+  tokenVerification,
+  roleAuthorization(['Super User']),
   async (req, res) => {
     const modules = await moduleService.getAllModules()
     if (!modules) {

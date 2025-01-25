@@ -1,7 +1,7 @@
 const { DataTypes } = require('sequelize')
 const db = require('../utils/db')
 
-const Token = db.define('Token', {
+const AuthenticationUser = db.define('AuthenticationUser', {
   token: {
     type: DataTypes.TEXT,
     allowNull: false,
@@ -20,4 +20,4 @@ const Token = db.define('Token', {
   timestamps: false,
 })
 
-module.exports = Token
+module.exports = AuthenticationUser

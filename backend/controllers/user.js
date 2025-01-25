@@ -16,7 +16,7 @@ const Semester = require('../models/semester')
 
 usersRouter.get('/',
   tokenVerification,
-  roleAuthorization,
+  roleAuthorization(['Super User']),
   async (req, res) => {
     const users = await userService.getAllUsers()
     if(!users) {
@@ -32,8 +32,18 @@ usersRouter.get(
   '/:user/courses',
   validateId('user'),
   validate,
+  tokenVerification,
+  roleAuthorization(['Super User', 'Admin', 'Teacher']),
   async (req, res) => {
     const userId = req.params.user
+    const { userId: authenticatedUserId, role } = req.user // Assuming `req.user` is populated by `tokenVerification`
+    console.log(req.user)
+    // Check if the authenticated user is a Super User or the same user
+    if (role !== 'Super User' && authenticatedUserId !== userId) {
+      const error = new Error('You are not authorized to view these courses')
+      error.status = 403
+      throw error
+    }
     const user = await userService.getUserCourses(userId)
     if(!user) {
       const error = new Error('User not found')

@@ -1,8 +1,7 @@
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
 const loginRouter = require('express').Router()
-const User = require('../models/user')
-const Token = require('../models/token')
+const { User, AuthenticationUser } = require('../models/')
 
 loginRouter.post('/', async (request, response) => {
   const { email, password } = request.body
@@ -25,7 +24,7 @@ loginRouter.post('/', async (request, response) => {
 
     const expiresAt = new Date(Date.now() + 60 * 60 * 1000 * 4)
 
-    await Token.create({ token, user_id: user.id, expires_at: expiresAt })
+    await AuthenticationUser.create({ token, user_id: user.id, expires_at: expiresAt })
 
     response.status(200).send({
       token,

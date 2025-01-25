@@ -1,18 +1,20 @@
-const Student = require('./student')
-const Course = require('./course')
-const User = require('./user')
+
 const Module = require('./module')
-const Classification = require('./classification')
-const QualificationLevel = require('./qualificationLevel')
-const Level = require('./level')
+const Course = require('./course')
+const ModuleCourse = require('./moduleCourse')
+const ModuleYear = require('./moduleYear')
+const CourseYear = require('./courseYear')
+const User = require('./user')
+const Semester = require('./semester')
+const Student = require('./student')
 const School = require('./school')
 const Role = require('./role')
-const Token = require('./token')
-const CourseYear = require('./courseYear')
-const ModuleYear = require('./moduleYear')
-const ModuleCourse = require('./moduleCourse')
-const Semester = require('./semester')
-const StudentModule = require('./studentModule')
+const QualificationLevel = require('./qualificationLevel')
+const Classification = require('./classification')
+const Level = require('./level')
+const AuthenticationUser = require('./authUser')
+
+
 
 
 // Module ->  Course
@@ -287,14 +289,15 @@ Level.hasMany(Classification, {
   foreignKey: 'level_id'
 })
 
-//Token -> User (for authentication)
-Token.belongsTo(User, {
+//AuthenticationUser -> User (for authentication)
+AuthenticationUser.belongsTo(User, {
   foreignKey: 'user_id',
   as: 'user'
 })
 
-User.hasMany(Token, {
+User.hasMany(AuthenticationUser, {
   foreignKey: 'user_id',
+  as: 'tokens'
 })
 
 
@@ -307,8 +310,7 @@ module.exports =
   QualificationLevel,
   Classification,
   Level,
-  Token,
-  StudentModule,
+  AuthenticationUser,
   ModuleYear,
   Role,
   School,

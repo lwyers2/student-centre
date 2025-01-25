@@ -60,7 +60,22 @@ usersRouter.get(
   }
 )
 
-
+usersRouter.get(
+  '/:user/students/:student',
+  validateId('user'),
+  async (req, res) => {
+    const userId = req.params.user
+    const studentId = req.params.student
+    console.log(studentId)
+    const user = await userService.getUserStudent(userId, studentId)
+    if(!user) {
+      const error = new Error('User not found')
+      error.status = 404
+      throw error
+    }
+    res.json(user)
+  }
+)
 
 usersRouter.post('/', async (request, response) => {
   const { forename, surname, email, password, active, token, roleName } = request.body

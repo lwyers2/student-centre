@@ -13,7 +13,7 @@ const QualificationLevel = require('./qualificationLevel')
 const Classification = require('./classification')
 const Level = require('./level')
 const AuthenticationUser = require('./authenticationUser')
-
+const StudentModule = require('./studentModule')
 
 
 
@@ -209,6 +209,52 @@ ModuleYear.belongsToMany(Student, {
   foreignKey: 'module_year_id',
   as: 'module_years', // Alias for related StudentModule records
 })
+
+// Define the Many-to-One relationship from StudentModule -> ModuleYear
+StudentModule.belongsToMany(ModuleYear, {
+  through: 'student_module',
+  timestamps: false,
+  foreignKey: 'student_id',
+  as: 'student_module_module_years',  // Alias to access module year data
+})
+
+ModuleYear.belongsToMany(StudentModule, {
+  through: 'student_module',
+  timestamps: false,
+  foreignKey: 'module_year_id',
+  as: 'module_years_student_module', // Alias for related StudentModule records
+})
+
+Student.belongsToMany(StudentModule, {
+  through: 'student_module',
+  timestamps: false,
+  foreignKey: 'student_id',
+  as: 'student_student_module',
+})
+
+StudentModule.belongsToMany(Student, {
+  through: 'student_module',
+  timestamps: false,
+  foreignKey: 'module_id',
+  as: 'student_module_module',
+})
+
+// Define the Many-to-One relationship from User -> ModuleYear
+User.belongsToMany(ModuleYear, {
+  through: 'user_module',
+  timestamps: false,
+  foreignKey: 'user_id',
+  as: 'user_module_years',  // Alias to access module year data
+})
+
+ModuleYear.belongsToMany(User, {
+  through: 'user_module',
+  timestamps: false,
+  foreignKey: 'module_year_id',
+  as: 'module_years_user', // Alias for related User records
+})
+
+
 
 // //Student -> ModuleCourse
 // Student.belongsToMany(ModuleCourse, {

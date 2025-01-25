@@ -1,4 +1,5 @@
 const modulesRouter = require('express').Router()
+const moduleService = require('../services/module')
 const Course = require('../models/course')
 const Module = require('../models/module')
 const User = require('../models/user')
@@ -9,61 +10,74 @@ const CourseYear = require('../models/courseYear')
 const QualificationLevel = require('../models/qualificationLevel')
 const Student = require('../models/student')
 
-//Will eventually need to include all students and users
-modulesRouter.get('/', async (request, response) => {
-  try {
-    const modules = await Module.findAll({
-      attributes: ['id', 'title', 'code', 'CATs', 'year'],
-      include: [
-        {
-          model: ModuleYear,
-          as: 'module_years',
-          attributes: ['id', 'year_start', 'semester_id'],
-          include: [
-            {
-              model: ModuleCourse,
-              as: 'module_courses',
-              attributes: ['id'],
-              include: [
-                {
-                  model: Course,
-                  as: 'course',
-                  attributes: ['id', 'title', 'code', 'part_time', 'years'],
-                  include: [
-                    {
-                      model: CourseYear,
-                      as: 'course_years',
-                      attributes: ['id', 'year_start', 'year_end'],
-                    },
-                    {
-                      model: QualificationLevel,
-                      as: 'qualification_level',
-                      attributes: ['qualification'],
-                    }
-                  ]
-                },
-              ]
-            },
-            {
-              model: User,
-              as: 'module_co-ordinator',
-              attributes: ['forename', 'surname']
-            },
-            {
-              model: Semester,
-              as: 'semester',
-              attributes: ['id', 'name']
-            },
-          ],
-        },
-      ],
-    })
-    response.json(modules)
-  } catch (error) {
-    console.error(error)
-    response.status(500).json({ error: 'Failed to fetch modules' })
+modulesRouter.get(
+  '/',
+  async (req, res) => {
+    const modules = await moduleService.getAllModules()
+    if (!modules) {
+      const error = new Error('Modules not found')
+      error.status = 404
+      throw error
+    }
+    res.json(modules)
   }
-})
+)
+
+// //Will eventually need to include all students and users
+// modulesRouter.get('/', async (request, response) => {
+//   try {
+//     const modules = await Module.findAll({
+//       attributes: ['id', 'title', 'code', 'CATs', 'year'],
+//       include: [
+//         {
+//           model: ModuleYear,
+//           as: 'module_years',
+//           attributes: ['id', 'year_start', 'semester_id'],
+//           include: [
+//             {
+//               model: ModuleCourse,
+//               as: 'module_courses',
+//               attributes: ['id'],
+//               include: [
+//                 {
+//                   model: Course,
+//                   as: 'course',
+//                   attributes: ['id', 'title', 'code', 'part_time', 'years'],
+//                   include: [
+//                     {
+//                       model: CourseYear,
+//                       as: 'course_years',
+//                       attributes: ['id', 'year_start', 'year_end'],
+//                     },
+//                     {
+//                       model: QualificationLevel,
+//                       as: 'qualification_level',
+//                       attributes: ['qualification'],
+//                     }
+//                   ]
+//                 },
+//               ]
+//             },
+//             {
+//               model: User,
+//               as: 'module_co-ordinator',
+//               attributes: ['forename', 'surname']
+//             },
+//             {
+//               model: Semester,
+//               as: 'semester',
+//               attributes: ['id', 'name']
+//             },
+//           ],
+//         },
+//       ],
+//     })
+//     response.json(modules)
+//   } catch (error) {
+//     console.error(error)
+//     response.status(500).json({ error: 'Failed to fetch modules' })
+//   }
+// })
 
 modulesRouter.get('/module-year/:moduleYear', async (request, response) => {
 

@@ -11,6 +11,13 @@ const errorHandler = (error, request, response, _next) => {
     })
   }
 
+  if (error instanceof Error) {
+    return response.status(500).json({
+      message: error.message,
+      stack: error.stack,
+    })
+  }
+
   // Sequelize Validation Errors (for example, missing required fields or invalid data formats)
   if (error instanceof ValidationError) {
     const errors = error.errors.map(err => err.message)

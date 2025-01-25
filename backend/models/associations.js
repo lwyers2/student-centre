@@ -12,7 +12,8 @@ const Role = require('./role')
 const QualificationLevel = require('./qualificationLevel')
 const Classification = require('./classification')
 const Level = require('./level')
-const AuthenticationUser = require('./authUser')
+const AuthenticationUser = require('./authenticationUser')
+
 
 
 

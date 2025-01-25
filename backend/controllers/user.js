@@ -13,6 +13,7 @@ const CourseYear = require('../models/courseYear')
 const ModuleYear = require('../models/moduleYear')
 const ModuleCourse = require('../models/moduleCourse')
 const Semester = require('../models/semester')
+const Role = require('../models/role')
 
 usersRouter.get('/',
   tokenVerification,

@@ -16,6 +16,9 @@ const StudentModule = require('./studentModule')
 const AuthenticationUser = require('./authenticationUser')
 
 
+
+
+
 //this clears up multiple require statements in services files
 
 module.exports = {
@@ -30,8 +33,8 @@ module.exports = {
   ModuleCourse,
   Role,
   School,
-  AuthenticationUser,
   Level,
   Classification,
   StudentModule,
+  AuthenticationUser
 }

@@ -21,7 +21,7 @@ const Courses = () => {
 
   useEffect(() => {
     const id = user.id
-    userService.getAllUserCourses(id)
+    userService.getAllUserCourses(id, user.token)
       .then(initialUserData => {
         setUserData(initialUserData)
         setCourses(initialUserData.all_courses)

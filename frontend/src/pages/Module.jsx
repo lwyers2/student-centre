@@ -11,7 +11,7 @@ const Module = () => {
   const user = useSelector(state => state.user)
 
   useEffect(() => {
-    moduleService.getModuleFromModuleYear(params.id)
+    moduleService.getModuleFromModuleYear(params.id, user)
       .then(response => {
         console.log('Module data fetched:', response)
         setModule(response.module)

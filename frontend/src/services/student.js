@@ -7,7 +7,6 @@ const getAll = async credentials => {
 }
 
 const getStudent = async (id, token) => {
-  console.log(token)
   const response = await axios.get(`${baseUrl}/${id}`, {
     headers: {
       'Authorization' : `Bearer ${token}`

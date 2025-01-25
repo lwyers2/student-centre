@@ -11,13 +11,21 @@ const getUser = async id => {
   return response.data
 }
 
-const getAllUserCourses = async id => {
-  const response = await axios.get(`${baseUrl}/${id}/courses`)
+const getAllUserCourses = async (id, token) => {
+  const response = await axios.get(`${baseUrl}/${id}/courses`, {
+    headers: {
+      'Authorization' : `Bearer ${token}`
+    }
+  })
   return response.data
 }
 
-const getUserModulesCourseYear = async (id, courseYearID) => {
-  const response = await axios.get(`${baseUrl}/${id}/modules/${courseYearID}`)
+const getUserModulesCourseYear = async (id, courseYearID, token) => {
+  const response = await axios.get(`${baseUrl}/${id}/modules/${courseYearID}`, {
+    headers: {
+      'Authorization' : `Bearer ${token}`
+    }
+  })
   return response.data
 }
 

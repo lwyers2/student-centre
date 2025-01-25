@@ -23,7 +23,7 @@ const Modules = () => {
   useEffect(() => {
     const id = user.id
     const courseYearId = params.id
-    userService.getUserModulesCourseYear(id, courseYearId)
+    userService.getUserModulesCourseYear(id, courseYearId, user.token)
       .then(response => {
         console.log(`Module Data fetched: ${response}`)
         setUserData(response.user)

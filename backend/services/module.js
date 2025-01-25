@@ -1,4 +1,4 @@
-const { Course, Module, User, ModuleYear, ModuleCourse, Semester, CourseYear, QualificationLevel } = require('../models')
+const { Student, Course, Module, User, ModuleYear, ModuleCourse, Semester, CourseYear, QualificationLevel } = require('../models')
 
 async function getAllModules() {
   const modules = await Module.findAll({
@@ -54,6 +54,46 @@ async function getAllModules() {
   return modules
 }
 
+
+async function getModuleFromModuleYear(moduleYearId) {
+  const module = await Module.findOne({
+    attributes: ['id', 'title', 'code', 'CATs', 'year'],
+    include: [
+      {
+        model: ModuleYear,
+        as: 'module_years',
+        attributes: ['id', 'year_start', 'semester_id'],
+        where: { id: moduleYearId },
+        include: [
+          {
+            model: Semester,
+            as: 'semester',
+            attributes: ['id', 'name']
+          }
+        ]
+      },
+      {
+        model: Student,
+        as: 'module_students',
+        attributes: ['id', 'forename', 'surname', 'email', 'student_code'],
+        through: {
+          attributes: ['result', 'resit', 'flagged'], // Include extra attributes from the join table if needed
+          where: { module_year_id: moduleYearId }, // Apply filter to the join table, not directly on Student
+        }
+      },
+      {
+        model: User,
+        as: 'users',
+        attributes: ['id']
+      }
+    ]
+  })
+  if(!module) return null
+
+  return (module)
+}
+
 module.exports = {
   getAllModules,
+  getModuleFromModuleYear
 }

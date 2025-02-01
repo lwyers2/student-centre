@@ -11,11 +11,11 @@ const Module = () => {
   const user = useSelector(state => state.user)
 
   useEffect(() => {
-    moduleService.getModuleFromModuleYear(params.id, user)
+    moduleService.getModuleFromModuleYear(params.id, user.token)
       .then(response => {
         console.log('Module data fetched:', response)
-        setModule(response.module)
-        setStudents(response.students)
+        setModule(response)
+        setStudents(response.module_students)
       })
       .catch(error => {
         console.error('Error fetching module:', error)
@@ -41,7 +41,7 @@ const Module = () => {
         student_code: student.student_code,
         forename: student.forename,
         surname: student.surname,
-        result: student.exam_results.result,
+        result: student.student_module.result,
       })),
       view: '/student', // Base path for "View" links
     },

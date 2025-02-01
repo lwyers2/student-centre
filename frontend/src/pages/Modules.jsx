@@ -54,10 +54,6 @@ const Modules = () => {
     return <div>loading... modules</div>
   }
 
-  console.log(modules)
-  console.log(groupedModules)
-
-
 
   return (
     <div className="w-auto p-2 my-4 scroll-mt-20">

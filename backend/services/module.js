@@ -81,11 +81,6 @@ async function getModuleFromModuleYear(moduleYearId) {
           attributes: ['result', 'resit', 'flagged'], // Include extra attributes from the join table if needed
           where: { module_year_id: moduleYearId }, // Apply filter to the join table, not directly on Student
         }
-      },
-      {
-        model: User,
-        as: 'users',
-        attributes: ['id']
       }
     ]
   })

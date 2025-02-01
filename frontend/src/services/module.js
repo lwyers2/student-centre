@@ -11,8 +11,14 @@ const getModule = async id => {
   return response.data
 }
 
-const getModuleFromModuleYear = async id => {
-  const response = await axios.get(`${baseUrl}/module-year/${id}`)
+const getModuleFromModuleYear = async (id, token) => {
+  const response = await axios.get(`${baseUrl}/module-year/${id}`,
+    {
+      headers: {
+        'Authorization' : `Bearer ${token}`
+      }
+    })
+
   return response.data
 }
 

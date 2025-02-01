@@ -5,12 +5,10 @@ const Level = require('../models/level')
 classificationsRouter.get('/', async (request, response) => {
   try {
     const classifications = await Classification.findAll({
-      attributes: ['range_start', 'range_end', 'classification'],
       include: [
         {
           model: Level,
           as: 'level',
-          attributes: ['level']
         }
       ]
     })

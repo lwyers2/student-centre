@@ -2,6 +2,11 @@ const { DataTypes } = require('sequelize')
 const db = require('../utils/db')
 
 const CourseYear = db.define('CourseYear', {
+  id: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    primaryKey: true
+  },
   course_id: {
     type: DataTypes.INTEGER,
     allowNull: false,
@@ -14,6 +19,10 @@ const CourseYear = db.define('CourseYear', {
     type: DataTypes.INTEGER,
     allowNull: false,
   },
+  course_coordinator: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+  }
 },
 {
   tableName: 'course_year',

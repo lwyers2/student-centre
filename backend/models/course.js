@@ -2,11 +2,24 @@ const { DataTypes } = require('sequelize')
 const db = require('../utils/db')
 
 const Course = db.define('Course', {
+  id: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    primaryKey: true
+  },
   title: {
     type: DataTypes.STRING,
     allowNull: false,
   },
+  school_id : {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+  },
   years: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+  },
+  qualification_id: {
     type: DataTypes.INTEGER,
     allowNull: false,
   },
@@ -16,10 +29,6 @@ const Course = db.define('Course', {
   },
   part_time: {
     type: DataTypes.INTEGER,
-    allowNull: false,
-  },
-  course_coordinator: {
-    type: DataTypes.STRING,
     allowNull: false,
   },
 },

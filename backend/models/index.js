@@ -15,6 +15,9 @@ const Classification = require('./classification')
 const StudentModule = require('./studentModule')
 const AuthenticationUser = require('./authenticationUser')
 const UserModule = require('./userModule')
+const StudentCourse = require('./studentCourse')
+const UserCourse = require('./userCourse')
+const UserSchool = require('./userSchool')
 
 
 
@@ -23,20 +26,23 @@ const UserModule = require('./userModule')
 //this clears up multiple require statements in services files
 
 module.exports = {
-  Student,
+  AuthenticationUser,
+  Classification,
   Course,
-  Module,
-  User,
-  QualificationLevel,
   CourseYear,
-  ModuleYear,
-  Semester,
+  Level,
+  Module,
   ModuleCourse,
+  ModuleYear,
+  QualificationLevel,
   Role,
   School,
-  Level,
-  Classification,
+  Semester,
+  Student,
+  StudentCourse,
   StudentModule,
-  AuthenticationUser,
-  UserModule
+  User,
+  UserCourse,
+  UserModule,
+  UserSchool,
 }

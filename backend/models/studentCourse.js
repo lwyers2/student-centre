@@ -1,32 +1,32 @@
 const { DataTypes } = require('sequelize')
 const db = require('../utils/db')
 
-const AuthenticationUser = db.define('AuthenticationUser', {
+const StudentCourse = db.define('StudentCourse', {
   id: {
     type: DataTypes.INTEGER,
     allowNull: false,
     primaryKey: true
   },
-  token: {
-    type: DataTypes.TEXT,
-    allowNull: false,
-  },
-  user_id: {
+  student_id: {
     type: DataTypes.INTEGER,
     allowNull: false,
   },
-  expires_at:{
-    type: DataTypes.DATE,
+  course_id: {
+    type: DataTypes.INTEGER,
     allowNull: false,
   },
-  created_at: {
-    type: DataTypes.DATE,
+  course_year_id: {
+    type: DataTypes.INTEGER,
     allowNull: false,
-  }
+  },
+  archived: {
+    type: DataTypes.TINYINT,
+    allowNull: false,
+  },
 },
 {
-  tableName: 'authentication_user',
-  timestamps: false,
+  tableName: 'student_course',
+  timestamps: false
 })
 
-module.exports = AuthenticationUser
+module.exports = StudentCourse

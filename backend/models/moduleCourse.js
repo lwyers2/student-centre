@@ -23,6 +23,10 @@ const ModuleCourse = db.define('ModuleCourse', {
     type: DataTypes.INTEGER,
     allowNull: false,
   },
+  required: {
+    type: DataTypes.TINYINT,
+    allowNull: false,
+  }
 },
 {
   tableName: 'module_course',

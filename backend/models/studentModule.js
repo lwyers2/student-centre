@@ -4,6 +4,11 @@ const db = require('../utils/db')
 
 // Define StudentModule model
 const StudentModule = db.define('StudentModule', {
+  id: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    primaryKey: true
+  },
   student_id: {
     type: DataTypes.INTEGER,
     allowNull: false,
@@ -17,7 +22,7 @@ const StudentModule = db.define('StudentModule', {
     allowNull: false,
   },
   flagged: {
-    type: DataTypes.INTEGER,
+    type: DataTypes.TINYINT,
     allowNull: false,
   },
   module_year_id: {
@@ -25,7 +30,7 @@ const StudentModule = db.define('StudentModule', {
     allowNull: false,
   },
   resit: {
-    type: DataTypes.INTEGER,
+    type: DataTypes.TINYINT,
     allowNull: false,
   }
 },

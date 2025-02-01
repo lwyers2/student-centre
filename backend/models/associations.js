@@ -14,7 +14,39 @@ const Classification = require('./classification')
 const Level = require('./level')
 const AuthenticationUser = require('./authenticationUser')
 const StudentModule = require('./studentModule')
+const StudentCourse = require('./studentCourse')
+const UserModule = require('./userModule')
+const UserCourse = require('./userCourse')
+const UserSchool = require('./userSchool')
 
+
+UserCourse.belongsToMany(User, {
+  through: 'user_course',
+  timestamps: false,
+  foreignKey: 'course_id',
+  as: 'user_course_course'
+})
+
+User.belongsToMany(UserCourse, {
+  through: 'user_course',
+  timestamps: false,
+  foreignKey: 'user_id',
+  as: 'user_course_user',
+})
+
+UserModule.belongsToMany(User, {
+  through: 'user_module',
+  timestamps: false,
+  foreignKey: 'module_id',
+  as: 'user_module_module'
+})
+
+User.belongsToMany(UserModule, {
+  through: 'user_module',
+  timestamps: false,
+  foreignKey: 'user_id',
+  as: 'user_module_user',
+})
 
 
 
@@ -239,6 +271,21 @@ StudentModule.belongsToMany(Student, {
   as: 'student_module_module',
 })
 
+
+StudentCourse.belongsToMany(Student, {
+  through: 'student_course',
+  timestamps: false,
+  foreignKey: 'course_id',
+  as: 'student_course_course'
+})
+
+Student.belongsToMany(StudentCourse, {
+  through: 'student_course',
+  timestamps: false,
+  foreignKey: 'student_id',
+  as: 'student_course_student',
+})
+
 // Define the Many-to-One relationship from User -> ModuleYear
 User.belongsToMany(ModuleYear, {
   through: 'user_module',
@@ -330,10 +377,12 @@ QualificationLevel.hasMany(Course, {
 Classification.belongsTo(Level, {
   foreignKey: 'level_id',
   as: 'level',
+  timestamps: false,
 })
 
 Level.hasMany(Classification, {
-  foreignKey: 'level_id'
+  foreignKey: 'level_id',
+  timestamps: false,
 })
 
 //AuthenticationUser -> User (for authentication)
@@ -347,18 +396,40 @@ User.hasMany(AuthenticationUser, {
   as: 'tokens'
 })
 
+User.belongsToMany(UserSchool, {
+  through: 'user_school',
+  timestamps: false,
+  foreignKey: 'user_id',
+  as: 'user_school_user',
+})
+
+UserSchool.belongsToMany(User, {
+  through: 'user_school',
+  timestamps: false,
+  foreignKey: 'school_id',
+  as: 'school_user_school',
+})
+
 
 module.exports =
 {
-  Student,
-  Course,
-  User ,
-  Module,
-  QualificationLevel,
-  Classification,
-  Level,
   AuthenticationUser,
+  Classification,
+  Course,
+  CourseYear,
+  Level,
+  Module,
+  ModuleCourse,
   ModuleYear,
+  QualificationLevel,
   Role,
   School,
+  Semester,
+  Student,
+  StudentCourse,
+  StudentModule,
+  User,
+  UserCourse,
+  UserModule,
+  UserSchool,
 }

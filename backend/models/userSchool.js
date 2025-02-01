@@ -1,21 +1,25 @@
 const { DataTypes } = require('sequelize')
 const db = require('../utils/db')
 
-const Semester = db.define('Semester', {
+const UserSchool = db.define('UserSchool', {
   id: {
     type: DataTypes.INTEGER,
     allowNull: false,
     primaryKey: true
   },
-  name: {
-    type: DataTypes.STRING,
+  user_id: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+  },
+  school_id: {
+    type: DataTypes.INTEGER,
     allowNull: false,
   }
 },
 {
-  tableName: 'semester',
+  tableName: 'user_school',
   timestamps: false,
 }
 )
 
-module.exports = Semester
+module.exports = UserSchool

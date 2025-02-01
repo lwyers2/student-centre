@@ -3,6 +3,11 @@ const db = require('../utils/db')
 
 // Define Student model
 const Student = db.define('Student', {
+  id: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    primaryKey: true
+  },
   forename: {
     type: DataTypes.STRING,
     allowNull: false,

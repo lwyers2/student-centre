@@ -2,6 +2,11 @@ const { DataTypes } = require('sequelize')
 const db = require('../utils/db')
 
 const Module = db.define('Module', {
+  id: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    primaryKey: true
+  },
   title: {
     type: DataTypes.STRING,
     allowNull: false,

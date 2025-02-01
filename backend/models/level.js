@@ -2,8 +2,15 @@ const { DataTypes } = require('sequelize')
 const db = require('../utils/db')
 
 const Level = db.define('Level', {
-  level: DataTypes.INTEGER,
-  allowNull: false,
+  id: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    primaryKey: true
+  },
+  level: {
+    type: DataTypes.INTEGER,
+    allowNull: false
+  },
 },
 {
   tableName: 'level',

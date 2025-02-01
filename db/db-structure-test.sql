@@ -1,0 +1,390 @@
+-- --------------------------------------------------------
+-- Host:                         127.0.0.1
+-- Server version:               8.0.40 - MySQL Community Server - GPL
+-- Server OS:                    Win64
+-- HeidiSQL Version:             12.10.0.7000
+-- --------------------------------------------------------
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET NAMES utf8 */;
+/*!50503 SET NAMES utf8mb4 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+
+-- Dumping database structure for student_marks_test
+CREATE DATABASE IF NOT EXISTS `student_marks_test` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
+USE `student_marks_test`;
+
+-- Dumping structure for table student_marks_test.authentication_user
+CREATE TABLE IF NOT EXISTS `authentication_user` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `token` text NOT NULL,
+  `user_id` int NOT NULL,
+  `expires_at` datetime NOT NULL,
+  `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `fk_authentication_user_user_id` (`user_id`),
+  CONSTRAINT `fk_authentication_user_user_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=75 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- Data exporting was unselected.
+
+-- Dumping structure for table student_marks_test.classification
+CREATE TABLE IF NOT EXISTS `classification` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `range_start` int DEFAULT NULL,
+  `range_end` int DEFAULT NULL,
+  `classification` varchar(60) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `level_id` int DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id_UNIQUE` (`id`),
+  KEY `FK_classification_level` (`level_id`) USING BTREE,
+  CONSTRAINT `fk_classification_level` FOREIGN KEY (`level_id`) REFERENCES `level` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- Data exporting was unselected.
+
+-- Dumping structure for table student_marks_test.course
+CREATE TABLE IF NOT EXISTS `course` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `title` varchar(45) NOT NULL,
+  `school_id` int NOT NULL,
+  `years` int NOT NULL,
+  `qualification_id` int NOT NULL,
+  `code` varchar(8) NOT NULL,
+  `part_time` smallint DEFAULT '0',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id_UNIQUE` (`id`),
+  KEY `fk_course_school_idx` (`school_id`) USING BTREE,
+  KEY `FK_course_course_level` (`qualification_id`) USING BTREE,
+  CONSTRAINT `fk_course_qualification_level` FOREIGN KEY (`qualification_id`) REFERENCES `qualification_level` (`id`),
+  CONSTRAINT `fk_course_school` FOREIGN KEY (`school_id`) REFERENCES `school` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=38 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- Data exporting was unselected.
+
+-- Dumping structure for table student_marks_test.course_year
+CREATE TABLE IF NOT EXISTS `course_year` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `course_id` int NOT NULL DEFAULT (0),
+  `year_start` int NOT NULL,
+  `year_end` int NOT NULL,
+  `course_coordinator` int DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id_UNIQUE` (`id`),
+  KEY `fk_course_year_course` (`course_id`),
+  KEY `fk_course_year_course_coordinator` (`course_coordinator`),
+  CONSTRAINT `fk_course_year_course` FOREIGN KEY (`course_id`) REFERENCES `course_year` (`id`),
+  CONSTRAINT `fk_course_year_course_coordinator` FOREIGN KEY (`course_coordinator`) REFERENCES `user` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- Data exporting was unselected.
+
+-- Dumping structure for table student_marks_test.letter
+CREATE TABLE IF NOT EXISTS `letter` (
+  `id` int NOT NULL,
+  `date_sent` datetime DEFAULT NULL,
+  `authorised` tinyint NOT NULL,
+  `sent_by_user` int NOT NULL DEFAULT '0',
+  `type_id` int DEFAULT NULL,
+  `sent` tinyint NOT NULL DEFAULT '0',
+  `authorised_by_staff` int DEFAULT NULL,
+  `student_module_id` int NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id_UNIQUE` (`id`),
+  KEY `fk_letter_admin_staff_idx` (`sent_by_user`),
+  KEY `fk_letter_authorised_staff_idx` (`authorised_by_staff`),
+  KEY `fk_letter_type` (`type_id`),
+  KEY `fk_letter_student_module` (`student_module_id`),
+  CONSTRAINT `fk_letter_admin_staff` FOREIGN KEY (`sent_by_user`) REFERENCES `user` (`id`),
+  CONSTRAINT `fk_letter_authorised_staff` FOREIGN KEY (`authorised_by_staff`) REFERENCES `user` (`id`),
+  CONSTRAINT `fk_letter_student` FOREIGN KEY (`id`) REFERENCES `student` (`id`),
+  CONSTRAINT `fk_letter_student_module` FOREIGN KEY (`student_module_id`) REFERENCES `student_module` (`id`),
+  CONSTRAINT `fk_letter_type` FOREIGN KEY (`type_id`) REFERENCES `letter_types` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- Data exporting was unselected.
+
+-- Dumping structure for table student_marks_test.letter_types
+CREATE TABLE IF NOT EXISTS `letter_types` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- Data exporting was unselected.
+
+-- Dumping structure for table student_marks_test.level
+CREATE TABLE IF NOT EXISTS `level` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `level` int DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id_UNIQUE` (`id`),
+  UNIQUE KEY `level_UNIQUE` (`level`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- Data exporting was unselected.
+
+-- Dumping structure for table student_marks_test.meeting
+CREATE TABLE IF NOT EXISTS `meeting` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `date_created` datetime NOT NULL,
+  `date_updated` datetime NOT NULL,
+  `student_id` int NOT NULL,
+  `scheduled_date` datetime NOT NULL,
+  `coordinater_id` int NOT NULL,
+  `academic_id` int NOT NULL,
+  `admin_staff_id` int NOT NULL,
+  `outcome` varchar(45) NOT NULL DEFAULT 'PEN',
+  `meeting_reason` varchar(45) NOT NULL DEFAULT 'PEN',
+  `module_id` int NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id_UNIQUE` (`id`),
+  KEY `fk_meeting_student` (`student_id`),
+  KEY `fk_meeting_academic` (`academic_id`),
+  KEY `fk_meeting_coordinator` (`coordinater_id`),
+  KEY `fk_meeting_admin_staff` (`admin_staff_id`),
+  KEY `fk_meeting_module` (`module_id`),
+  CONSTRAINT `fk_meeting_academic` FOREIGN KEY (`academic_id`) REFERENCES `user` (`id`),
+  CONSTRAINT `fk_meeting_admin_staff` FOREIGN KEY (`admin_staff_id`) REFERENCES `user` (`id`),
+  CONSTRAINT `fk_meeting_coordinator` FOREIGN KEY (`coordinater_id`) REFERENCES `user` (`id`),
+  CONSTRAINT `fk_meeting_module` FOREIGN KEY (`module_id`) REFERENCES `module` (`id`),
+  CONSTRAINT `fk_meeting_student` FOREIGN KEY (`student_id`) REFERENCES `student` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- Data exporting was unselected.
+
+-- Dumping structure for table student_marks_test.module
+CREATE TABLE IF NOT EXISTS `module` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `title` varchar(70) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `code` varchar(8) NOT NULL,
+  `CATs` int NOT NULL,
+  `year` int DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id_UNIQUE` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=142 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- Data exporting was unselected.
+
+-- Dumping structure for table student_marks_test.module_course
+CREATE TABLE IF NOT EXISTS `module_course` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `module_id` int NOT NULL,
+  `course_id` int NOT NULL,
+  `course_year_id` int NOT NULL,
+  `module_year_id` int NOT NULL,
+  `required` tinyint(1) unsigned zerofill NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id_UNIQUE` (`id`),
+  KEY `fk_module_course_course` (`course_id`),
+  KEY `fk_module_course_module` (`module_id`) USING BTREE,
+  KEY `fk_module_course_course_year` (`course_year_id`),
+  KEY `fk_module_course_module_year` (`module_year_id`),
+  CONSTRAINT `fk_module_course_course` FOREIGN KEY (`course_id`) REFERENCES `course` (`id`),
+  CONSTRAINT `fk_module_course_course_year` FOREIGN KEY (`course_year_id`) REFERENCES `course_year` (`id`),
+  CONSTRAINT `fk_module_course_module` FOREIGN KEY (`module_id`) REFERENCES `module` (`id`),
+  CONSTRAINT `fk_module_course_module_year` FOREIGN KEY (`module_year_id`) REFERENCES `module_year` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=339 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- Data exporting was unselected.
+
+-- Dumping structure for table student_marks_test.module_year
+CREATE TABLE IF NOT EXISTS `module_year` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `module_id` int NOT NULL,
+  `year_start` int NOT NULL,
+  `semester_id` int NOT NULL,
+  `module_coordinator_id` int NOT NULL DEFAULT '1',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id_UNIQUE` (`id`),
+  KEY `fk_module_year_module` (`module_id`),
+  KEY `fk_module_year_semester` (`semester_id`),
+  KEY `fk_module_year_module_coordinator_id` (`module_coordinator_id`),
+  CONSTRAINT `fk_module_year_module` FOREIGN KEY (`module_id`) REFERENCES `module` (`id`),
+  CONSTRAINT `fk_module_year_module_coordinator_id` FOREIGN KEY (`module_coordinator_id`) REFERENCES `user` (`id`),
+  CONSTRAINT `fk_module_year_semester` FOREIGN KEY (`semester_id`) REFERENCES `semester` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=262 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- Data exporting was unselected.
+
+-- Dumping structure for table student_marks_test.qualification_level
+CREATE TABLE IF NOT EXISTS `qualification_level` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `level_id` int DEFAULT NULL,
+  `qualification` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id_UNIQUE` (`id`),
+  UNIQUE KEY `qualification_UNIQUE` (`qualification`),
+  KEY `fk_course_level_level` (`level_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- Data exporting was unselected.
+
+-- Dumping structure for table student_marks_test.role
+CREATE TABLE IF NOT EXISTS `role` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `name` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  PRIMARY KEY (`id`,`name`) USING BTREE,
+  UNIQUE KEY `id_UNIQUE` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- Data exporting was unselected.
+
+-- Dumping structure for table student_marks_test.school
+CREATE TABLE IF NOT EXISTS `school` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `school_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id_UNIQUE` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- Data exporting was unselected.
+
+-- Dumping structure for table student_marks_test.semester
+CREATE TABLE IF NOT EXISTS `semester` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `name` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id_UNIQUE` (`id`),
+  UNIQUE KEY `name_UNIQUE` (`name`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- Data exporting was unselected.
+
+-- Dumping structure for table student_marks_test.student
+CREATE TABLE IF NOT EXISTS `student` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `forename` varchar(255) NOT NULL,
+  `surname` varchar(255) NOT NULL,
+  `student_code` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `email` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id_UNIQUE` (`id`),
+  UNIQUE KEY `email_UNIQUE` (`email`)
+) ENGINE=InnoDB AUTO_INCREMENT=116 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- Data exporting was unselected.
+
+-- Dumping structure for table student_marks_test.student_course
+CREATE TABLE IF NOT EXISTS `student_course` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `student_id` int NOT NULL,
+  `course_id` int NOT NULL,
+  `course_year_id` int DEFAULT NULL,
+  `archived` tinyint(1) unsigned zerofill NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id_UNIQUE` (`id`),
+  KEY `fk_student_course_student` (`student_id`) USING BTREE,
+  KEY `fk_student_course_course` (`course_id`) USING BTREE,
+  KEY `fk_student_course_year` (`course_year_id`),
+  CONSTRAINT `fk_student_course_course` FOREIGN KEY (`course_id`) REFERENCES `course` (`id`),
+  CONSTRAINT `fk_student_course_student` FOREIGN KEY (`student_id`) REFERENCES `student` (`id`),
+  CONSTRAINT `fk_student_course_year` FOREIGN KEY (`course_year_id`) REFERENCES `course_year` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=135 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- Data exporting was unselected.
+
+-- Dumping structure for table student_marks_test.student_module
+CREATE TABLE IF NOT EXISTS `student_module` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `student_id` int NOT NULL,
+  `module_id` int NOT NULL,
+  `result` int DEFAULT NULL,
+  `flagged` tinyint(1) unsigned zerofill NOT NULL,
+  `module_year_id` int NOT NULL,
+  `resit` tinyint(1) unsigned zerofill DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id_UNIQUE` (`id`),
+  KEY `fk_student_module_student` (`student_id`),
+  KEY `fk_student_module_module` (`module_id`),
+  KEY `fk_student_module_module_year` (`module_year_id`),
+  CONSTRAINT `fk_student_module_module` FOREIGN KEY (`module_id`) REFERENCES `module` (`id`),
+  CONSTRAINT `fk_student_module_module_year` FOREIGN KEY (`module_year_id`) REFERENCES `module_year` (`id`),
+  CONSTRAINT `fk_student_module_student` FOREIGN KEY (`student_id`) REFERENCES `student` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3027 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- Data exporting was unselected.
+
+-- Dumping structure for table student_marks_test.user
+CREATE TABLE IF NOT EXISTS `user` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `prefix` varchar(50) DEFAULT NULL,
+  `forename` varchar(45) NOT NULL,
+  `surname` varchar(45) NOT NULL,
+  `email` varchar(45) NOT NULL,
+  `password` varchar(60) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `date_created` datetime DEFAULT NULL,
+  `date_updated` datetime DEFAULT NULL,
+  `active` tinyint(1) NOT NULL DEFAULT '1',
+  `role_id` int NOT NULL,
+  `job_title` varchar(50) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id_UNIQUE` (`id`),
+  UNIQUE KEY `email_UNIQUE` (`email`),
+  KEY `fk_user_role` (`role_id`),
+  CONSTRAINT `fk_user_role` FOREIGN KEY (`role_id`) REFERENCES `role` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- Data exporting was unselected.
+
+-- Dumping structure for table student_marks_test.user_course
+CREATE TABLE IF NOT EXISTS `user_course` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` int NOT NULL,
+  `course_id` int NOT NULL,
+  `course_year_id` int DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id_UNIQUE` (`id`),
+  KEY `fk_user_course_course` (`course_id`),
+  KEY `fk_user_course_user` (`user_id`),
+  KEY `fk_user_course_course_year` (`course_year_id`),
+  CONSTRAINT `fk_user_course_course` FOREIGN KEY (`course_id`) REFERENCES `course` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `fk_user_course_course_year` FOREIGN KEY (`course_year_id`) REFERENCES `course_year` (`id`),
+  CONSTRAINT `fk_user_course_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=147 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- Data exporting was unselected.
+
+-- Dumping structure for table student_marks_test.user_module
+CREATE TABLE IF NOT EXISTS `user_module` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `user_id` int NOT NULL,
+  `module_id` int NOT NULL,
+  `module_year_id` int DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id_UNIQUE` (`id`),
+  KEY `fk_user_module_user` (`user_id`),
+  KEY `fk_user_module_module` (`module_id`),
+  KEY `fk_user_module_module_year` (`module_year_id`),
+  CONSTRAINT `fk_user_module_module` FOREIGN KEY (`module_id`) REFERENCES `module` (`id`),
+  CONSTRAINT `fk_user_module_module_year` FOREIGN KEY (`module_year_id`) REFERENCES `module_year` (`id`),
+  CONSTRAINT `fk_user_module_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1061 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- Data exporting was unselected.
+
+-- Dumping structure for table student_marks_test.user_school
+CREATE TABLE IF NOT EXISTS `user_school` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `user_id` int DEFAULT NULL,
+  `school_id` int DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id_UNIQUE` (`id`),
+  KEY `fk_user_school_user` (`user_id`),
+  KEY `fk_school_id` (`school_id`),
+  CONSTRAINT `fk_school_id` FOREIGN KEY (`school_id`) REFERENCES `school` (`id`),
+  CONSTRAINT `fk_user_school_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- Data exporting was unselected.
+
+/*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
+/*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
+/*!40014 SET FOREIGN_KEY_CHECKS=IFNULL(@OLD_FOREIGN_KEY_CHECKS, 1) */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40111 SET SQL_NOTES=IFNULL(@OLD_SQL_NOTES, 1) */;

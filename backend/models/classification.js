@@ -2,6 +2,11 @@ const { DataTypes } = require('sequelize')
 const db = require('../utils/db')
 
 const Classification = db.define('Classification' , {
+  id: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    primaryKey: true,
+  },
   range_start: {
     type: DataTypes.INTEGER,
     allowNull: false
@@ -14,6 +19,10 @@ const Classification = db.define('Classification' , {
     type: DataTypes.STRING,
     allowNull: false,
   },
+  level_id: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+  }
 },
 {
   tableName: 'classification',

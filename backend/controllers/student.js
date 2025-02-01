@@ -82,5 +82,20 @@ studentsRouter.get(
   }
 )
 
+studentsRouter.get(
+  '/:student/module-year/:moduleYearId',
+  async (req, res) => {
+    const studentId = req.params.student
+    const moduleYearId = req.params.moduleYearId
+    const student = await studentService.getStudentModuleData(studentId, moduleYearId)
+    if (!student) {
+      const error = new Error('Student not found')
+      error.status = 404
+      throw error
+    }
+    res.json(student)
+  }
+)
+
 
 module.exports = studentsRouter

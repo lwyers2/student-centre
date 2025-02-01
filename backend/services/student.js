@@ -1,4 +1,4 @@
-const { Student, Course, Module, User, QualificationLevel, CourseYear, ModuleYear, Semester, ModuleCourse } = require('../models')
+const { Student, Course, Module, User, QualificationLevel, CourseYear, ModuleYear, Semester, ModuleCourse, StudentModule } = require('../models')
 const { formatAllStudentData } = require('../helper/formaters/student/formatAllStudentData')
 const { formatStudentCourses } = require('../helper/formaters/student/formatStudentCourses')
 const { formatStudentModules } = require('../helper/formaters/student/formatStudentModules')
@@ -157,10 +157,51 @@ async function getAllStudents() {
 
 }
 
+async function getStudentModuleData(studentId, moduleYearId) {
+
+  const student = await Student.findOne({
+    where: { id: studentId },
+    attributes: ['id', 'email', 'student_code', 'forename', 'surname'],
+    include: [
+      {
+        model: ModuleYear,
+        as: 'student_module_years',
+        attributes: ['id', 'year_start', 'module_coordinator_id'],
+        through: { attributes: ['result', 'resit', 'flagged'] },
+        where: { id : moduleYearId },
+        include: [
+          {
+            model: Semester,
+            as: 'semester',
+            attributes: ['name']
+          },
+          {
+            model: User,
+            as: 'module_co-ordinator',
+            attributes: ['prefix', 'forename', 'surname']
+          },
+          {
+            model: Module,
+            as: 'module',
+            attributes: ['title', 'id', 'code', 'CATs', 'year']
+          }
+        ]
+      },
+    ],
+
+  })
+  if (!student) {
+    return null
+  }
+
+  return student
+}
+
 module.exports = {
   getAllStudentData,
   getStudentCoursesData,
   getStudentModulesData,
   getAllStudents,
+  getStudentModuleData
 
 }

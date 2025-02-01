@@ -54,6 +54,7 @@ const Module = () => {
   }
 
   console.log(module)
+  console.log(students)
 
   return (
     <div className="p-2 my-4 scroll-mt-20">

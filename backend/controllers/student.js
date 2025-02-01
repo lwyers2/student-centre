@@ -4,6 +4,8 @@ const { validateId } = require('../validators/validateId')
 const validate = require('../middleware/validate')
 const tokenVerification = require('../middleware/tokenVerification')
 const roleAuthorization = require('../middleware/roleAuthorization')
+const { checkUserAccessToModule } = require('../helper/moduleAccess')
+const { check } = require('express-validator')
 
 
 studentsRouter.get('/',
@@ -84,9 +86,19 @@ studentsRouter.get(
 
 studentsRouter.get(
   '/:student/module-year/:moduleYearId',
+  validateId('student'),
+  validate,
+  tokenVerification,
+  roleAuthorization(['Super User', 'Admin', 'Teacher']),
   async (req, res) => {
     const studentId = req.params.student
     const moduleYearId = req.params.moduleYearId
+    const userId = req.user.id
+    const userRole = req.user.role_name
+    const hasAccess = await checkUserAccessToModule(userId, moduleYearId)
+    if(!hasAccess && (userRole !== 'Super User')) {
+      if (!hasAccess) throw new Error('Access denied')
+    }
     const student = await studentService.getStudentModuleData(studentId, moduleYearId)
     if (!student) {
       const error = new Error('Student not found')

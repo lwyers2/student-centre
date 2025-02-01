@@ -1,4 +1,5 @@
-const { Student, Course, Module, User, ModuleYear, ModuleCourse, Semester, CourseYear, QualificationLevel } = require('../models')
+const { Student, Course, Module, User, ModuleYear, ModuleCourse, Semester, CourseYear, QualificationLevel, UserModule } = require('../models')
+const db = require('../utils/db')
 
 async function getAllModules() {
   const modules = await Module.findAll({
@@ -93,7 +94,19 @@ async function getModuleFromModuleYear(moduleYearId) {
   return (module)
 }
 
+async function checkUserAccessToModule(userId, moduleYearId) {
+  const userModule = await UserModule.findOne({
+    where: {
+      user_id: userId,
+      module_year_id: moduleYearId
+    }
+  })
+  return !!userModule // Convert to boolean (true if found, false if not)
+}
+
+
 module.exports = {
   getAllModules,
-  getModuleFromModuleYear
+  getModuleFromModuleYear,
+  checkUserAccessToModule
 }

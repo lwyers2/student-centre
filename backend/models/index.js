@@ -14,6 +14,7 @@ const Level = require('./level')
 const Classification = require('./classification')
 const StudentModule = require('./studentModule')
 const AuthenticationUser = require('./authenticationUser')
+const UserModule = require('./userModule')
 
 
 
@@ -36,5 +37,6 @@ module.exports = {
   Level,
   Classification,
   StudentModule,
-  AuthenticationUser
+  AuthenticationUser,
+  UserModule
 }

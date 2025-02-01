@@ -46,6 +46,8 @@ const Header = () => {
               <>
                 <Link to="/upload-records" className="hover:opacity-60">Upload Records</Link>
                 <Link to="/view-courses" className="hover:opacity-60">View Courses</Link>
+                <Link to="/view-courses" className="hover:opacity-60">View Modules</Link>
+                <Link to="/view-courses" className="hover:opacity-60">View Students</Link>
                 <Link to="/meetings" className="hover:opacity-60">Meetings</Link>
                 <Link to="/admin" className="hover:opacity-60">Admin</Link>
                 <button

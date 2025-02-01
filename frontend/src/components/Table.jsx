@@ -39,7 +39,7 @@ const Table = ({ labels, content }) => {
                   </td>
                 ))}
                 <td className="px-2 py-1 border border-gray-300 dark:border-slate-700 text-center">
-                  <Link to={`${content.view}/${row.id}`} state={row}>
+                  <Link to={typeof content.view === 'function' ? content.view(row) : `${content.view}/${row.id}`} state={row}>
                     <button className="text-sm bg-slate-500 text-white font-medium px-2 py-1 rounded hover:bg-slate-400">
                       View
                     </button>

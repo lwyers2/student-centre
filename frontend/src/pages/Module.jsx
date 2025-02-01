@@ -1,3 +1,9 @@
+//TODO:
+//1. Update Title of Module (might want to resturucture api response)
+//2. Filter working
+//3. Search working
+//Info on course (course details, amount of students, failing students, class average)
+
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
@@ -43,15 +49,17 @@ const Module = () => {
         surname: student.surname,
         result: student.student_module.result,
       })),
-      view: '/student', // Base path for "View" links
+      view: (row) => `/student/${row.id}/module/${module.module_years[0].id}`
     },
   }
+
+  console.log(module)
 
   return (
     <div className="p-2 my-4 scroll-mt-20">
       <div>
         {module ? (
-          <h2 className="text-4xl font-bold text-center sm:text-5xl mb-6 text-slate-900 dark:text-white">{module.title} ({module.code}) {module.year_start}</h2>
+          <h2 className="text-4xl font-bold text-center sm:text-5xl mb-6 text-slate-900 dark:text-white">{module.title} ({module.code}) {module.module_years[0].year_start}</h2>
         ): (
           <p>Module not found</p>
         )

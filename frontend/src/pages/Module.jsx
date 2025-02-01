@@ -2,7 +2,7 @@
 //1. Update Title of Module (might want to resturucture api response)
 //2. Filter working
 //3. Search working
-//Info on course (course details, amount of students, failing students, class average)
+//4. Info on course (course details, amount of students, failing students, class average)
 
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
@@ -20,8 +20,8 @@ const Module = () => {
     moduleService.getModuleFromModuleYear(params.id, user.token)
       .then(response => {
         console.log('Module data fetched:', response)
-        setModule(response)
-        setStudents(response.module_students)
+        setModule(response.module)
+        setStudents(response.students)
       })
       .catch(error => {
         console.error('Error fetching module:', error)
@@ -47,9 +47,9 @@ const Module = () => {
         student_code: student.student_code,
         forename: student.forename,
         surname: student.surname,
-        result: student.student_module.result,
+        result: student.exam_results.result,
       })),
-      view: (row) => `/student/${row.id}/module/${module.module_years[0].id}`
+      view: (row) => `/student/${row.id}/module/${module.module_year_id}`
     },
   }
 
@@ -59,7 +59,10 @@ const Module = () => {
     <div className="p-2 my-4 scroll-mt-20">
       <div>
         {module ? (
-          <h2 className="text-4xl font-bold text-center sm:text-5xl mb-6 text-slate-900 dark:text-white">{module.title} ({module.code}) {module.module_years[0].year_start}</h2>
+          <>
+            <h2 className="text-4xl font-bold text-center sm:text-5xl mb-6 text-slate-900 dark:text-white">{module.title} </h2>
+            <h2 className="text-2xl font-bold text-center sm:text-3xl mb-6 text-slate-900 dark:text-white">({module.code}) {module.semester} {module.year_start}</h2>
+          </>
         ): (
           <p>Module not found</p>
         )

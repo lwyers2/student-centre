@@ -7,6 +7,7 @@ function formatModuleYear(module) {
       year: module.year,
       year_start: module['module_years'][0]['year_start'],
       semester: module['module_years'][0]['semester']['name'],
+      module_year_id: module['module_years'][0]['id'],
     },
     students: module.module_students.map((student) => ({
       student_code: student.student_code,

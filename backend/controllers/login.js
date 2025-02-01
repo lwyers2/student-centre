@@ -20,13 +20,20 @@ loginRouter.post('/', async (request, response) => {
     }
 
     const userForToken = { email: user.email, id: user.id }
-    const token = jwt.sign(userForToken, process.env.SECRET, { expiresIn: '4h' })
+    //TODO: Update expires in
+    const token = jwt.sign(userForToken, process.env.SECRET, { expiresIn: '240h' })
 
-    const expiresAt = new Date(Date.now() + 60 * 60 * 1000 * 4)
+    const expiresAt = new Date(Date.now() + 60 * 60 * 1000 * 240)
+    const createdAt = new Date(Date.now())
 
-    await AuthenticationUser.create({ token, user_id: user.id, expires_at: expiresAt })
+    await AuthenticationUser.create({
+      token,
+      user_id: user.id,
+      expires_at: expiresAt,
+      created_at:  createdAt,
+    })
 
-    response.status(200).send({
+    response.status(200).json({
       token,
       email: user.email,
       forename: user.forename,
@@ -34,7 +41,7 @@ loginRouter.post('/', async (request, response) => {
       id: user.id
     })
   } catch (error) {
-    console.error('Login error:', error)
+    console.error('Login error:', error.message || error)
     response.status(500).json({ error: 'An error occurred while loggin in' })
   }
 

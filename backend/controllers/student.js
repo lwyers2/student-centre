@@ -5,7 +5,6 @@ const validate = require('../middleware/validate')
 const tokenVerification = require('../middleware/tokenVerification')
 const roleAuthorization = require('../middleware/roleAuthorization')
 const { checkUserAccessToModule } = require('../helper/moduleAccess')
-const { check } = require('express-validator')
 
 
 studentsRouter.get('/',

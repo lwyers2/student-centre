@@ -18,9 +18,7 @@ function formatOneStudentOneModuleYear(student) {
       code: moduleYear.module.code,
       CATs: moduleYear.module.CATs,
       year: moduleYear.module.year,
-      result: moduleYear.student_module.result,
-      resit: moduleYear.student_module.resit,
-      flagged: moduleYear.student_module.flagged,
+      result_details: moduleYear.student_module,
     }
   }
 }

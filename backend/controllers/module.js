@@ -5,6 +5,7 @@ const validate = require('../middleware/validate')
 const tokenVerification = require('../middleware/tokenVerification')
 const roleAuthorization = require('../middleware/roleAuthorization')
 const roleAndIdAuthorization = require('../middleware/roleAndIdAuthorization')
+const { formatModuleYear } = require('../helper/formaters/module/formatModuleYear')
 
 modulesRouter.get(
   '/',
@@ -41,7 +42,7 @@ modulesRouter.get(
       error.status = 404
       throw error
     }
-    res.json(module)
+    res.json(formatModuleYear(module))
   }
 )
 

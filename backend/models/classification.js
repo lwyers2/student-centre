@@ -6,6 +6,7 @@ const Classification = db.define('Classification' , {
     type: DataTypes.INTEGER,
     allowNull: false,
     primaryKey: true,
+    autoIncrement: true,
   },
   range_start: {
     type: DataTypes.INTEGER,

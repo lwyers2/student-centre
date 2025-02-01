@@ -7,7 +7,8 @@ const StudentModule = db.define('StudentModule', {
   id: {
     type: DataTypes.INTEGER,
     allowNull: false,
-    primaryKey: true
+    primaryKey: true,
+    autoIncrement: true,
   },
   student_id: {
     type: DataTypes.INTEGER,

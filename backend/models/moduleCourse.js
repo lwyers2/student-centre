@@ -4,6 +4,7 @@ const db = require('../utils/db')
 const ModuleCourse = db.define('ModuleCourse', {
   id: {
     type: DataTypes.INTEGER,
+    allowNull: false,
     primaryKey: true,
     autoIncrement: true,
   },

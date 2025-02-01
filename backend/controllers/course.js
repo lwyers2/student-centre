@@ -38,30 +38,7 @@ coursesRouter.get('/', async (request, response) => {
   }
 })
 
-// coursesRouter.get('/user/:userId', async(request, response) => {
-//   try {
-//     const userId = request.params.userId
 
-//     const courses = await Course.findAll({
-//       include: {
-//         model: User,
-//         through: { attributes: [] },
-//         where : { id: userId },
-//         attributes: [], //need to add in user details,
-//         as: 'users'
-//       },
-//       attributes: ['id', 'title', 'code', 'years', 'part_time']
-//     })
-
-//     if (courses.length === 0) {
-//       return response.status(404).json({ error: 'No courses found for this user' })
-//     }
-//     response.json(courses)
-//   } catch (error) {
-//     console.error('Error fetching courses:', error)
-//     response.status(500).json({ error: 'failed to fectch courses' })
-//   }
-// })
 
 
 

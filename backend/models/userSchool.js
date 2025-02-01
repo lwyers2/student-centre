@@ -5,7 +5,8 @@ const UserSchool = db.define('UserSchool', {
   id: {
     type: DataTypes.INTEGER,
     allowNull: false,
-    primaryKey: true
+    primaryKey: true,
+    autoIncrement: true,
   },
   user_id: {
     type: DataTypes.INTEGER,

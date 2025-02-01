@@ -6,7 +6,8 @@ const Student = db.define('Student', {
   id: {
     type: DataTypes.INTEGER,
     allowNull: false,
-    primaryKey: true
+    primaryKey: true,
+    autoIncrement: true,
   },
   forename: {
     type: DataTypes.STRING,

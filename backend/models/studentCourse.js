@@ -5,7 +5,8 @@ const StudentCourse = db.define('StudentCourse', {
   id: {
     type: DataTypes.INTEGER,
     allowNull: false,
-    primaryKey: true
+    primaryKey: true,
+    autoIncrement: true,
   },
   student_id: {
     type: DataTypes.INTEGER,

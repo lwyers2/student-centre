@@ -5,7 +5,8 @@ const ModuleYear = db.define('ModuleYear', {
   id: {
     type: DataTypes.INTEGER,
     allowNull: false,
-    primaryKey: true
+    primaryKey: true,
+    autoIncrement: true,
   },
   module_id: {
     type: DataTypes.INTEGER,
@@ -19,7 +20,7 @@ const ModuleYear = db.define('ModuleYear', {
     type: DataTypes.INTEGER,
     allowNull: false,
   },
-  module_coordinator: {
+  module_coordinator_id: {
     type: DataTypes.INTEGER,
     allowNull: false,
   }

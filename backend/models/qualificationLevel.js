@@ -5,14 +5,15 @@ const QualificationLevel = db.define('QualificationLevel' , {
   id: {
     type: DataTypes.INTEGER,
     allowNull: false,
-    primaryKey: true
+    primaryKey: true,
+    autoIncrement: true,
   },
   qualification: {
     type: DataTypes.STRING,
     allowNull: false,
   },
   level_id: {
-    type: DataTypes.STRING,
+    type: DataTypes.INTEGER,
     allowNull: false,
   }
 },

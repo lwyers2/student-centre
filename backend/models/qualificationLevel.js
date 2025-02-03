@@ -19,7 +19,7 @@ const QualificationLevel = db.define('QualificationLevel' , {
 },
 {
   tableName: 'qualification_level',
-  timestaps: false
+  timestamps: false,
 }
 )
 

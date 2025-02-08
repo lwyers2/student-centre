@@ -38,8 +38,6 @@ Course.hasMany(UserCourse, {
   timestamps: false,
 })
 
-
-
 UserCourse.belongsTo(Course, {
   foreignKey: 'course_id',
   timestamps: false,
@@ -296,21 +294,31 @@ CourseYear.belongsToMany(Student, {
   as: 'students',
 })
 
-// ✅ User ↔ School (Many-to-Many)
-User.belongsToMany(School, {
-  through: UserSchool,
+
+// User <-> UserSchool
+User.hasMany(UserSchool, {
   foreignKey: 'user_id',
-  otherKey: 'school_id',
+  as: 'user_user_schools',
   timestamps: false,
-  as: 'schools',
 })
 
-School.belongsToMany(User, {
-  through: UserSchool,
-  foreignKey: 'school_id',
-  otherKey: 'user_id',
+UserSchool.belongsTo(User, {
+  foreignKey: 'user_id',
+  as: 'user_school_users',
   timestamps: false,
-  as: 'users',
+})
+
+// Schools <-> UserSchool
+School.hasMany(UserSchool, {
+  foreignKey: 'school_id',
+  as: 'school_user_schools',
+  timestamps: false,
+})
+
+UserSchool.belongsTo(School, {
+  foreignKey: 'school_id',
+  as: 'user_school_schools',
+  timestamps: false,
 })
 
 // ✅ User ↔ Role (Many-to-One)

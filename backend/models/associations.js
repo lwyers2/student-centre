@@ -220,33 +220,43 @@ ModuleYear.belongsTo(Module, {
   timestamps: false,
 })
 
-// ✅ Student ↔ Course (Many-to-Many via StudentCourse)
+// ✅ Student -> Student Course
 StudentCourse.belongsTo(Student, {
   foreignKey: 'student_id',
-  as: 'student',
+  as: 'student_course_student',
   timestamps: false,
 })
 
+Student.hasMany(StudentCourse, {
+  foreignKey: 'student_id',
+  as: 'student_student_course',
+  timestamps: false,
+})
+
+//Course -> Student_Course
 StudentCourse.belongsTo(Course, {
   foreignKey: 'course_id',
-  as: 'course',
+  as: 'student_course_course',
   timestamps: false,
 })
 
-Student.belongsToMany(Course, {
-  through: StudentCourse,
-  foreignKey: 'student_id',
-  otherKey: 'course_id',
-  timestamps: false,
-  as: 'courses',
-})
-
-Course.belongsToMany(Student, {
-  through: StudentCourse,
+Student.belongsTo(StudentCourse, {
   foreignKey: 'course_id',
-  otherKey: 'student_id',
+  as: 'course_student_coursee',
   timestamps: false,
-  as: 'students',
+})
+
+//CourseYear -> StudentCourse
+StudentCourse.belongsTo(CourseYear, {
+  foreignKey: 'course_year_id',
+  as: 'student_course_course_year',
+  timestamps: false,
+})
+
+CourseYear.belongsTo(StudentCourse, {
+  foreignKey: 'course_year_id',
+  as: 'course_year_student_coursee',
+  timestamps: false,
 })
 
 // ✅ Student ↔ Module (Many-to-Many via StudentModule)
@@ -300,22 +310,6 @@ ModuleYear.belongsToMany(Student, {
   timestamps: false,
   as: 'students',
 })
-
-// ✅ Student ↔ CourseYear (Many-to-Many via StudentCourse)
-Student.belongsToMany(CourseYear, {
-  through: StudentCourse,
-  foreignKey: 'student_id',
-  timestamps: false,
-  as: 'course_years',
-})
-
-CourseYear.belongsToMany(Student, {
-  through: StudentCourse,
-  foreignKey: 'course_year_id',
-  timestamps: false,
-  as: 'students',
-})
-
 
 // User <-> UserSchool
 User.hasMany(UserSchool, {

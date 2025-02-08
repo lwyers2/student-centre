@@ -1,5 +1,4 @@
 //TODO:
-// student
 // student_course
 // student_module
 
@@ -19,6 +18,7 @@ const { seedModuleYears } = require('./seedModuleYears')
 const { seedModuleCourses } = require('./seedModuleCourses')
 const { seedUserModules } = require('./seedUserModules')
 const { seedStudents } = require('./seedStudents')
+const { seedStudentCourses } = require('./seedStudentCourses')
 
 async function populateTestDatabase() {
   try {
@@ -43,7 +43,7 @@ async function populateTestDatabase() {
     await seedModuleCourses(courses, courseYears, modules, moduleYears)
     await seedUserModules(users, modules, moduleYears)
     const students = await seedStudents()
-    console.log(students)
+    await seedStudentCourses(students, courses, courseYears)
 
     console.log('Test database seeded successfully')
   } catch (error) {

@@ -1,3 +1,12 @@
+// SELECT CONCAT('{ forename: "', student.forename,
+//   '", surname: "', student.surname,
+//   '", student_code: "', student.student_code,
+//   '", email: "', student.email,
+//   '" },') AS 'student_info'
+// FROM student;
+
+
+
 const { Student } = require('../../models')
 
 async function seedStudents() {

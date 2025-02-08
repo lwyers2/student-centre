@@ -2,7 +2,7 @@ const { Semester } = require('../../models')
 
 async function seedSemesters() {
   const semesters = await Semester.bulkCreate([
-    { name: 'Autmn' },
+    { name: 'Autumn' },
     { name: 'Spring' },
     { name: 'Summer' },
     { name: 'Full Year' },

@@ -40,7 +40,10 @@ async function seedCourses(schools, qualification_levels) {
     { title: 'Linguistics', school_id: schools['School of Arts, English, and Languages'], years: 1, qualification_id: qualification_levels['MA'], code: 'MLIN', part_time: 0 },
     { title: 'Linguistics', school_id: schools['School of Arts, English, and Languages'], years: 2, qualification_id: qualification_levels['MA'], code: 'MLIN', part_time: 1 }
   ])
-  return courses.reduce((acc, course) => ({ ...acc,  [course.title ] : course.id }), {})
+  return courses.reduce((acc, course) => ({
+    ...acc,
+    [`${course.title} - ${course.part_time ? 'PT' : 'FT'}`]: course.id
+  }), {})
 }
 
 module.exports = { seedCourses }

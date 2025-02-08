@@ -18,21 +18,32 @@ const UserModule = require('./userModule')
 const UserCourse = require('./userCourse')
 const UserSchool = require('./userSchool')
 
-// ✅ User ↔ Course (Many-to-Many)
-User.belongsToMany(Course, {
-  through: UserCourse,
+//User <-> User_course (Many to One)
+User.hasMany(UserCourse, {
   foreignKey: 'user_id',
-  otherKey: 'course_id',
+  as: 'user_courses',
   timestamps: false,
-  as: 'courses',
 })
 
-Course.belongsToMany(User, {
-  through: UserCourse,
-  foreignKey: 'course_id',
-  otherKey: 'user_id',
+UserCourse.belongsTo(User, {
+  foreignKey: 'user_id',
   timestamps: false,
-  as: 'users',
+  as: 'user_course_users'
+})
+
+//Course <-> User_course (Many to One)
+Course.hasMany(UserCourse, {
+  foreignKey: 'course_id',
+  as: 'course_users',
+  timestamps: false,
+})
+
+
+
+UserCourse.belongsTo(Course, {
+  foreignKey: 'course_id',
+  timestamps: false,
+  as: 'user_course_courses'
 })
 
 // ✅ User ↔ Module (Many-to-Many)
@@ -121,15 +132,16 @@ CourseYear.belongsTo(Course, {
   timestamps: false,
 })
 
+
 // ✅ CourseYear ↔ User (Course Coordinator)
 User.hasMany(CourseYear, {
-  foreignKey: 'course_coordinator_id', // Changed from 'course_coordinator'
+  foreignKey: 'course_coordinator',
   as: 'coordinated_course_years',
   timestamps: false,
 })
 
 CourseYear.belongsTo(User, {
-  foreignKey: 'course_coordinator_id', // Changed from 'course_coordinator'
+  foreignKey: 'course_coordinator',
   as: 'coordinator', // Changed alias to avoid collision
   timestamps: false,
 })
@@ -146,6 +158,7 @@ School.hasMany(Course, {
   as: 'courses',
   timestamps: false,
 })
+
 
 // ✅ ModuleYear ↔ User (Module Coordinator)
 User.hasMany(ModuleYear, {

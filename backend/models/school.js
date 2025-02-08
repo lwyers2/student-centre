@@ -7,10 +7,12 @@ const School = db.define('School', {
     allowNull: false,
     primaryKey: true,
     autoIncrement: true,
+    unique: true,
   },
   school_name: {
     type: DataTypes.STRING,
-    allowNull: false
+    allowNull: false,
+    unique: true,
   }
 },
 {

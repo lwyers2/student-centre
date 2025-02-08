@@ -7,6 +7,7 @@ const QualificationLevel = db.define('QualificationLevel' , {
     allowNull: false,
     primaryKey: true,
     autoIncrement: true,
+    unique: true,
   },
   qualification: {
     type: DataTypes.STRING,

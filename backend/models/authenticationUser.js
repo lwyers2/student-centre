@@ -7,6 +7,7 @@ const AuthenticationUser = db.define('AuthenticationUser', {
     allowNull: false,
     primaryKey: true,
     autoIncrement: true,
+    unique: true,
   },
   token: {
     type: DataTypes.TEXT,

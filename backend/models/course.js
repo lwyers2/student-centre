@@ -7,6 +7,7 @@ const Course = db.define('Course', {
     allowNull: false,
     primaryKey: true,
     autoIncrement: true,
+    unique: true,
   },
   title: {
     type: DataTypes.STRING,

@@ -7,10 +7,12 @@ const Semester = db.define('Semester', {
     allowNull: false,
     primaryKey: true,
     autoIncrement: true,
+    unique: true,
   },
   name: {
     type: DataTypes.STRING,
     allowNull: false,
+    unique: true,
   }
 },
 {

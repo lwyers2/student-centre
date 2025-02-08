@@ -7,6 +7,7 @@ const UserCourse = db.define('UserCourse', {
     allowNull: false,
     primaryKey: true,
     autoIncrement: true,
+    unique: true,
   },
   user_id: {
     type: DataTypes.INTEGER,

@@ -8,6 +8,7 @@ const Student = db.define('Student', {
     allowNull: false,
     primaryKey: true,
     autoIncrement: true,
+    unique: true,
   },
   forename: {
     type: DataTypes.STRING,
@@ -20,10 +21,12 @@ const Student = db.define('Student', {
   email: {
     type: DataTypes.STRING,
     allowNull: false,
+    unique: true,
   },
   student_code: {
     type: DataTypes.STRING,
     allowNull: false,
+    unique: true,
   }
 },
 {

@@ -7,6 +7,7 @@ const Module = db.define('Module', {
     allowNull: false,
     primaryKey: true,
     autoIncrement: true,
+    unique: true,
   },
   title: {
     type: DataTypes.STRING,
@@ -19,6 +20,7 @@ const Module = db.define('Module', {
   code: {
     type: DataTypes.STRING,
     allowNull: false,
+    unique: true,
   },
   CATs: {
     type: DataTypes.STRING,

@@ -7,6 +7,7 @@ const User = db.define('User', {
     allowNull: false,
     primaryKey: true,
     autoIncrement: true,
+    unique: true,
   },
   forename: {
     type: DataTypes.STRING,
@@ -19,6 +20,7 @@ const User = db.define('User', {
   email: {
     type: DataTypes.STRING,
     allowNull: false,
+    unique: true,
     //Will add validation at some point
     // validate: {
     //   isEmail: true

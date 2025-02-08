@@ -7,6 +7,7 @@ const ModuleCourse = db.define('ModuleCourse', {
     allowNull: false,
     primaryKey: true,
     autoIncrement: true,
+    unique: true,
   },
   course_id: {
     type: DataTypes.INTEGER,

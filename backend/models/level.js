@@ -7,10 +7,12 @@ const Level = db.define('Level', {
     allowNull: false,
     primaryKey: true,
     autoIncrement: true,
+    unique: true,
   },
   level: {
     type: DataTypes.INTEGER,
-    allowNull: false
+    allowNull: false,
+    unique: true,
   },
 },
 {

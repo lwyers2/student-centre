@@ -1,3 +1,13 @@
+//SELECT CONCAT('{ user_id: users["', user.email, '"], ',
+// 'module_id: modules["', module.title, '"], ',
+// 'module_year_id: moduleYears["', module.title, ' - ', module_year.year_start, '"] },') AS 'module_year'  FROM user_module
+// INNER JOIN user
+// ON user.id = user_module.user_id
+// INNER JOIN module
+// ON module.id = user_module.module_id
+// INNER JOIN module_year
+// ON module_year.id = user_module.module_year_id
+
 const { UserModule } = require('../../models')
 
 async function seedUserModules (users, modules, moduleYears) {

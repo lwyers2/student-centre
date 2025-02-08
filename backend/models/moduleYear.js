@@ -7,6 +7,7 @@ const ModuleYear = db.define('ModuleYear', {
     allowNull: false,
     primaryKey: true,
     autoIncrement: true,
+    unique: true,
   },
   module_id: {
     type: DataTypes.INTEGER,

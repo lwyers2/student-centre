@@ -7,10 +7,12 @@ const Role = db.define('Role', {
     allowNull: false,
     primaryKey: true,
     autoIncrement: true,
+    unique: true,
   },
   name: {
     type: DataTypes.STRING,
-    allowNull: false
+    allowNull: false,
+    unique: true,
   },
 },
 {

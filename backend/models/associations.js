@@ -18,385 +18,425 @@ const UserModule = require('./userModule')
 const UserCourse = require('./userCourse')
 const UserSchool = require('./userSchool')
 
-//User <-> User_course (Many to One)
+//user_course (user, course, course_year)
+
+//User -> User_course
 User.hasMany(UserCourse, {
   foreignKey: 'user_id',
-  as: 'user_courses',
+  as: 'user_user_course',
   timestamps: false,
 })
 
 UserCourse.belongsTo(User, {
   foreignKey: 'user_id',
   timestamps: false,
-  as: 'user_course_users'
+  as: 'user_course_user'
 })
 
-//Course <-> User_course (Many to One)
+//Course -> User_course
 Course.hasMany(UserCourse, {
   foreignKey: 'course_id',
-  as: 'course_users',
+  as: 'course_user_course',
   timestamps: false,
 })
 
 UserCourse.belongsTo(Course, {
   foreignKey: 'course_id',
   timestamps: false,
-  as: 'user_course_courses'
+  as: 'user_course_course'
 })
+
+//Course_Year -> User_course
+CourseYear.hasMany(UserCourse, {
+  foreignKey: 'course_year_id',
+  as: 'course_year_user_course',
+  timestamps: false,
+})
+
+UserCourse.belongsTo(CourseYear, {
+  foreignKey: 'course_year_id',
+  timestamps: false,
+  as: 'user_course_course_year'
+})
+
+//end of user_course
+
+//user_module (user, course, course_year)
 
 //User -> User Module
 User.hasMany(UserModule, {
   foreignKey: 'user_id',
-  as: 'user_module_users',
+  as: 'user_module_user',
   timestamps: false,
 })
 
 UserModule.belongsTo(User, {
   foreignKey: 'user_id',
   timestamps: false,
-  as: 'user_user_module'
+  as: 'user_module_user'
 })
 
 //Module -> User Module
 Module.hasMany(UserModule, {
   foreignKey: 'module_id',
-  as: 'module_module_users',
+  as: 'module_user_module',
   timestamps: false,
 })
 
 UserModule.belongsTo(Module, {
   foreignKey: 'module_id',
   timestamps: false,
-  as: 'user_modules_modules'
+  as: 'user_modules_module'
 })
 
-//Module -> User Module
+//ModuleYear -> User Module
 ModuleYear.hasMany(UserModule, {
   foreignKey: 'module_year_id',
-  as: 'module_year_module_users',
+  as: 'module_year_user_module',
   timestamps: false,
 })
 
 UserModule.belongsTo(ModuleYear, {
   foreignKey: 'module_year_id',
   timestamps: false,
-  as: 'user_modules_module_years'
+  as: 'user_module_module_year'
 })
 
+//End of user_module
 
+//module_course (module, module_year, course, course_year)
 
 //Module -> ModuleCourse
 Module.hasMany(ModuleCourse, {
   foreignKey: 'module_id',
-  as: 'module_module_courses',
+  as: 'module_module_course',
   timestamps: false,
 })
 
-ModuleCourse.hasMany(Module, {
+ModuleCourse.belongsTo(Module, {
   foreignKey: 'module_id',
-  as: 'module_course_modules',
+  as: 'module_course_module',
   timestamps: false,
 })
 
-
-
-// ✅ ModuleCourse ↔ ModuleYear (Many-to-One)
-ModuleCourse.belongsTo(ModuleYear, {
-  foreignKey: 'module_year_id',
-  as: 'module_course_module_years',
-  timestamps: false,
-})
-
+//ModuleYear -> ModuleCourse
 ModuleYear.hasMany(ModuleCourse, {
   foreignKey: 'module_year_id',
-  as: 'module_year_module_courses',
+  as: 'module_year_module_course',
   timestamps: false,
 })
 
-// ✅ ModuleCourse ↔ Course (Many-to-One)
-ModuleCourse.belongsTo(Course, {
-  foreignKey: 'course_id',
-  as: 'course',
+ModuleCourse.belongsTo(ModuleYear, {
+  foreignKey: 'module_year_id',
+  as: 'module_course_module_year',
   timestamps: false,
 })
 
+// Course -> ModuleCourse
 Course.hasMany(ModuleCourse, {
   foreignKey: 'course_id',
-  as: 'module_courses',
+  as: 'course_module_course',
   timestamps: false,
 })
 
-// ✅ ModuleCourse ↔ CourseYear (Many-to-One)
-ModuleCourse.belongsTo(CourseYear, {
-  foreignKey: 'course_year_id',
-  as: 'course_year',
+ModuleCourse.belongsTo(Course, {
+  foreignKey: 'course_id',
+  as: 'module_course_course',
   timestamps: false,
 })
 
+//CourseYear -> ModuleCourse
 CourseYear.hasMany(ModuleCourse, {
   foreignKey: 'course_year_id',
-  as: 'course_modules',
+  as: 'course_year_module_course',
   timestamps: false,
 })
 
-// ✅ Course ↔ CourseYear (One-to-Many)
+ModuleCourse.belongsTo(CourseYear, {
+  foreignKey: 'course_year_id',
+  as: 'module_course_course_year',
+  timestamps: false,
+})
+
+//end of module_course
+
+//course_year (course, user - module_coordinator)
+
+// Course -> CourseYear
 Course.hasMany(CourseYear, {
   foreignKey: 'course_id',
-  as: 'course_years',
+  as: 'course_course_year',
   timestamps: false,
 })
 
 CourseYear.belongsTo(Course, {
   foreignKey: 'course_id',
-  as: 'course',
+  as: 'course_year_course',
   timestamps: false,
 })
 
-
-// ✅ CourseYear ↔ User (Course Coordinator)
+// User (course_coordinator) -> CourseYear
 User.hasMany(CourseYear, {
   foreignKey: 'course_coordinator',
-  as: 'coordinated_course_years',
+  as: 'course_coordinator_course_year',
   timestamps: false,
 })
 
 CourseYear.belongsTo(User, {
   foreignKey: 'course_coordinator',
-  as: 'coordinator', // Changed alias to avoid collision
+  as: 'course_year_course_coordinator',
   timestamps: false,
 })
 
-// ✅ Course ↔ School (Many-to-One)
+//course table (school, qualification_level) school_id, qualification_id
+
+// Course -> School
 Course.belongsTo(School, {
   foreignKey: 'school_id',
-  as: 'school',
+  as: 'course_school',
   timestamps: false,
 })
 
 School.hasMany(Course, {
   foreignKey: 'school_id',
-  as: 'courses',
+  as: 'school_course',
   timestamps: false,
 })
 
+// Course -> QualificationLevel
+Course.belongsTo(QualificationLevel, {
+  foreignKey: 'qualification_id',
+  as: 'course_qualification_level',
+  timestamps: false,
+})
 
-// ✅ ModuleYear ↔ User (Module Coordinator)
+QualificationLevel.hasMany(Course, {
+  foreignKey: 'qualification_id',
+  as: 'qualification_level_course',
+  timestamps: false,
+})
+
+//module year table (module_coordinator, semeseter_id, module_id)
+
+// User -> ModuleYear
 User.hasMany(ModuleYear, {
   foreignKey: 'module_coordinator_id',
-  as: 'coordinated_module_years',
+  as: 'module_coordinator_module_year',
   timestamps: false,
 })
 
 ModuleYear.belongsTo(User, {
   foreignKey: 'module_coordinator_id',
-  as: 'module_coordinator',
+  as: 'module_year_module_coordinator',
   timestamps: false,
 })
 
-// ✅ ModuleYear ↔ Semester (Many-to-One)
+//Semester -> ModuleYear
 Semester.hasMany(ModuleYear, {
   foreignKey: 'semester_id',
-  as: 'module_years',
+  as: 'semester_module_year',
   timestamps: false,
 })
 
 ModuleYear.belongsTo(Semester, {
   foreignKey: 'semester_id',
-  as: 'semester',
+  as: 'module_year_semester',
   timestamps: false,
 })
 
-// ✅ Module ↔ ModuleYear (One-to-Many)
+//Module -> ModuleYear
 Module.hasMany(ModuleYear, {
   foreignKey: 'module_id',
-  as: 'module_years',
+  as: 'module_module_year',
   timestamps: false,
 })
-
 
 ModuleYear.belongsTo(Module, {
   foreignKey: 'module_id',
-  as: 'module',
+  as: 'module_year_module',
   timestamps: false,
 })
 
-// ✅ Student -> Student Course
-StudentCourse.belongsTo(Student, {
-  foreignKey: 'student_id',
-  as: 'student_course_student',
-  timestamps: false,
-})
+//end of module_year table
 
+//student course table (student, course, course_year)
+
+// Student -> Student Course
 Student.hasMany(StudentCourse, {
   foreignKey: 'student_id',
   as: 'student_student_course',
   timestamps: false,
 })
 
+StudentCourse.belongsTo(Student, {
+  foreignKey: 'student_id',
+  as: 'student_course_student',
+  timestamps: false,
+})
+
 //Course -> Student_Course
+Course.belongsTo(StudentCourse, {
+  foreignKey: 'course_id',
+  as: 'course_student_course',
+  timestamps: false,
+})
+
 StudentCourse.belongsTo(Course, {
   foreignKey: 'course_id',
   as: 'student_course_course',
   timestamps: false,
 })
 
-Student.belongsTo(StudentCourse, {
-  foreignKey: 'course_id',
-  as: 'course_student_coursee',
-  timestamps: false,
-})
-
 //CourseYear -> StudentCourse
-StudentCourse.belongsTo(CourseYear, {
-  foreignKey: 'course_year_id',
-  as: 'student_course_course_year',
-  timestamps: false,
-})
-
 CourseYear.belongsTo(StudentCourse, {
   foreignKey: 'course_year_id',
   as: 'course_year_student_coursee',
   timestamps: false,
 })
 
-// ✅ Student ↔ Module (Many-to-Many via StudentModule)
+StudentCourse.belongsTo(CourseYear, {
+  foreignKey: 'course_year_id',
+  as: 'student_course_course_year',
+  timestamps: false,
+})
+
+//end of student_course table
+
+//student_module table (student, module, module_year)
+
+//Student-> StudentModule
+Student.hasMany(StudentModule, {
+  foreignKey: 'student_id',
+  as: 'student_student_module',
+  timestamps: false,
+})
+
 StudentModule.belongsTo(Student, {
   foreignKey: 'student_id',
-  as: 'student',
+  as: 'student_module_student',
+  timestamps: false,
+})
+
+// Module -> StudentModule
+Module.hasMany(StudentModule, {
+  foreignKey: 'module_id',
+  as: 'module_student_module',
   timestamps: false,
 })
 
 StudentModule.belongsTo(Module, {
   foreignKey: 'module_id',
-  as: 'module',
+  as: 'student_module_module',
   timestamps: false,
 })
 
-Student.belongsToMany(Module, {
-  through: StudentModule,
-  foreignKey: 'student_id',
-  otherKey: 'module_id',
+//moduleYear -> studentModule
+ModuleYear.hasMany(StudentModule, {
+  foreignKey: 'module_year_id',
+  as: 'module_year_student_module',
   timestamps: false,
-  as: 'modules',
 })
 
-Module.belongsToMany(Student, {
-  through: StudentModule,
-  foreignKey: 'module_id',
-  otherKey: 'student_id',
-  timestamps: false,
-  as: 'students',
-})
-
-// ✅ StudentModule ↔ ModuleYear (Many-to-One)
 StudentModule.belongsTo(ModuleYear, {
   foreignKey: 'module_year_id',
-  as: 'module_year',
+  as: 'student_module_module_year',
   timestamps: false,
 })
 
-Student.belongsToMany(ModuleYear, {
-  through: StudentModule,
-  foreignKey: 'student_id',
-  otherKey: 'module_year_id',
-  timestamps: false,
-  as: 'module_years',
-})
+//end of student_module table
 
-ModuleYear.belongsToMany(Student, {
-  through: StudentModule,
-  foreignKey: 'module_year_id',
-  otherKey: 'student_id',
-  timestamps: false,
-  as: 'students',
-})
+//user_school table (user, school)
 
-// User <-> UserSchool
+// User -> UserSchool
 User.hasMany(UserSchool, {
   foreignKey: 'user_id',
-  as: 'user_user_schools',
+  as: 'user_user_school',
   timestamps: false,
 })
 
 UserSchool.belongsTo(User, {
   foreignKey: 'user_id',
-  as: 'user_school_users',
+  as: 'user_school_user',
   timestamps: false,
 })
 
-// Schools <-> UserSchool
+// Schools -> UserSchool
 School.hasMany(UserSchool, {
   foreignKey: 'school_id',
-  as: 'school_user_schools',
+  as: 'school_user_school',
   timestamps: false,
 })
 
 UserSchool.belongsTo(School, {
   foreignKey: 'school_id',
-  as: 'user_school_schools',
+  as: 'user_school_school',
   timestamps: false,
 })
 
-// ✅ User ↔ Role (Many-to-One)
+//end of user_school table
+
+//user table
+
+// User -> Role
 User.belongsTo(Role, {
   foreignKey: 'role_id',
-  as: 'role',
+  as: 'user_role',
   timestamps: false,
 })
 
 Role.hasMany(User, {
   foreignKey: 'role_id',
-  as: 'users',
+  as: 'role_user',
   timestamps: false,
 })
 
-// ✅ Course ↔ QualificationLevel
-Course.belongsTo(QualificationLevel, {
-  foreignKey: 'qualification_id',
-  as: 'qualification_level',
-  timestamps: false,
-})
+//end of user table
 
-QualificationLevel.hasMany(Course, {
-  foreignKey: 'qualification_id',
-  timestamps: false,
-})
+//qualification_level (level)
 
 // ✅ QualificationLevel ↔ Level
 QualificationLevel.belongsTo(Level, {
   foreignKey: 'level_id',
-  as: 'level',
+  as: 'qualification_level_level',
   timestamps: false,
 })
 
 Level.hasMany(QualificationLevel, {
-  foreignKey: 'level_id',
+  foreignKey: 'level_qualification_level',
   timestamps: false,
 })
 
-// ✅ AuthenticationUser ↔ User (for authentication)
+//end of qualification_level table
+
+//authentication_user table (user)
+
+//AuthenticationUser -> User (for authentication)
 AuthenticationUser.belongsTo(User, {
   foreignKey: 'user_id',
-  as: 'user',
+  as: 'authentication_user_user',
   timestamps: false,
 })
 
 User.hasMany(AuthenticationUser, {
   foreignKey: 'user_id',
-  as: 'tokens',
+  as: 'user_authentication_user',
   timestamps: false,
 })
 
-// Level -> Classification (One-to-Many)
+//end of authentication_user table
+
+//classification table (level)
+
+// Level -> Classification
 Level.hasMany(Classification, {
   foreignKey: 'level_id',
-  as: 'classifications', // Plural to reflect multiple classifications
+  as: 'level_classification',
   timestamps: false,
 })
 
 Classification.belongsTo(Level, {
   foreignKey: 'level_id',
-  as: 'level', // Singular because one classification belongs to one level
+  as: 'classification_level',
   timestamps: false,
 })
 

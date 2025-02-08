@@ -24,6 +24,7 @@ const StudentCourse = db.define('StudentCourse', {
   archived: {
     type: DataTypes.TINYINT,
     allowNull: false,
+    defaultValue: 0,
   },
 },
 {

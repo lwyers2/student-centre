@@ -8,7 +8,7 @@ classificationsRouter.get('/', async (request, response) => {
       include: [
         {
           model: Level,
-          as: 'level',
+          as: 'classification_level',
         }
       ]
     })

@@ -61,33 +61,31 @@ Module.belongsToMany(User, {
   as: 'users',
 })
 
-// ✅ Module ↔ Course (Many-to-Many)
-Module.belongsToMany(Course, {
-  through: ModuleCourse,
+//Module -> ModuleCourse
+Module.hasMany(ModuleCourse, {
   foreignKey: 'module_id',
-  otherKey: 'course_id',
+  as: 'module_module_courses',
   timestamps: false,
-  as: 'courses',
 })
 
-Course.belongsToMany(Module, {
-  through: ModuleCourse,
-  foreignKey: 'course_id',
-  otherKey: 'module_id',
+ModuleCourse.hasMany(Module, {
+  foreignKey: 'module_id',
+  as: 'module_course_modules',
   timestamps: false,
-  as: 'modules',
 })
+
+
 
 // ✅ ModuleCourse ↔ ModuleYear (Many-to-One)
 ModuleCourse.belongsTo(ModuleYear, {
   foreignKey: 'module_year_id',
-  as: 'module_year',
+  as: 'module_course_module_years',
   timestamps: false,
 })
 
 ModuleYear.hasMany(ModuleCourse, {
   foreignKey: 'module_year_id',
-  as: 'module_courses',
+  as: 'module_year_module_courses',
   timestamps: false,
 })
 

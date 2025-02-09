@@ -21,10 +21,15 @@ const User = db.define('User', {
     type: DataTypes.STRING,
     allowNull: false,
     unique: true,
-    //Will add validation at some point
-    // validate: {
-    //   isEmail: true
-    // }
+    validate: {
+      // Custom email validation using a regular expression
+      isCustomEmail(value) {
+        const regex = /^[a-zA-Z0-9._%+-]+@(ads\.qub\.ac\.uk|qub\.ac\.uk)$/
+        if (!regex.test(value)) {
+          throw new Error('Email must be in the format x@ads.qub.ac.uk or x@qub.ac.uk')
+        }
+      },
+    },
   },
   password: {
     type: DataTypes.STRING,
@@ -46,12 +51,15 @@ const User = db.define('User', {
   },
   prefix: {
     type: DataTypes.STRING,
+    allowNull: false,
   },
   job_title: {
     type: DataTypes.STRING,
+    allowNull: false,
   },
   role_id: {
-    type: DataTypes.INTEGER
+    type: DataTypes.INTEGER,
+    allowNull: false,
   }
 },
 {

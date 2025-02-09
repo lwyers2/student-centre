@@ -50,6 +50,9 @@ const User = db.define('User', {
   job_title: {
     type: DataTypes.STRING,
   },
+  role_id: {
+    type: DataTypes.INTEGER
+  }
 },
 {
   tableName: 'user',

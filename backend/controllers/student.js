@@ -1,7 +1,7 @@
 const studentsRouter = require('express').Router()
 const studentService = require('../services/student')
 const { validateId } = require('../validators/validateId')
-const validate = require('../middleware/validate')
+const { validate } = require('../middleware/validate')
 const tokenVerification = require('../middleware/tokenVerification')
 const roleAuthorization = require('../middleware/roleAuthorization')
 const { checkUserAccessToModule } = require('../helper/moduleAccess')

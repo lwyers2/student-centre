@@ -5,7 +5,7 @@ const tokenVerification = require('../middleware/tokenVerification')
 const roleAuthorization = require('../middleware/roleAuthorization')
 const roleAndIdAuthorization = require('../middleware/roleAndIdAuthorization')
 const { validateId } = require('../validators/validateId')
-const validate = require('../middleware/validate')
+const { validate } = require('../middleware/validate')
 const User = require('../models/user')
 const Role = require('../models/role')
 

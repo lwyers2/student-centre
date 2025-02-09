@@ -1,4 +1,4 @@
-const { validationResult } = require('express-validator')
+const { body, validationResult } = require('express-validator')
 
 const validate = (req, res, next) => {
   const errors = validationResult(req)
@@ -8,4 +8,10 @@ const validate = (req, res, next) => {
   next()
 }
 
-module.exports = validate
+const validateLogin = async (req, res, next) => {
+  await body('email').isEmail().withMessage('Invalid email format').run(req)
+  await body('password').notEmpty().withMessage('Password is required').run(req)
+  validate(req, res, next)
+}
+
+module.exports = { validate, validateLogin }

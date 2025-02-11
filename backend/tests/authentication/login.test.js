@@ -3,8 +3,7 @@ const bcrypt = require('bcrypt')
 const app = require('../../app')
 const { User, AuthenticationUser } = require('../../models')
 
-//Todo 
-// check if user is active
+//Todo
 // failed attempts 5
 // expired token?
 //check that password isn't sent in console log

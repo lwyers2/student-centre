@@ -15,8 +15,8 @@ jobs:
         ports:
           - 3306:3306
         env:
-          MYSQL_ROOT_PASSWORD: root
-          MYSQL_DATABASE: test_db
+          MYSQL_ROOT_PASSWORD: ${{ secrets.DB_PASSWORD }}  # Use GitHub Secrets for sensitive data
+          MYSQL_DATABASE: student_marks_test  # You can also put this in secrets if needed
         options: --health-cmd="mysqladmin ping --silent" --health-interval=10s --health-timeout=5s --health-retries=3
 
     steps:
@@ -55,8 +55,8 @@ jobs:
         run: |
           echo "DB_HOST=127.0.0.1" >> .env
           echo "DB_PORT=3306" >> .env
-          echo "DB_USER=root" >> .env
-          echo "DB_PASSWORD=password" >> .env
+          echo "DB_USER=${{ secrets.DB_USER }}" >> .env  # Fetch username from GitHub Secrets
+          echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env  # Fetch password from GitHub Secrets
           echo "DB_NAME=student_marks_test" >> .env 
 
       # Run tests for backend
@@ -65,7 +65,7 @@ jobs:
         run: |
           npm test -- --ci
 
-      # Run tests for frontend
+      # Run tests for frontend (optional, currently commented out)
       # - name: Run tests for frontend
       #   working-directory: ./frontend
       #   run: |

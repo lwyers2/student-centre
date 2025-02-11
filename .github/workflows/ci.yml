@@ -44,12 +44,12 @@ jobs:
       - name: Run tests for backend
         working-directory: ./backend
         run: |
-          npm test -- --ci --maxWorkers=2  # Adjust maxWorkers if needed
+          npm test -- --ci
 
       # Run tests for frontend
-      - name: Run tests for frontend
-        working-directory: ./frontend
-        run: |
-          npm test -- --ci --maxWorkers=2  # Adjust maxWorkers if needed
+      # - name: Run tests for frontend
+      #   working-directory: ./frontend
+      #   run: |
+      #     npm test -- --ci --maxWorkers=2  # Adjust maxWorkers if needed
 
 

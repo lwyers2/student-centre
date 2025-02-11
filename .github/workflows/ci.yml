@@ -70,6 +70,10 @@ jobs:
         run: |
           npm test -- --ci
 
+      - name: Debug .env contents
+        run: |
+          cat .env  # This will print out the contents of .env
+
       # Run tests for frontend (optional, currently commented out)
       # - name: Run tests for frontend
       #   working-directory: ./frontend

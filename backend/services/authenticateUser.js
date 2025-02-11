@@ -3,6 +3,7 @@
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
 const { User, AuthenticationUser } = require('../models')
+const { AuthError } = require('../utils/errors')
 
 const generateToken = (user) => {
   return jwt.sign({ email: user.email, id: user.id }, process.env.SECRET, { expiresIn: '240h' })
@@ -11,14 +12,12 @@ const generateToken = (user) => {
 const authenticateUser = async (email, password) => {
   const user = await User.findOne({ where: { email } })
   if (!user){
-    console.warn(`Login failed: Email not found - ${email}`)
-    throw new Error('Email not found')
+    throw new AuthError('Email not found', 401)
   }
 
   const passwordCorrect = await bcrypt.compare(password, user.password)
   if (!passwordCorrect){
-    console.warn(`Login failed: Incorrect password - ${email}`)
-    throw new Error('Incorrect password')
+    throw new AuthError('Incorrect password', 401)
   }
 
   const token = generateToken(user)

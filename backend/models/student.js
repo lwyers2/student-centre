@@ -21,12 +21,10 @@ const Student = db.define('Student', {
   email: {
     type: DataTypes.STRING,
     allowNull: false,
-    unique: true,
   },
   student_code: {
     type: DataTypes.STRING,
     allowNull: false,
-    unique: true,
   }
 },
 {

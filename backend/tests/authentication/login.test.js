@@ -1,25 +1,20 @@
-// tests/authentication/login.test.js
-const request = require('supertest')
-const app = require('../../app') // Adjust the path as needed
-const { User } = require('../../models')
+const supertest = require('supertest')
 const bcrypt = require('bcrypt')
-
-process.on('unhandledRejection', (reason) => {
-  console.error('Unhandled Rejection:', reason)
-})
+const app = require('../../app')
+const { User, AuthenticationUser } = require('../../models')
 
 describe('POST /login', () => {
-  let testUser // Declare testUser to be used in beforeAll and afterAll
+  let testUser
 
   beforeAll(async () => {
-    // Seed a test user into the database
-    const hashedPassword = await bcrypt.hash('password123', 10) // Hash the password
-    testUser = await User.create({ // Save the user to the database
+    // Create the user once before all tests run
+    const hashedPassword = await bcrypt.hash('password123', 10)
+    testUser = await User.create({
       email: 'test@qub.ac.uk',
       password: hashedPassword,
       forename: 'John',
       surname: 'Doe',
-      active: 0,
+      active: 1,
       prefix: 'Prof',
       job_title: 'Professor',
       role_id: 1
@@ -27,13 +22,15 @@ describe('POST /login', () => {
   })
 
   afterAll(async () => {
-    // Clean up by deleting the test user
-    await User.destroy({ where: { id: testUser.id } })
+    if (testUser) {
+      await AuthenticationUser.destroy({ where: { user_id: testUser.id }, force: true })
+      await User.destroy({ where: { id: testUser.id }, force: true })
+    }
   })
 
   it('should return a token when valid credentials are provided', async () => {
-    const response = await request(app)
-      .post('/login')
+    const response = await supertest(app)
+      .post('/api/login')
       .send({
         email: 'test@qub.ac.uk',
         password: 'password123',
@@ -48,8 +45,8 @@ describe('POST /login', () => {
   })
 
   it('should return 401 when email is incorrect', async () => {
-    const response = await request(app)
-      .post('/login')
+    const response = await supertest(app)
+      .post('/api/login')
       .send({
         email: 'wrong@example.com',
         password: 'password123',
@@ -60,8 +57,8 @@ describe('POST /login', () => {
   })
 
   it('should return 401 when password is incorrect', async () => {
-    const response = await request(app)
-      .post('/login')
+    const response = await supertest(app)
+      .post('/api/login')
       .send({
         email: 'test@qub.ac.uk',
         password: 'wrongpassword',
@@ -70,4 +67,6 @@ describe('POST /login', () => {
     expect(response.status).toBe(401)
     expect(response.body.error).toBe('Incorrect password')
   })
+
+  
 })

@@ -1,20 +1,20 @@
 const { SequelizeConnectionTimedOutError, SequelizeConnectionRefusedError, TimeoutError, ValidationError, UniqueConstraintError, DatabaseError, ConnectionError, ForeignKeyConstraintError } = require('sequelize')
-
+const { AuthError } = require('../utils/errors')
 
 const errorHandler = (error, request, response, _next) => {
   console.log('error:', error)
+
+
+  if (error instanceof AuthError) {
+    return response.status(error.status).json({
+      error: error.message,
+    })
+  }
 
   if (error.status) {
     return response.status(error.status).json({
       error: error.message || 'An error occurred',
       details: error.details || undefined, // Include details if provided
-    })
-  }
-
-  if (error instanceof Error) {
-    return response.status(500).json({
-      message: error.message,
-      status: error.status,
     })
   }
 
@@ -87,6 +87,13 @@ const errorHandler = (error, request, response, _next) => {
     return response.status(400).json({ error: error.message })
   } else if (error.name === 'JsonWebTokenError') {
     return response.status(400).json({ error: 'token missing or invalid' })
+  }
+
+  if (error instanceof Error) {
+    return response.status(500).json({
+      message: error.message,
+      status: error.status,
+    })
   }
 
   // Generic 500 error for unhandled errors

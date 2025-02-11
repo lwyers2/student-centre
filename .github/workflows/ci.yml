@@ -59,10 +59,12 @@ jobs:
           echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env  # Fetch password from GitHub Secrets
           echo "DB_NAME=student_marks_test" >> .env 
 
-      # Add JWT Secret to .env
+      # Add JWT Secret to .env only if not already set
       - name: Set up JWT secret
         run: |
-          echo "SECRET=${{ secrets.SECRET }}" >> .env  # Fetch JWT secret from GitHub Secrets
+          if ! grep -q "SECRET=" .env; then
+            echo "SECRET=${{ secrets.SECRET }}" >> .env  # Fetch JWT secret from GitHub Secrets
+          fi
 
       # Run tests for backend
       - name: Run tests for backend

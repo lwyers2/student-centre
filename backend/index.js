@@ -1,4 +1,5 @@
 require('./models/associations')
+require('dotenv').config()
 const app = require('./app') // Import app.js
 const config = require('./utils/config') // Get port from config
 const { info } = require('./utils/logger')

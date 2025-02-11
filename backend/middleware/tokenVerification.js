@@ -51,8 +51,8 @@ const tokenVerification = async (req, res, next) => {
       })
   }
 
-  console.log('JWT SECRET!!:', process.env.SECRET) // Debug line
-  const decodedToken = jwt.verify(token, process.env.SECRET)
+  console.log('JWT SECRET!!:', process.env.JWT_SECRET) // Debug line
+  const decodedToken = jwt.verify(token, process.env.JWT_SECRET)
 
   if (!storedToken.user) {
     return res.status(401).json(

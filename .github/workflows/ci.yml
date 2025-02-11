@@ -62,10 +62,10 @@ jobs:
       # Add JWT Secret to .env only if not already set
       - name: Set up JWT secret
         run: |
-          if ! grep -q "SECRET=" .env; then
-            echo "SECRET=${{ secrets.SECRET }}" >> .env  # Fetch JWT secret from GitHub Secrets
+          if ! grep -q "JWT_SECRET=" .env; then
+            echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> .env  # Fetch JWT secret from GitHub Secrets
           else
-            echo "SECRET is already set in .env"
+            echo "JWT_SECRET is already set in .env"
           fi
 
       # Debug: Verify the .env content for debugging purposes (don't expose secrets in production)

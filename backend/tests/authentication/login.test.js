@@ -124,19 +124,19 @@ describe('POST /login', () => {
     expect(response.body.error).toBe('Invalid email format')
   })
 
-  // it('should return 401 if the account is inactive', async () => {
-  //   // Update the test user to be inactive
-  //   await User.update({ active: 0 }, { where: { id: testUser.id } })
+  it('should return 401 if the account is inactive', async () => {
+    // Update the test user to be inactive
+    await User.update({ active: 0 }, { where: { id: testUser.id } })
 
-  //   const response = await supertest(app)
-  //     .post('/api/login')
-  //     .send({
-  //       email: 'test@qub.ac.uk',
-  //       password: 'password123',
-  //     })
+    const response = await supertest(app)
+      .post('/api/login')
+      .send({
+        email: 'test@qub.ac.uk',
+        password: 'password123',
+      })
 
-  //   expect(response.status).toBe(401)
-  //   expect(response.body.error).toBe('Account is inactive')
-  // })
+    expect(response.status).toBe(401)
+    expect(response.body.error).toBe('Account is inactive')
+  })
 
 })

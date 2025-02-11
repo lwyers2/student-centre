@@ -2,7 +2,6 @@
 
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
-require('dotenv').config()
 const { User, AuthenticationUser } = require('../models')
 const { AuthError } = require('../utils/errors')
 

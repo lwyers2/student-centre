@@ -12,7 +12,6 @@ const Level = db.define('Level', {
   level: {
     type: DataTypes.INTEGER,
     allowNull: false,
-    unique: true,
   },
 },
 {

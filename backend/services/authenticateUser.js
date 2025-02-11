@@ -21,6 +21,10 @@ const authenticateUser = async (email, password) => {
     throw new AuthError('Incorrect password', 401)
   }
 
+  if(!user.active) {
+    throw new AuthError('Account is inactive', 401)
+  }
+
   const token = generateToken(user)
   const expiresAt = new Date(Date.now() + 60 * 60 * 1000 * 240) // 240 hours
 

@@ -20,7 +20,6 @@ const User = db.define('User', {
   email: {
     type: DataTypes.STRING,
     allowNull: false,
-    unique: true,
     validate: {
       // Custom email validation using a regular expression
       isCustomEmail(value) {

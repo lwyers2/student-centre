@@ -3,6 +3,15 @@ const bcrypt = require('bcrypt')
 const app = require('../../app')
 const { User, AuthenticationUser } = require('../../models')
 
+//Todo 
+// check if user is active
+// failed attempts 5
+// expired token?
+//check that password isn't sent in console log
+//test for successful login after resetting password
+//correct token format
+//response time
+
 describe('POST /login', () => {
   let testUser
 
@@ -115,5 +124,20 @@ describe('POST /login', () => {
     expect(response.status).toBe(400)
     expect(response.body.error).toBe('Invalid email format')
   })
+
+  // it('should return 401 if the account is inactive', async () => {
+  //   // Update the test user to be inactive
+  //   await User.update({ active: 0 }, { where: { id: testUser.id } })
+
+  //   const response = await supertest(app)
+  //     .post('/api/login')
+  //     .send({
+  //       email: 'test@qub.ac.uk',
+  //       password: 'password123',
+  //     })
+
+  //   expect(response.status).toBe(401)
+  //   expect(response.body.error).toBe('Account is inactive')
+  // })
 
 })

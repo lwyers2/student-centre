@@ -12,7 +12,6 @@ const School = db.define('School', {
   school_name: {
     type: DataTypes.STRING,
     allowNull: false,
-    unique: true,
   }
 },
 {

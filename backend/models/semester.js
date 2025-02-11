@@ -12,7 +12,6 @@ const Semester = db.define('Semester', {
   name: {
     type: DataTypes.STRING,
     allowNull: false,
-    unique: true,
   }
 },
 {

@@ -9,6 +9,16 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    services:
+      mysql:
+        image: mysql:5.7
+        ports:
+          - 3306:3306
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: test_db
+        options: --health-cmd="mysqladmin ping --silent" --health-interval=10s --health-timeout=5s --health-retries=3
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -40,6 +50,14 @@ jobs:
         run: |
           npx eslint . --max-warnings=0  # Fail if there are any warnings
 
+      # Set up database connection details for backend tests
+      - name: Set up database connection
+        run: |
+          echo "DB_HOST=127.0.0.1" >> .env
+          echo "DB_USER=root" >> .env
+          echo "DB_PASSWORD=root" >> .env
+          echo "DB_NAME=test_db" >> .env
+
       # Run tests for backend
       - name: Run tests for backend
         working-directory: ./backend
@@ -51,5 +69,3 @@ jobs:
       #   working-directory: ./frontend
       #   run: |
       #     npm test -- --ci --maxWorkers=2  # Adjust maxWorkers if needed
-
-

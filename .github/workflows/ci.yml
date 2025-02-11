@@ -54,7 +54,7 @@ jobs:
 
       - name: Set up JWT secret
         run: |
-          echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> .env  # Append instead of overwriting
+          echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> $GITHUB_ENV  # Append instead of overwriting
 
       - name: Debug .env file
         run: |
@@ -69,9 +69,9 @@ jobs:
       - name: Debug JWT Secret in App
         working-directory: ./backend
         run: |
-          echo "Checking JWT_SECRET..."
+          echo "JWT_SECRET is: $JWT_SECRET"
           node -e 'console.log("Loaded JWT Secret:", process.env.JWT_SECRET ? "✅ Loaded" : "❌ Not Found")'
-
+      
       - name: Run tests for backend
         working-directory: ./backend
         run: npm test -- --ci

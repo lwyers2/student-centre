@@ -63,7 +63,7 @@ jobs:
       - name: Set up JWT secret
         run: |
           if ! grep -q "SECRET=" .env; then
-            echo "SECRET=${{ secrets.SECRET }}" >> .env  # Fetch JWT secret from GitHub Secrets
+            echo "SECRET=THISISASECRET" >> .env  # Fetch JWT secret from GitHub Secrets
           fi
 
       # Run tests for backend

@@ -1,5 +1,5 @@
 const { Student, Course, Module, User, ModuleYear, ModuleCourse, Semester, CourseYear, QualificationLevel, UserModule } = require('../models')
-const db = require('../utils/db')
+
 
 async function getAllModules() {
   const modules = await Module.findAll({

@@ -1,6 +1,5 @@
 require('../models/associations')
 const sequelize = require('../utils/db')
-const { log } = require('../utils/logger')
 const { populateTestDatabase } = require('../helper/seeders')
 
 beforeAll(async () => {

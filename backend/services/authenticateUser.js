@@ -10,6 +10,15 @@ const generateToken = (user) => {
 }
 
 const authenticateUser = async (email, password) => {
+
+  if (!email){
+    throw new AuthError('Email is required', 400)
+  }
+
+  if(!password){
+    throw new AuthError('Password is required', 400)
+  }
+
   const user = await User.findOne({ where: { email } })
   if (!user){
     throw new AuthError('Email not found', 401)

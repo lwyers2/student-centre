@@ -6,6 +6,7 @@ const { User, AuthenticationUser } = require('../models')
 const { AuthError } = require('../utils/errors')
 
 const generateToken = (user) => {
+  console.log('JWT SECRET:', process.env.SECRET) // Debug line
   return jwt.sign({ email: user.email, id: user.id }, process.env.SECRET, { expiresIn: '240h' })
 }
 

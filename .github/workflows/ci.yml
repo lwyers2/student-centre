@@ -57,21 +57,21 @@ jobs:
           echo "DB_PORT=3306" >> .env
           echo "DB_USER=${{ secrets.DB_USER }}" >> .env  # Fetch username from GitHub Secrets
           echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env  # Fetch password from GitHub Secrets
-          echo "DB_NAME=student_marks_test" >> .env 
+          echo "DB_NAME=student_marks_test" >> .env
+          
+      - name: Load Environment Variables
+        run: export $(grep -v '^#' .env | xargs)
 
       # Add JWT Secret to .env only if not already set
       - name: Set up JWT secret
         run: |
-          if ! grep -q "JWT_SECRET=" .env; then
-            echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> .env  # Fetch JWT secret from GitHub Secrets
-          else
-            echo "JWT_SECRET is already set in .env"
-          fi
+          echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" > .env  # Overwrite instead of appending
 
       # Debug: Verify the .env content for debugging purposes (don't expose secrets in production)
-      - name: Debug .env contents
+      - name: Debug .env file
         run: |
-          cat .env  # Check .env content to ensure the correct variables are set
+          echo "=== .env File Contents ==="
+          cat .env | grep -v 'JWT_SECRET'  # Exclude secret for security
 
       # Run tests for backend
       - name: Run tests for backend

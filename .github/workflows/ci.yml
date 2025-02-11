@@ -62,7 +62,7 @@ jobs:
       # Add JWT Secret to .env
       - name: Set up JWT secret
         run: |
-          echo "SECRET=${{ secrets.SECRET }}" >> .env  # Fetch JWT secret from GitHub Secrets
+          echo "JWT_SECRET=${{ secrets.SECRET }}" >> .env  # Fetch JWT secret from GitHub Secrets
 
       # Run tests for backend
       - name: Run tests for backend

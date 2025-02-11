@@ -68,5 +68,52 @@ describe('POST /login', () => {
     expect(response.body.error).toBe('Incorrect password')
   })
 
-  
+  it('should return 400 when password is missing', async () => {
+    const response = await supertest(app)
+      .post('/api/login')
+      .send({
+        email: 'test@qub.ac.uk',
+        password: '',
+      })
+
+    expect(response.status).toBe(400)
+    expect(response.body.error).toBe('Password is required')
+  })
+
+  it('should return 400 when email is missing', async () => {
+    const response = await supertest(app)
+      .post('/api/login')
+      .send({
+        email: '',
+        password: 'password123',
+      })
+
+    expect(response.status).toBe(400)
+    expect(response.body.error).toBe('Email is required')
+  })
+
+  it('should return 400 when email and password are missing', async () => {
+    const response = await supertest(app)
+      .post('/api/login')
+      .send({
+        email: '',
+        password: '',
+      })
+
+    expect(response.status).toBe(400)
+    expect(response.body.error).toBe('Email and password are required')
+  })
+
+  it('should return 400 when email is invalid', async () => {
+    const response = await supertest(app)
+      .post('/api/login')
+      .send({
+        email: 'invalid-email',
+        password: 'password123',
+      })
+
+    expect(response.status).toBe(400)
+    expect(response.body.error).toBe('Invalid email format')
+  })
+
 })

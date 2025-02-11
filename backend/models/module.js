@@ -20,7 +20,6 @@ const Module = db.define('Module', {
   code: {
     type: DataTypes.STRING,
     allowNull: false,
-    unique: true,
   },
   CATs: {
     type: DataTypes.STRING,

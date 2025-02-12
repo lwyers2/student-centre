@@ -1,9 +1,11 @@
 const loginRouter = require('express').Router()
 const { authenticateUser } = require('../services/authenticateUser')
 const { validateLogin } = require('../validators/validateLogin')
+const { rateLimitLoginAttempts } = require('../middleware/rateLimitLoginAttempts')
 
 loginRouter.post(
   '/',
+  rateLimitLoginAttempts,
   validateLogin,
   async (req, res) => {
     const { email, password } = req.body

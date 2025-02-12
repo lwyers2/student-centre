@@ -59,6 +59,14 @@ const User = db.define('User', {
   role_id: {
     type: DataTypes.INTEGER,
     allowNull: false,
+  },
+  failed_attempts: {
+    type: DataTypes.INTEGER,
+    defaultValue: 0,
+  },
+  last_failed_attempt: {
+    type: DataTypes.DATE,
+    defaultValue: null,
   }
 },
 {

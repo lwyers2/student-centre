@@ -4,7 +4,6 @@ const app = require('../../app')
 const { User, AuthenticationUser } = require('../../models')
 
 //Todo
-// failed attempts 5
 // expired token?
 //check that password isn't sent in console log
 //test for successful login after resetting password
@@ -137,6 +136,36 @@ describe('POST /login', () => {
 
     expect(response.status).toBe(401)
     expect(response.body.error).toBe('Account is inactive')
+  })
+
+  it('should block login after 5 failed attempts', async () => {
+    await User.update({ active: 1 }, { where: { id: testUser.id } })
+    for (let i = 0; i < 5; i++) {
+      await supertest(app).post('/api/login').send({
+        email: 'test@qub.ac.uk',
+        password: 'wrongpassword',
+      })
+    }
+
+    const response = await supertest(app).post('/api/login').send({
+      email: 'test@qub.ac.uk',
+      password: 'wrongpassword',
+    })
+
+    expect(response.status).toBe(429) // 429 Too Many Requests
+    expect(response.body.error).toBe('Too many failed login attempts. Please try again later.')
+  })
+
+  it('should not log the password in console', async () => {
+    const logSpy = jest.spyOn(console, 'log').mockImplementation(() => {})
+
+    await supertest(app)
+      .post('/api/login')
+      .send({ email: 'test@qub.ac.uk', password: 'password123' })
+
+    expect(logSpy).not.toHaveBeenCalledWith(expect.stringContaining('password123'))
+
+    logSpy.mockRestore()
   })
 
 })

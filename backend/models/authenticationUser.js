@@ -1,4 +1,4 @@
-const { DataTypes } = require('sequelize')
+const { DataTypes, BOOLEAN } = require('sequelize')
 const db = require('../utils/db')
 
 const AuthenticationUser = db.define('AuthenticationUser', {
@@ -24,6 +24,11 @@ const AuthenticationUser = db.define('AuthenticationUser', {
   created_at: {
     type: DataTypes.DATE,
     allowNull: false,
+  },
+  is_active: {
+    type: BOOLEAN,
+    allowNull: false,
+    defaultValue: true,
   }
 },
 {

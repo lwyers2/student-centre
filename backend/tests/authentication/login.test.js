@@ -3,11 +3,9 @@ const bcrypt = require('bcrypt')
 const app = require('../../app')
 const { User, AuthenticationUser } = require('../../models')
 
-//Todo
-// expired token?
-//test for successful login after resetting password
-//correct token format
-//response time
+//TODO:
+//Account deleteion when implemented
+
 
 describe('POST /login', () => {
   let testUser
@@ -135,10 +133,10 @@ describe('POST /login', () => {
 
     expect(response.status).toBe(401)
     expect(response.body.error).toBe('Account is inactive')
+    await User.update({ active: 1 }, { where: { id: testUser.id } })
   })
 
   it('should block login after 5 failed attempts', async () => {
-    await User.update({ active: 1 }, { where: { id: testUser.id } })
     for (let i = 0; i < 5; i++) {
       await supertest(app).post('/api/login').send({
         email: 'test@qub.ac.uk',
@@ -153,6 +151,9 @@ describe('POST /login', () => {
 
     expect(response.status).toBe(429) // 429 Too Many Requests
     expect(response.body.error).toBe('Too many failed login attempts. Please try again later.')
+
+    //reset uesr
+    await User.update({ failed_attempts: 0 }, { where: { id: testUser.id } })
   })
 
   it('should not log the password in console', async () => {
@@ -173,5 +174,54 @@ describe('POST /login', () => {
     logSpy.mockRestore() // Restore the original console.log
   })
 
+  it('should allow login with new password after reset', async () => {
+    const newPassword = 'newPassword123'
+
+    // Reset password in your database
+    await User.update({ password: await bcrypt.hash(newPassword, 10) }, { where: { id: testUser.id } })
+
+    const response = await supertest(app)
+      .post('/api/login')
+      .send({
+        email: 'test@qub.ac.uk',
+        password: newPassword,
+      })
+
+    expect(response.status).toBe(200)
+    expect(response.body).toHaveProperty('token')
+
+    //reset user
+    await User.update({ password: await bcrypt.hash('password123', 10) }, { where: { id: testUser.id } })
+  })
+
+  it('should return a token with correct structure', async () => {
+    const response = await supertest(app)
+      .post('/api/login')
+      .send({ email: 'test@qub.ac.uk', password: 'password123' })
+
+    expect(response.status).toBe(200)
+    const token = response.body.token
+    const tokenParts = token.split('.')
+    expect(tokenParts.length).toBe(3) // JWT token should have 3 parts
+  })
+
+  it('should respond within acceptable time limit', async () => {
+    const start = Date.now()
+    await supertest(app)
+      .post('/api/login')
+      .send({ email: 'test@qub.ac.uk', password: 'password123' })
+    const duration = Date.now() - start
+    expect(duration).toBeLessThan(500) // 500ms limit
+  })
+
+  it('should not store the password in plain text', async () => {
+    await supertest(app)
+      .post('/api/login')
+      .send({ email: 'test@qub.ac.uk', password: 'password123' })
+
+    const storedUser = await User.findOne({ where: { email: 'test@qub.ac.uk' } })
+    const isPasswordCorrect = await bcrypt.compare('password123', storedUser.password)
+    expect(isPasswordCorrect).toBe(true) // Ensure password is correctly hashed
+  })
 
 })

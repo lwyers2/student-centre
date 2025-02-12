@@ -2,9 +2,6 @@ const jwt = require('jsonwebtoken')
 const { Role, AuthenticationUser, User } = require('../models/')
 
 const tokenVerification = async (req, res, next) => {
-  console.log('Request headers:', req.headers) // Print headers
-  console.log('Request params:', req.params) // Print route params
-  console.log('Request body:', req.body) // Print request body
   const authHeader = req.headers.authorization
 
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -23,18 +20,20 @@ const tokenVerification = async (req, res, next) => {
     include: [
       {
         model: User,
-        as: 'user',
+        as: 'authentication_user_user',
         attributes: ['id', 'email', 'role_id'],
         include: [
           {
             model: Role,
-            as: 'role',
+            as: 'user_role',
             attributes: ['id', 'name'],
           }
         ]
       }
     ],
   })
+
+
 
   if (!storedToken) {
     return res.status(401).json(
@@ -46,30 +45,36 @@ const tokenVerification = async (req, res, next) => {
   // Handle case where token is not found or expired
   if (new Date(storedToken.expires_at) < new Date()) {
     return res.status(401).json(
-      { error: 'Token expired or invalid',
+      { error: 'Token expired',
         status: 401,
       })
   }
 
-  console.log('JWT SECRET!!:', process.env.JWT_SECRET) // Debug line
+
   const decodedToken = jwt.verify(token, process.env.JWT_SECRET)
 
-  if (!storedToken.user) {
+  if (!storedToken.authentication_user_user) {
     return res.status(401).json(
       { error: 'User not associated with token',
         status: 401,
       })
   }
 
+  if(!storedToken.is_active) {
+    return res.status(401).json(
+      { error: 'Token invalid',
+        status: 401,
+      })
+  }
+
   req.user = {
-    id: storedToken.user.id,
-    email: storedToken.user.email,
-    role_id: storedToken.user.role_id,
-    role_name: storedToken.user.role.name,
+    id: storedToken.authentication_user_user.id,
+    email: storedToken.authentication_user_user.email,
+    role_id: storedToken.authentication_user_user.user_role_id,
+    role_name: storedToken.authentication_user_user.user_role.name,
     ...decodedToken,
   }
 
-  console.log('User set on request:', req.user)  // Debug line
   next()
 
 }

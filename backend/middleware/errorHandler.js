@@ -1,4 +1,4 @@
-const { SequelizeConnectionTimedOutError, SequelizeConnectionRefusedError, TimeoutError, ValidationError, UniqueConstraintError, DatabaseError, ConnectionError, ForeignKeyConstraintError } = require('sequelize')
+const { TimeoutError, ValidationError, UniqueConstraintError, DatabaseError, ConnectionError, ForeignKeyConstraintError } = require('sequelize')
 const { AuthError } = require('../utils/errors')
 
 const errorHandler = (error, request, response, _next) => {
@@ -59,22 +59,6 @@ const errorHandler = (error, request, response, _next) => {
     return response.status(408).json({
       error: 'Timeout Error',
       message: 'The request timed out. Please try again later.',
-    })
-  }
-
-  //connection to db refused (server down or network issues)
-  if (error instanceof SequelizeConnectionRefusedError) {
-    return response.status(503).json({
-      error: 'Connection Refused',
-      message: 'Database connection was refused. Please check your database configuration.',
-    })
-  }
-
-  //Connection time out
-  if (error instanceof SequelizeConnectionTimedOutError) {
-    return response.status(408).json({
-      error: 'Connection Timeout',
-      message: 'The connection to the database timed out. Please try again later.',
     })
   }
 

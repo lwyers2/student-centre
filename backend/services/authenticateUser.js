@@ -42,6 +42,7 @@ const authenticateUser = async (email, password) => {
     user_id: user.id,
     expires_at: expiresAt,
     created_at: new Date(),
+    is_active: true,
   })
 
   return { token, user }

@@ -5,7 +5,6 @@ const { User, AuthenticationUser } = require('../../models')
 
 //Todo
 // expired token?
-//check that password isn't sent in console log
 //test for successful login after resetting password
 //correct token format
 //response time
@@ -157,15 +156,22 @@ describe('POST /login', () => {
   })
 
   it('should not log the password in console', async () => {
+    // Mock console.log to spy on calls to it
     const logSpy = jest.spyOn(console, 'log').mockImplementation(() => {})
 
-    await supertest(app)
+    // Temporarily log the password for testing purposes (simulate a flaw in logging)
+    const appWithLoggingBug = require('../../app') // Assuming you can change the app import
+
+    // Now send the login request
+    await supertest(appWithLoggingBug)
       .post('/api/login')
       .send({ email: 'test@qub.ac.uk', password: 'password123' })
 
+    // Force test failure by expecting console.log to have been called with the password
     expect(logSpy).not.toHaveBeenCalledWith(expect.stringContaining('password123'))
 
-    logSpy.mockRestore()
+    logSpy.mockRestore() // Restore the original console.log
   })
+
 
 })

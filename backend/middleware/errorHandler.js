@@ -2,8 +2,6 @@ const { SequelizeConnectionTimedOutError, SequelizeConnectionRefusedError, Timeo
 const { AuthError } = require('../utils/errors')
 
 const errorHandler = (error, request, response, _next) => {
-  console.log('error:', error)
-
 
   if (error instanceof AuthError) {
     return response.status(error.status).json({

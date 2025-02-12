@@ -10,7 +10,7 @@ const AuthenticationUser = db.define('AuthenticationUser', {
     unique: true,
   },
   token: {
-    type: DataTypes.TEXT,
+    type: DataTypes.STRING(255),
     allowNull: false,
   },
   user_id: {
@@ -23,6 +23,7 @@ const AuthenticationUser = db.define('AuthenticationUser', {
   },
   created_at: {
     type: DataTypes.DATE,
+    defaultValue: DataTypes.NOW,
     allowNull: false,
   },
   is_active: {

@@ -12,7 +12,7 @@ const roleAuthorization = (allowedRoles) => {
     if(req.user && allowedRoleIds.includes(req.user.role_id)) {
       next()
     } else {
-      return res.status(403).json({ error: 'Access denied: insufficient permissions' })
+      return res.status(403).json({ error: `Access denied: insufficient permissions {Role needed: ${allowedRoleIds[0]} actual role id: ${req.user.role_id}}` })
     }
   }
 }

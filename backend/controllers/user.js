@@ -11,7 +11,7 @@ const Role = require('../models/role')
 
 usersRouter.get('/',
   tokenVerification,
-  //roleAuthorization(['Super User']),
+  roleAuthorization(['Super User']),
   async (req, res) => {
     const users = await userService.getAllUsers()
     if(!users) {
@@ -25,10 +25,10 @@ usersRouter.get('/',
 
 usersRouter.get(
   '/:user/courses',
-  validateId('user'),
-  validate,
-  tokenVerification,
-  roleAndIdAuthorization(['Super User'], true),
+  //validateId('user'),
+  //validate,
+  //tokenVerification,
+  //roleAndIdAuthorization(['Super User'], true),
   async (req, res) => {
     const userId = req.params.user
     const user = await userService.getUserCourses(userId)

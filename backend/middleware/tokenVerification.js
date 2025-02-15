@@ -70,7 +70,7 @@ const tokenVerification = async (req, res, next) => {
   req.user = {
     id: storedToken.authentication_user_user.id,
     email: storedToken.authentication_user_user.email,
-    role_id: storedToken.authentication_user_user.user_role_id,
+    role_id: storedToken.authentication_user_user.user_role.id,
     role_name: storedToken.authentication_user_user.user_role.name,
     ...decodedToken,
   }

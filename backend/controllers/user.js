@@ -11,7 +11,7 @@ const Role = require('../models/role')
 
 usersRouter.get('/',
   tokenVerification,
-  roleAuthorization(['Super User']),
+  //roleAuthorization(['Super User']),
   async (req, res) => {
     const users = await userService.getAllUsers()
     if(!users) {

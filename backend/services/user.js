@@ -1,4 +1,4 @@
-const { School, Role, Course, Module, User, QualificationLevel, CourseYear, ModuleYear, Semester, ModuleCourse } = require('../models')
+const { School, UserSchool, Role, Course, Module, User, QualificationLevel, CourseYear, ModuleYear, Semester, ModuleCourse } = require('../models')
 const { formatAllUsers } = require('../helper/formaters/user/formatAllUsers')
 const { formatUserModulesFromCourseYear } = require('../helper/formaters/user/formatUserModulesFromCourseYear')
 async function getAllUsers() {
@@ -6,14 +6,18 @@ async function getAllUsers() {
     attributes: ['id', 'forename', 'surname', 'email', 'active', 'date_created', 'date_updated'],
     include: [
       {
-        model: School,
-        attributes: ['school_name'],
-        as: 'school'
+        model: UserSchool,
+        as: 'user_user_school',
+        include: [
+          {
+            model: School,
+            as: 'user_school_school'
+          }
+        ]
       },
       {
         model: Role,
-        as: 'role',
-        attributes: ['name'],
+        as: 'user_role',
       },
     ],
   })

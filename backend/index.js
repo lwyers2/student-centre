@@ -18,7 +18,6 @@ const startServer = async () => {
     // Sync the database and ensure all models are in place
     await sequelize.sync()  // You can optionally add { force: true } for re-syncing
     console.log('Database synced successfully')
-    console.log(sequelize.models)
 
     // Now that the DB is synced, start the server
     app.listen(config.PORT, () => {

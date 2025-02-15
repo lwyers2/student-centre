@@ -8,11 +8,12 @@ function formatAllUsers(users) {
       active: user.active,
       date_created: user.date_created,
       date_updated: user.date_updated,
-      schools: user.school.map((school) => ({
-        school: school.school_name,
-        school_id: school.user_school.school_id,
+      is_active: user.is_active,
+      schools: user.user_user_school.map((school) => ({
+        school: school.user_school_school.school_name,
+        school_id: school.user_school_school.id,
       })),
-      role: user.role.name
+      role: user.user_role.name
     }
   })
 }

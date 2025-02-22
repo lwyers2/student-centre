@@ -276,7 +276,7 @@ StudentCourse.belongsTo(Student, {
 
 //Course -> Student_Course
 Course.belongsTo(StudentCourse, {
-  foreignKey: 'course_id',
+  foreignKey: 'id',
   as: 'course_student_course',
   timestamps: false,
 })
@@ -402,7 +402,7 @@ QualificationLevel.belongsTo(Level, {
 })
 
 Level.hasMany(QualificationLevel, {
-  foreignKey: 'level_qualification_level',
+  foreignKey: 'level_id',
   timestamps: false,
 })
 

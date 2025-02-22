@@ -1,12 +1,13 @@
 POST http://localhost:3000/api/users
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Imx3eWVyczNAZ21haWwuY29tIiwiaWQiOjEyLCJpYXQiOjE3NDAyMzQ4NTgsImV4cCI6MTc0MTA5ODg1OH0.SDTSCWiL6vDFj0iW9FSbbzk4uNOwFD_fQFgFrzHTrOo
 
 {
-
-  "forename": "Luke",
-  "surname": "Wyers",
-  "email": "lwyers3@gmail.com",
+  "forename": "Puke",
+  "surname": "Plyers",
+  "email": "lwyers68@ads.qub.ac.uk",
   "password": "password",
-  "roleName": "Teacher"
-
+  "roleName": "Teacher",
+  "jobTitle": "Teaching assistant",
+  "prefix": "Doc"
 }

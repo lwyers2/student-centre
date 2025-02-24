@@ -289,7 +289,7 @@ StudentCourse.belongsTo(Course, {
 
 //CourseYear -> StudentCourse
 CourseYear.belongsTo(StudentCourse, {
-  foreignKey: 'course_year_id',
+  foreignKey: 'id',
   as: 'course_year_student_coursee',
   timestamps: false,
 })

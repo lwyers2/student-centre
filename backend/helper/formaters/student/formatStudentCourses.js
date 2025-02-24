@@ -1,6 +1,7 @@
 function formatStudentCourses(student) {
 
-  const studentCourseYears = student.student_course_years
+
+  const studentCourseYears = student.student_student_course
 
   return {
     id: student.id,
@@ -9,16 +10,16 @@ function formatStudentCourses(student) {
     forename: student.forname,
     surname: student.surname,
     courses: studentCourseYears.map((studentCourseYear) => ({
-      course_year_id: studentCourseYear.id,
-      course_id: studentCourseYear.course.id,
-      year_start: studentCourseYear.year_start,
-      year_end: studentCourseYear.year_end,
-      title: studentCourseYear.course.title,
-      years: studentCourseYear.course.years,
-      code: studentCourseYear.course.code,
-      part_time: studentCourseYear.course.part_time? 'PT' : 'FY',
-      qualification: studentCourseYear.course.qualification_level.qualification,
-      course_coordinator: studentCourseYear['course_co-ordinator'].forename + ' ' + studentCourseYear['course_co-ordinator'].surname,
+      course_year_id: studentCourseYear.student_course_course_year.id,
+      course_id: studentCourseYear.student_course_course_year.course_id,
+      year_start: studentCourseYear.student_course_course_year.year_start,
+      year_end: studentCourseYear.student_course_course_year.year_end,
+      title: studentCourseYear.student_course_course_year.course_year_course.title,
+      years: studentCourseYear.student_course_course_year.course_year_course.years,
+      code: studentCourseYear.student_course_course_year.course_year_course.code,
+      part_time: studentCourseYear.student_course_course_year.course_year_course.part_time,
+      qualification: studentCourseYear.student_course_course_year.course_year_course.course_qualification_level.qualification,
+      course_coordinator: `${studentCourseYear.student_course_course_year.course_year_course_coordinator.prefix}. ${studentCourseYear.student_course_course_year.course_year_course_coordinator.forename} ${studentCourseYear.student_course_course_year.course_year_course_coordinator.surname}`,
     }))
   }
 }

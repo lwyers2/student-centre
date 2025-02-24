@@ -1,72 +1,78 @@
-const { Student, Course, Module, User, QualificationLevel, CourseYear, ModuleYear, Semester, ModuleCourse } = require('../models')
+const { Student, Course, Module, User, QualificationLevel, CourseYear, ModuleYear, Semester, ModuleCourse, StudentModule, StudentCourse } = require('../models')
 const { formatAllStudentData } = require('../helper/formaters/student/formatAllStudentData')
 const { formatStudentCourses } = require('../helper/formaters/student/formatStudentCourses')
 const { formatStudentModules } = require('../helper/formaters/student/formatStudentModules')
 const { formatOneStudentOneModuleYear } = require('../helper/formaters/student/formatOneStudentOneModuleYear')
+
 async function getAllStudentData(studentId) {
   const student = await Student.findOne({
     where: { id: studentId },
     attributes: ['id','forename', 'surname', 'student_code', 'email'],
     include: [
       {
-        model: ModuleYear,
-        as: 'student_module_years',
-        attributes: ['id', 'year_start', 'module_coordinator_id'],
-        through: { attributes: ['result', 'resit', 'flagged'] },
+        model: StudentModule,
+        as: 'student_student_module',
         include: [
           {
-            model: Semester,
-            as: 'semester',
-            attributes: ['name']
-          },
-          {
-            model: User,
-            as: 'module_co-ordinator',
-            attributes: ['prefix', 'forename', 'surname']
-          },
-          {
-            model: Module,
-            as: 'module',
-            attributes: ['title', 'id', 'code', 'CATs', 'year']
-          },
-          {
-            model: ModuleCourse,
-            as: 'module_courses',
-            attributes: ['course_year_id'],
-          }
-        ]
-      },
-      {
-        model: CourseYear,
-        as: 'student_course_years',
-        attributes: ['id', 'year_start', 'year_end'],
-        include: [
-          {
-            model: Course,
-            as: 'course',
-            attributes: ['id','title', 'years', 'code', 'part_time'],
+            model: ModuleYear,
+            as: 'student_module_module_year',
             include: [
               {
-                model: QualificationLevel,
-                as: 'qualification_level',
-                attributes: ['qualification'],
+                model: Semester,
+                as: 'module_year_semester',
+                attributes: ['name']
               },
-            ],
-          },
-          {
-            model: User,
-            as: 'course_co-ordinator',
-            attributes: ['forename', 'surname']
+              {
+                model: User,
+                as: 'module_year_module_coordinator',
+                attributes: ['id', 'prefix', 'forename', 'surname']
+              },
+              {
+                model: Module,
+                as: 'module_year_module'
+              },
+              {
+                model: ModuleCourse,
+                as: 'module_year_module_course'
+              }
+            ]
           }
         ],
       },
+      {
+        model: StudentCourse,
+        as: 'student_student_course',
+        include: [
+          {
+            model: CourseYear,
+            as: 'student_course_course_year',
+            include: [
+              {
+                model: Course,
+                as: 'course_year_course',
+                attributes: ['title', 'years', 'code', 'part_time'],
+                include: [
+                  {
+                    model: QualificationLevel,
+                    as: 'course_qualification_level',
+                    attributes: ['qualification']
+                  }
+                ]
+              },
+              {
+                model: User,
+                as: 'course_year_course_coordinator',
+                attributes: ['id', 'prefix', 'forename', 'surname']
+              }
+            ]
+          }
+        ]
+      }
     ],
-    //logging: console.log,
   })
 
   if (!student) return null
 
-  // return formatStudentData(student); // Separate function for transformation
   return formatAllStudentData(student)
 }
 
@@ -76,35 +82,41 @@ async function getStudentCoursesData(studentId) {
     attributes: ['id','forename', 'surname', 'student_code', 'email'],
     include: [
       {
-        model: CourseYear,
-        as: 'student_course_years',
-        attributes: ['id', 'year_start', 'year_end'],
+        model: StudentCourse,
+        as: 'student_student_course',
         include: [
           {
-            model: Course,
-            as: 'course',
-            attributes: ['id','title', 'years', 'code', 'part_time'],
+            model: CourseYear,
+            as: 'student_course_course_year',
             include: [
               {
-                model: QualificationLevel,
-                as: 'qualification_level',
-                attributes: ['qualification'],
+                model: Course,
+                as: 'course_year_course',
+                attributes: ['title', 'years', 'code', 'part_time'],
+                include: [
+                  {
+                    model: QualificationLevel,
+                    as: 'course_qualification_level',
+                    attributes: ['qualification']
+                  }
+                ]
               },
-            ],
-          },
-          {
-            model: User,
-            as: 'course_co-ordinator',
-            attributes: ['forename', 'surname']
+              {
+                model: User,
+                as: 'course_year_course_coordinator',
+                attributes: ['id', 'prefix', 'forename', 'surname']
+              }
+            ]
           }
-        ],
-      },
+        ]
+      }
     ],
   })
 
   if (!student) return null
 
   return formatStudentCourses(student)
+  //return student
 }
 
 async function getStudentModulesData(studentId) {
@@ -113,27 +125,34 @@ async function getStudentModulesData(studentId) {
     attributes: [], //'id','forename', 'surname', 'student_code', 'email'
     include: [
       {
-        model: ModuleYear,
-        as: 'student_module_years',
-        attributes: ['id', 'year_start', 'module_coordinator_id'],
-        through: { attributes: ['result', 'resit', 'flagged'] },
+        model: StudentModule,
+        as: 'student_student_module',
         include: [
           {
-            model: Semester,
-            as: 'semester',
-            attributes: ['name']
-          },
-          {
-            model: User,
-            as: 'module_co-ordinator',
-            attributes: ['prefix', 'forename', 'surname']
-          },
-          {
-            model: Module,
-            as: 'module',
-            attributes: ['title', 'id', 'code', 'CATs', 'year']
+            model: ModuleYear,
+            as: 'student_module_module_year',
+            include: [
+              {
+                model: Semester,
+                as: 'module_year_semester',
+                attributes: ['name']
+              },
+              {
+                model: User,
+                as: 'module_year_module_coordinator',
+                attributes: ['id', 'prefix', 'forename', 'surname']
+              },
+              {
+                model: Module,
+                as: 'module_year_module'
+              },
+              {
+                model: ModuleCourse,
+                as: 'module_year_module_course'
+              }
+            ]
           }
-        ]
+        ],
       },
     ],
   })
@@ -141,6 +160,7 @@ async function getStudentModulesData(studentId) {
   if (!student) return null
 
   return formatStudentModules(student)
+  //return student
 }
 
 async function getAllStudents() {

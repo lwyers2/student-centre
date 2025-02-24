@@ -67,10 +67,10 @@ studentsRouter.get(
 
 studentsRouter.get(
   '/:student/modules',
-  validateId('student'),
-  validate,
-  tokenVerification,
-  roleAuthorization(['Super User']),
+  //validateId('student'),
+  //validate,
+  //tokenVerification,
+  //roleAuthorization(['Super User']),
   async (req, res,) => {
     const studentId = req.params.student
     const student = await studentService.getStudentModulesData(studentId)

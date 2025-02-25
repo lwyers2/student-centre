@@ -1,4 +1,4 @@
-const { Student, Course, Module, User, ModuleYear, ModuleCourse, Semester, CourseYear, QualificationLevel, UserModule } = require('../models')
+const { Student, Course, Module, User, ModuleYear, ModuleCourse, Semester, CourseYear, QualificationLevel, UserModule, StudentModule } = require('../models')
 
 
 async function getAllModules() {
@@ -7,27 +7,27 @@ async function getAllModules() {
     include: [
       {
         model: ModuleYear,
-        as: 'module_years',
+        as: 'module_module_year',
         attributes: ['id', 'year_start', 'semester_id'],
         include: [
           {
             model: ModuleCourse,
-            as: 'module_courses',
+            as: 'module_year_module_course',
             attributes: ['id'],
             include: [
               {
                 model: Course,
-                as: 'course',
+                as: 'module_course_course',
                 attributes: ['id', 'title', 'code', 'part_time', 'years'],
                 include: [
                   {
                     model: CourseYear,
-                    as: 'course_years',
+                    as: 'course_course_year',
                     attributes: ['id', 'year_start', 'year_end'],
                   },
                   {
                     model: QualificationLevel,
-                    as: 'qualification_level',
+                    as: 'course_qualification_level',
                     attributes: ['qualification'],
                   }
                 ]
@@ -36,12 +36,12 @@ async function getAllModules() {
           },
           {
             model: User,
-            as: 'module_co-ordinator',
+            as: 'module_year_module_coordinator',
             attributes: ['forename', 'surname']
           },
           {
             model: Semester,
-            as: 'semester',
+            as: 'module_year_semester',
             attributes: ['id', 'name']
           },
         ],
@@ -58,30 +58,35 @@ async function getAllModules() {
 
 async function getModuleFromModuleYear(moduleYearId) {
   const module = await Module.findOne({
-    attributes: ['id', 'title', 'code', 'CATs', 'year'],
+    attributes: [],
     include: [
       {
         model: ModuleYear,
-        as: 'module_years',
+        as: 'module_module_year',
         attributes: ['id', 'year_start', 'semester_id'],
         where: { id: moduleYearId },
         include: [
           {
+            model: Module,
+            as: 'module_year_module',
+          },
+          {
             model: Semester,
-            as: 'semester',
+            as: 'module_year_semester',
             attributes: ['id', 'name']
+          },
+          {
+            model: StudentModule,
+            as: 'module_year_student_module',
+            include: [
+              {
+                model: Student,
+                as: 'student_module_student'
+              }
+            ]
           }
         ]
       },
-      {
-        model: Student,
-        as: 'module_students',
-        attributes: ['id', 'forename', 'surname', 'email', 'student_code'],
-        through: {
-          attributes: ['result', 'resit', 'flagged'], // Include extra attributes from the join table if needed
-          where: { module_year_id: moduleYearId }, // Apply filter to the join table, not directly on Student
-        }
-      }
     ]
   })
   if(!module) return null

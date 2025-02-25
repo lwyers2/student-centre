@@ -24,25 +24,26 @@ modulesRouter.get(
 
 modulesRouter.get(
   '/module-year/:moduleYear',
-  validateId('moduleYear'),
-  validate,
-  tokenVerification,
-  roleAndIdAuthorization(['Super User', 'Admin', 'Teacher'], true),
+  //validateId('moduleYear'),
+  //validate,
+  //tokenVerification,
+  //roleAndIdAuthorization(['Super User', 'Admin', 'Teacher'], true),
   async (req, res) => {
     const moduleYearId = req.params.moduleYear
-    const userId = req.user.id
-    const userRole = req.user.role_name
-    const hasAccess=await moduleService.checkUserAccessToModule(userId, moduleYearId)
-    if(!hasAccess && (userRole !== 'Super User')) {
-      return res.status(403).json({ message: 'Access denied: You are not assigned to this module. ' })
-    }
+    // const userId = req.user.id
+    // const userRole = req.user.role_name
+    // const hasAccess=await moduleService.checkUserAccessToModule(userId, moduleYearId)
+    // if(!hasAccess && (userRole !== 'Super User')) {
+    //   return res.status(403).json({ message: 'Access denied: You are not assigned to this module. ' })
+    // }
     const module = await moduleService.getModuleFromModuleYear(moduleYearId)
     if(!module) {
       const error = new Error('Module not found')
       error.status = 404
       throw error
     }
-    res.json(formatModuleYear(module))
+    //res.json(formatModuleYear(module))
+    res.json(module)
   }
 )
 

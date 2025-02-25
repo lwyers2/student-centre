@@ -8,10 +8,8 @@ const unknownEndpoint  = require('./middleware/unkownEndpoint')
 const studentsRouter = require('./controllers/student')
 const coursesRouter = require('./controllers/course')
 const modulesRouter = require('./controllers/module')
-const classificationsRouter = require('./controllers/classification')
 const usersRouter = require('./controllers/user')
 const loginRouter = require('./controllers/login')
-const protectedRouter = require('./controllers/protected')
 const logoutRouter = require('./controllers/logout')
 
 
@@ -31,9 +29,7 @@ app.use('/api/students', studentsRouter)
 app.use('/api/courses', coursesRouter)
 app.use('/api/modules', modulesRouter)
 app.use('/api/users', usersRouter)
-app.use('/api/classifications', classificationsRouter)
 app.use('/api/login', loginRouter)
-app.use('/api/protected', protectedRouter)
 app.use('/api/logout', logoutRouter)
 
 // Error handling middleware

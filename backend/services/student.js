@@ -160,7 +160,6 @@ async function getStudentModulesData(studentId) {
   if (!student) return null
 
   return formatStudentModules(student)
-  //return student
 }
 
 async function getAllStudents() {
@@ -178,43 +177,44 @@ async function getAllStudents() {
 
 }
 
-async function getStudentModuleData(studentId, moduleYearId) {
+async function getStudentModuleYearData(studentId, moduleYearId) {
 
   const student = await Student.findOne({
     where: { id: studentId },
-    attributes: ['id', 'email', 'student_code', 'forename', 'surname'],
+    attributes: ['id','forename', 'surname', 'student_code', 'email'],
     include: [
       {
-        model: ModuleYear,
-        as: 'student_module_years',
-        attributes: ['id', 'year_start', 'module_coordinator_id'],
-        through: { attributes: ['result', 'resit', 'flagged'] },
-        where: { id : moduleYearId },
+        model: StudentModule,
+        as: 'student_student_module',
+        where: { module_year_id: moduleYearId },
         include: [
           {
-            model: Semester,
-            as: 'semester',
-            attributes: ['name']
-          },
-          {
-            model: User,
-            as: 'module_co-ordinator',
-            attributes: ['prefix', 'forename', 'surname']
-          },
-          {
-            model: Module,
-            as: 'module',
-            attributes: ['title', 'id', 'code', 'CATs', 'year']
+            model: ModuleYear,
+            as: 'student_module_module_year',
+            include: [
+              {
+                model: Semester,
+                as: 'module_year_semester',
+                attributes: ['name']
+              },
+              {
+                model: User,
+                as: 'module_year_module_coordinator',
+                attributes: ['id', 'prefix', 'forename', 'surname']
+              },
+              {
+                model: Module,
+                as: 'module_year_module'
+              },
+            ]
           }
-        ]
+        ],
       },
     ],
-
   })
   if (!student) {
     return null
   }
-
   return formatOneStudentOneModuleYear(student)
 }
 
@@ -223,6 +223,6 @@ module.exports = {
   getStudentCoursesData,
   getStudentModulesData,
   getAllStudents,
-  getStudentModuleData
+  getStudentModuleYearData
 
 }

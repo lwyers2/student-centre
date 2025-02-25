@@ -1,5 +1,5 @@
 function formatOneStudentOneModuleYear(student) {
-  const moduleYear = student.student_module_years[0]
+  const studentStudentModule = student.student_student_module[0]
   return {
     student: {
       id: student.id,
@@ -9,16 +9,18 @@ function formatOneStudentOneModuleYear(student) {
       surname: student.surname,
     },
     module:  {
-      module_year_id: moduleYear.id,
-      year_start: moduleYear.year_start,
-      semester: moduleYear.semester.name,
-      module_coordinator: moduleYear['module_co-ordinator'].prefix + ' ' + moduleYear['module_co-ordinator'].forename + ' ' + moduleYear['module_co-ordinator'].surname,
-      title: moduleYear.module.title,
-      module_id: moduleYear.module.id,
-      code: moduleYear.module.code,
-      CATs: moduleYear.module.CATs,
-      year: moduleYear.module.year,
-      result_details: moduleYear.student_module,
+      module_year_id: studentStudentModule.module_year_id,
+      year_start: studentStudentModule.student_module_module_year.year_start,
+      semester: studentStudentModule.student_module_module_year.module_year_semester.name,
+      module_coordinator: `${studentStudentModule.student_module_module_year.module_year_module_coordinator.prefix}. ${studentStudentModule.student_module_module_year.module_year_module_coordinator.forename} ${studentStudentModule.student_module_module_year.module_year_module_coordinator.surname}`,
+      title: studentStudentModule.student_module_module_year.module_year_module.title,
+      module_id: studentStudentModule.student_module_module_year.module_year_module.id,
+      code: studentStudentModule.student_module_module_year.module_year_module.code,
+      CATs: studentStudentModule.student_module_module_year.module_year_module.CATs,
+      year: studentStudentModule.student_module_module_year.module_year_module.year,
+      result: studentStudentModule.result,
+      flagged: studentStudentModule.flagged,
+      resit: studentStudentModule.resit
     }
   }
 }

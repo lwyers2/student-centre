@@ -1,17 +1,19 @@
 function formatStudentModules(student) {
-  const student_module_years = student.student_module_years
+  const studentModules = student.student_student_module
   return {
     modules:
-        student_module_years.map((student_module_year) => ({
-          module_year_id: student_module_year.id,
-          year_start: student_module_year.id,
-          module_coordinator: student_module_year['module_co-ordinator']['prefix'] + ' ' + student_module_year['module_co-ordinator']['forename'] + ' ' + student_module_year['module_co-ordinator']['surname'],
-          title: student_module_year['module']['title'],
-          module_id: student_module_year['module']['id'],
-          code: student_module_year['module']['code'],
-          CATs: student_module_year['module']['CATs'],
-          year: student_module_year['module']['year'],
-          student_module: student_module_year['student_module']
+        studentModules.map((studentModule) => ({
+          module_year_id: studentModule.module_year_id,
+          year_start: studentModule.student_module_module_year.year_start,
+          module_coordinator: `${studentModule.student_module_module_year.module_year_module_coordinator.prefix}. ${studentModule.student_module_module_year.module_year_module_coordinator.forename} ${studentModule.student_module_module_year.module_year_module_coordinator.surname}`,
+          title: studentModule.student_module_module_year.module_year_module.title,
+          module_id: studentModule.student_module_module_year.module_year_module.id,
+          code: studentModule.student_module_module_year.module_year_module.code,
+          CATs: studentModule.student_module_module_year.module_year_module.CATs,
+          year: studentModule.student_module_module_year.module_year_module.year,
+          result: studentModule.result,
+          flagged: studentModule.flagged,
+          resit: studentModule.flagged,
         }))
   }
 }

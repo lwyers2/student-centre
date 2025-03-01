@@ -1,1 +1,2 @@
 GET http://localhost:3000/api/modules/module-year/74
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im1pY2hhZWwuZ2lyYUBleGFtcGxlLmNvbSIsImlkIjoxNSwiaWF0IjoxNzQwODMyODk5LCJleHAiOjE3NDE2OTY4OTl9.HrzJXRu2voltBbOfYIxuIMOcRAfKB9v254H8J3bQIkw

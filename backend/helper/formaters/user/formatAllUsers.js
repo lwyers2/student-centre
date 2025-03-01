@@ -13,7 +13,7 @@ function formatAllUsers(users) {
         school: school.user_school_school.school_name,
         school_id: school.user_school_school.id,
       })),
-      role: user.user_role.name
+      role: user.user_role.name,
     }
   })
 }

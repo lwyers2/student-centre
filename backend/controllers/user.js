@@ -19,6 +19,24 @@ usersRouter.get('/',
     res.json(users)
   })
 
+usersRouter.get(
+  '/:user',
+  validateId('user'),
+  validate,
+  tokenVerification,
+  roleAndIdAuthorization(['Super User'], true),
+  async (req, res) => {
+    const userId = req.params.user
+    const user = await userService.getUser(userId)
+    if(!user) {
+      const error = new Error('User not found')
+      error.status = 404
+      throw error
+    }
+    res.json(user)
+  }
+)
+
 
 usersRouter.get(
   '/:user/courses',

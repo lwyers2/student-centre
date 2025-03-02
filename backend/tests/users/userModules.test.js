@@ -85,7 +85,7 @@ describe('Main User API Endpoints', () => {
     expect(response.body.error).toBe('Access denied: insufficient permissions {Role needed: 3 actual role id: 1}')
   })
 
-  // ✅ Test GET /api/users/:user/courses
+  // Test GET /api/users/:user/courses
   it('should fetch user courses if authorized', async () => {
     const response = await supertest(app)
       .get(`/api/users/${testUser.id}/courses`)
@@ -95,7 +95,7 @@ describe('Main User API Endpoints', () => {
     expect(response.body.user).toHaveProperty('courses')
   })
 
-  // 🚫 User Not Found
+  // User Not Found
   it('should return 404 if user does not exist', async () => {
     const response = await supertest(app)
       .get('/api/users/99999/courses') // Invalid user ID

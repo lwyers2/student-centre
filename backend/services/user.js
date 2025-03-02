@@ -12,6 +12,7 @@ async function getAllUsers() {
       {
         model: UserSchool,
         as: 'user_user_school',
+        required: true,
         include: [
           {
             model: School,
@@ -22,6 +23,7 @@ async function getAllUsers() {
       {
         model: Role,
         as: 'user_role',
+        required: true,
       },
     ],
   })
@@ -44,11 +46,13 @@ async function getUser(userId) {
             model: School,
             as: 'user_school_school'
           }
-        ]
+        ],
+        required: true,
       },
       {
         model: Role,
         as: 'user_role',
+        required: true,
       },
       {
         model: UserCourse,
@@ -119,6 +123,7 @@ async function getUser(userId) {
     ],
   })
   return formatOneUser(user)
+
 }
 
 async function getUserCourses(userId) {

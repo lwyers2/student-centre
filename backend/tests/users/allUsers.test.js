@@ -4,7 +4,7 @@ const app = require('../../app') // Adjust the path based on your structure
 const { User, AuthenticationUser } = require('../../models')
 const { authenticateUser } = require('../../services/authenticateUser')
 
-describe('Main User API Endpoints', () => {
+describe('All Users', () => {
   let testUser
   let token
   let authenticationUser
@@ -129,7 +129,4 @@ describe('Main User API Endpoints', () => {
     expect(response.status).toBe(401)
     expect(response.body.error).toBe('Missing or invalid token')
   })
-
-
-
 })

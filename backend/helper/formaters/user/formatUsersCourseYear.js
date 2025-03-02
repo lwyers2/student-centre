@@ -1,4 +1,7 @@
 function formatUsersCourseYear(user) {
+  // Check if user is undefined
+  if (!user) return undefined
+
   return {
     user: {
       id: user.id,
@@ -11,7 +14,7 @@ function formatUsersCourseYear(user) {
         const courseYears = courseEntry.user_course_course.years
         const courseCode = courseEntry.user_course_course.code
         const coursePartTime = courseEntry.user_course_course.part_time
-        const courseQualification = courseEntry.user_course_course.course_qualification_level.qualification
+        const courseQualification = courseEntry.user_course_course.course_qualification_level?.qualification // Safe navigation
 
         // Find existing course in acc
         let existingCourse = acc.find(c => c.course_id === courseId)
@@ -30,11 +33,15 @@ function formatUsersCourseYear(user) {
         }
 
         // Push course year details
+        const courseYear = courseEntry.user_course_course_year
+
         existingCourse.course_years.push({
-          id: courseEntry.user_course_course_year.id,
-          year_start: courseEntry.user_course_course_year.year_start,
-          year_end: courseEntry.user_course_course_year.year_end,
-          course_coordinator: `${courseEntry.user_course_course_year.course_year_course_coordinator['prefix']}. ${courseEntry.user_course_course_year.course_year_course_coordinator['forename']} ${courseEntry.user_course_course_year.course_year_course_coordinator['surname']}`
+          id: courseYear?.id, // Safe navigation
+          year_start: courseYear?.year_start, // Safe navigation
+          year_end: courseYear?.year_end, // Safe navigation
+          course_coordinator: courseYear?.course_year_course_coordinator
+            ? `${courseYear.course_year_course_coordinator.prefix}. ${courseYear.course_year_course_coordinator.forename} ${courseYear.course_year_course_coordinator.surname}`
+            : undefined, // Default value if missing
         })
 
         return acc
@@ -42,5 +49,8 @@ function formatUsersCourseYear(user) {
     }
   }
 }
+
+module.exports = { formatUsersCourseYear }
+
 
 module.exports= { formatUsersCourseYear }

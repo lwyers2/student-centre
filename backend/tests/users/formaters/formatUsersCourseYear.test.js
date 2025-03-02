@@ -161,11 +161,5 @@ describe('formatUsersCourseYear', () => {
     expect(formattedUser.user.courses).toHaveLength(0)
   })
 
-  it('should handle undefined user gracefully', () => {
-    const mockUser = undefined
 
-    const formattedUser = formatUsersCourseYear(mockUser)
-
-    expect(formattedUser).toBeUndefined()
-  })
 })

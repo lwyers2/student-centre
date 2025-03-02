@@ -1,6 +1,6 @@
 const roleAndIdAuthorization = (allowedRoles, resourceOwnerRequired = false) => {
   return (req, res, next) => {
-    const { role_name: role, id: authenticatedUserId } = req.user
+    const { role_name: role, id: authenticatedUserId, } = req.user
     const { user: requestedUserId } = req.params // The ID from the route params
 
     // If resourceOwnerRequired is true, ensure the requesting user is the same as the requested user

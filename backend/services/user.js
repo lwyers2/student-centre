@@ -175,13 +175,17 @@ async function getUserCourses(userId) {
 const createUser = async ({ forename, surname, email, password, active, token, roleName, jobTitle, prefix }) => {
   // Validate required fields
   if (!forename || !surname || !email || !password || !roleName) {
-    throw new Error('Missing required fields')
+    const error = new Error('Missing required fields')
+    error.status = 400
+    throw error
   }
 
   // Find the role by name
   const role = await Role.findOne({ where: { name: roleName } })
   if (!role) {
-    throw new Error('Role not found')
+    const error = new Error('Role not found')
+    error.status = 400
+    throw error
   }
 
   // Hash password

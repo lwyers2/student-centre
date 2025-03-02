@@ -1,39 +1,46 @@
 const supertest = require('supertest')
 const bcrypt = require('bcrypt')
 const app = require('../../app') // Adjust the path based on your structure
-const { User, AuthenticationUser } = require('../../models')
+const { User, Role, AuthenticationUser } = require('../../models')
 const { authenticateUser } = require('../../services/authenticateUser')
 
-describe('Main User API Endpoints', () => {
-  let testUser
+describe('User Creation API Endpoints', () => {
+  let adminUser
   let token
   let authenticationUser
+  let superUserRole
 
   beforeAll(async () => {
-    // Hash password and create test user
-    const hashedPassword = await bcrypt.hash('password123', 10)
-    testUser = await User.create({
-      email: 'test@qub.ac.uk',
+    // Ensure Super User role exists
+    superUserRole = await Role.findOrCreate({
+      where: { name: 'Super User' },
+      defaults: { name: 'Super User' },
+    }).then(([role]) => role)
+
+    // Create an admin user with Super User role
+    const hashedPassword = await bcrypt.hash('adminpassword', 10)
+    adminUser = await User.create({
+      email: 'admin@qub.ac.uk',
       password: hashedPassword,
-      forename: 'John',
-      surname: 'Doe',
+      forename: 'Admin',
+      surname: 'User',
       active: 1,
-      prefix: 'Prof',
-      job_title: 'Professor',
-      role_id: 3,
+      role_id: superUserRole.id,
+      job_title: 'admin',
+      prefix: 'Mr'
     })
 
-
-    const result = await authenticateUser(testUser.email, 'password123')
+    // Authenticate to get token
+    const result = await authenticateUser(adminUser.email, 'adminpassword')
     token = result.token
     authenticationUser = await AuthenticationUser.findOne({ where: { token } })
   })
 
   afterAll(async () => {
     if (authenticationUser) await authenticationUser.destroy()
-    if (testUser) {
-      await AuthenticationUser.destroy({ where: { user_id: testUser.id } })
-      await User.destroy({ where: { id: testUser.id }, force: true })
+    if (adminUser) {
+      await AuthenticationUser.destroy({ where: { user_id: adminUser.id } })
+      await User.destroy({ where: { id: adminUser.id }, force: true })
     }
   })
 
@@ -44,64 +51,135 @@ describe('Main User API Endpoints', () => {
     )
   })
 
-  //Test GET /api/users (Super User role required)
-  it('should fetch all users if authorized', async () => {
-    const response = await supertest(app)
-      .get('/api/users')
-      .set('Authorization', `Bearer ${token}`)
+  // ✅ Test: Successfully create a new user
+  it('should create a new user successfully', async () => {
+    const newUser = {
+      forename: 'John',
+      surname: 'Doe',
+      email: 'johndoe@qub.ac.uk',
+      password: 'securepassword',
+      active: true,
+      roleName: 'Super User',
+      jobTitle: 'Professor',
+      prefix: 'Dr',
+    }
 
-    expect(response.status).toBe(200)
-    expect(Array.isArray(response.body)).toBe(true) // Check if response is an array
+    const response = await supertest(app)
+      .post('/api/users')
+      .set('Authorization', `Bearer ${token}`)
+      .send(newUser)
+
+    expect(response.status).toBe(201)
+    expect(response.body).toHaveProperty('id')
+    expect(response.body.email).toBe(newUser.email)
+
+    // Cleanup created user
+    await User.destroy({ where: { email: newUser.email }, force: true })
   })
 
-  it('should return 403 if user is not a Super User', async () => {
-    // Create a new user with a lower role (not 'Super User')
-    const hashedPassword = await bcrypt.hash('password123', 10)
-    const normalUser = await User.create({
-      email: 'normaluser@qub.ac.uk',
-      password: hashedPassword,
-      forename: 'Sarah',
-      surname: 'Hall',
-      active: 1,
+  // 🚫 Test: Missing required fields
+  it('should return 400 if required fields are missing', async () => {
+    const invalidUser = {
+      surname: 'Doe',
+      email: 'invalid@qub.ac.uk',
+      password: 'password123',
+      roleName: 'Super User',
+    } // Missing 'forename'
+
+    const response = await supertest(app)
+      .post('/api/users')
+      .set('Authorization', `Bearer ${token}`)
+      .send(invalidUser)
+
+    expect(response.status).toBe(400)
+    expect(response.body.error).toBe('Missing required fields')
+  })
+
+  // 🚫 Test: Role not found
+  it('should return 400 if the specified role does not exist', async () => {
+    const userWithInvalidRole = {
+      forename: 'Jane',
+      surname: 'Smith',
+      email: 'jane@qub.ac.uk',
+      password: 'password123',
+      roleName: 'Nonexistent Role',
+      jobTitle: 'Professor',
       prefix: 'Dr',
-      job_title: 'Lecturer',
-      role_id: 1,
+    }
+
+    const response = await supertest(app)
+      .post('/api/users')
+      .set('Authorization', `Bearer ${token}`)
+      .send(userWithInvalidRole)
+
+    expect(response.status).toBe(400)
+    expect(response.body.error).toBe('Role not found')
+  })
+
+  // 🚫 Test: Unauthorized user trying to create a user
+  it('should return 403 if the user does not have the Super User role', async () => {
+    // Create a non-admin user
+    const normalUserRole = await Role.findOrCreate({
+      where: { name: 'User' },
+      defaults: { name: 'User' },
+    }).then(([role]) => role)
+
+    const hashedPassword = await bcrypt.hash('userpassword', 10)
+    const normalUser = await User.create({
+      email: 'user@qub.ac.uk',
+      password: hashedPassword,
+      forename: 'Normal',
+      surname: 'User',
+      active: 1,
+      role_id: normalUserRole.id,
+      job_title: 'Teacher',
+      prefix: 'Mr',
     })
 
-    const normalUserAuth = await authenticateUser(normalUser.email, 'password123')
-    const normalUserToken = normalUserAuth.token
+    // Authenticate as normal user
+    const result = await authenticateUser(normalUser.email, 'userpassword')
+    const normalUserToken = result.token
 
-    // Attempt to fetch all users (Super User-only route)
+    const newUser = {
+      forename: 'Sam',
+      surname: 'Wilson',
+      email: 'sam@qub.ac.uk',
+      password: 'securepassword',
+      roleName: 'Super User',
+      jobTitle: 'Admin',
+      prefix: 'Mr',
+    }
+
     const response = await supertest(app)
-      .get('/api/users')
+      .post('/api/users')
       .set('Authorization', `Bearer ${normalUserToken}`)
+      .send(newUser)
 
-    // Cleanup test user
+    expect(response.status).toBe(403)
+    expect(response.body.error).toBe('You are not authorized to access this resource')
+
+    // Cleanup
     await AuthenticationUser.destroy({ where: { user_id: normalUser.id } })
     await User.destroy({ where: { id: normalUser.id }, force: true })
-
-    // Expect 403 since normal user doesn't have permission
-    expect(response.status).toBe(403)
-    expect(response.body.error).toBe('Access denied: insufficient permissions {Role needed: 3 actual role id: 1}')
   })
 
-  // ✅ Test GET /api/users/:user/courses
-  it('should fetch user courses if authorized', async () => {
+  // 🚫 Test: Unauthorized request (No token)
+  it('should return 401 if no token is provided', async () => {
+    const newUser = {
+      forename: 'Alex',
+      surname: 'Brown',
+      email: 'alex@qub.ac.uk',
+      password: 'password123',
+      roleName: 'Super User',
+      jobTitle: 'Teacer',
+      prefix: 'Mr',
+    }
+
     const response = await supertest(app)
-      .get(`/api/users/${testUser.id}/courses`)
-      .set('Authorization', `Bearer ${token}`)
+      .post('/api/users')
+      .send(newUser)
 
-    expect(response.status).toBe(200)
-    expect(response.body.user).toHaveProperty('courses')
+    expect(response.status).toBe(401)
+    expect(response.body.error).toBe('Missing or invalid token')
   })
-
-  // 🚫 User Not Found
-  it('should return 404 if user does not exist', async () => {
-    const response = await supertest(app)
-      .get('/api/users/99999/courses') // Invalid user ID
-      .set('Authorization', `Bearer ${token}`)
-
-    expect(response.status).toBe(404)
-  })
-
 })

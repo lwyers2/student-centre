@@ -1,2 +1,1 @@
 GET http://localhost:3000/api/users/1/courses
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Imx3eWVyczNAZ21haWwuY29tIiwiaWQiOjEyLCJpYXQiOjE3Mzk2MzExMDEsImV4cCI6MTc0MDQ5NTEwMX0.bEscTL9Wj48TFBuYQJfFKvjwcQ9hmrqvdj0KUOLKtWE

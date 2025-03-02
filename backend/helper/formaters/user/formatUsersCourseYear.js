@@ -1,7 +1,4 @@
 function formatUsersCourseYear(user) {
-  // Check if user is undefined
-  if (!user) return undefined
-
   return {
     user: {
       id: user.id,

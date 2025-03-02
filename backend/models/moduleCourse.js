@@ -28,6 +28,7 @@ const ModuleCourse = db.define('ModuleCourse', {
   required: {
     type: DataTypes.TINYINT,
     allowNull: false,
+    defaultValue: false
   }
 },
 {

@@ -250,7 +250,6 @@ async function getUserModulesFromCourseYear(userId, courseYearId) {
   })
   if(!user) return null
 
-  //return user
   return formatUserModulesFromCourseYear(user)
 }
 

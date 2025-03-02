@@ -13,7 +13,7 @@ modulesRouter.get(
   roleAuthorization(['Super User']),
   async (req, res) => {
     const modules = await moduleService.getAllModules()
-    if (!modules) {
+    if (!modules || modules.length === 0) {
       const error = new Error('Modules not found')
       error.status = 404
       throw error

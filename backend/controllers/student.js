@@ -30,7 +30,7 @@ studentsRouter.get(
   roleAuthorization(['Super User']),
   async (req, res, ) => {
     const studentId = req.params.student
-    const student = await studentService.getAllStudentData(studentId)
+    const student = await studentService.getOneStudentAllInfo(studentId)
     if (!student) {
       const error = new Error('Student not found')
       error.status = 404

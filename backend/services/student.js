@@ -4,7 +4,7 @@ const { formatStudentCourses } = require('../helper/formaters/student/formatStud
 const { formatStudentModules } = require('../helper/formaters/student/formatStudentModules')
 const { formatOneStudentOneModuleYear } = require('../helper/formaters/student/formatOneStudentOneModuleYear')
 
-async function getAllStudentData(studentId) {
+async function getOneStudentAllInfo(studentId) {
   const student = await Student.findOne({
     where: { id: studentId },
     attributes: ['id','forename', 'surname', 'student_code', 'email'],
@@ -74,6 +74,7 @@ async function getAllStudentData(studentId) {
   if (!student) return null
 
   return formatAllStudentData(student)
+  //return student
 }
 
 async function getStudentCoursesData(studentId) {
@@ -219,7 +220,7 @@ async function getStudentModuleYearData(studentId, moduleYearId) {
 }
 
 module.exports = {
-  getAllStudentData,
+  getOneStudentAllInfo,
   getStudentCoursesData,
   getStudentModulesData,
   getAllStudents,

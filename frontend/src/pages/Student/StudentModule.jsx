@@ -51,13 +51,13 @@ const StudentModule = () => {
               Module Details:
             </div>
             <div className="flex items-center justify-between mb-4">
-              Result: {module.result_details.result}
+              Result: {module.result}
             </div>
             <div className="flex items-center justify-between mb-4">
-              Resit: {module.result_details.resit}
+              Resit: {module.resit}
             </div>
             <div className="flex items-center justify-between mb-4">
-              Flagged: {module.result_details.flagged}
+              Flagged: {module.lagged}
             </div>
           </div>
           <div className="border border-solid border-slate-900 dark:border-slate-600 bg-white dark:bg-gray-900 p-8 rounded-3xl shadow-xl mb-5">

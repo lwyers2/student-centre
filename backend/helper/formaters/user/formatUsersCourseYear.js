@@ -48,6 +48,3 @@ function formatUsersCourseYear(user) {
 }
 
 module.exports = { formatUsersCourseYear }
-
-
-module.exports= { formatUsersCourseYear }

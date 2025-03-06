@@ -25,22 +25,24 @@ const Modules = () => {
     const courseYearId = params.id
     userService.getUserModulesCourseYear(id, courseYearId, user.token)
       .then(response => {
-        console.log(`Module Data fetched: ${response}`)
         setUserData(response.user)
         setCourse(response.course)
-        setModules(response.course.modules)
-        const grouped = response.course.modules.reduce((acc, module) => {
+        setModules(response.modules)
+        const grouped = response.modules.reduce((acc, module) => {
           acc[module.year] = acc[module.year] || []
           acc[module.year].push(module)
           return acc
         }, {})
         setGroupedModules(grouped)
+
       })
       .catch(error => {
         console.error(`Error fetching modules: ${error}`)
       })
   }, [params.id])
 
+
+  console.log(userData)
 
   if(!user.id) {
     return <div>loading....</div>

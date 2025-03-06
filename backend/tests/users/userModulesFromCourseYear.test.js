@@ -1,14 +1,14 @@
 const supertest = require('supertest')
 const app = require('../../app')
 const bcrypt = require('bcrypt')
-const { User, AuthenticationUser, UserModule, ModuleYear, Module, ModuleCourse } = require('../../models')
+const { User, AuthenticationUser, UserModule, ModuleYear, Module, ModuleCourse, CourseYear, Course, School, QualificationLevel, UserCourse } = require('../../models')
 const { authenticateUser } = require('../../services/authenticateUser')
 
 describe('User Modules API Endpoints', () => {
   let testUser
   let token
   let authenticationUser
-  let courseYearId = 1 // Example course year ID
+  let courseYearId
 
   beforeAll(async () => {
     // Create a test user
@@ -47,11 +47,43 @@ describe('User Modules API Endpoints', () => {
     })
 
 
+    const school = await School.create({
+      school_name: 'Test School'
+    })
+
+    const qualification = await QualificationLevel.create({
+      level_id: 1,
+      qualification: 'BA'
+    })
+
+    const course = await Course.create({
+      title: 'Course Title',
+      years: 3,
+      school_id: school.id,
+      code: 'CT1000',
+      part_time: 0,
+      qualification_id: qualification.id,
+    })
+
+    const courseYear = await CourseYear.create({
+      course_id: course.id,
+      year_start: 2021,
+      year_end: 2023,
+      course_coordinator: testUser.id
+    })
+
+    await UserCourse.create({
+      course_year_id: courseYear.id,
+      course_id: course.id,
+      user_id: testUser.id
+    })
+
+
 
     await ModuleCourse.create({
-      course_year_id: courseYearId,
+      course_year_id: courseYear.id,
       module_year_id: moduleYear.id,
-      course_id: 1,
+      course_id: course.id,
       module_id: module.id
     })
 
@@ -60,6 +92,8 @@ describe('User Modules API Endpoints', () => {
       module_year_id: moduleYear.id,
       user_id: testUser.id,
     })
+
+    courseYearId = courseYear.id
 
   })
 

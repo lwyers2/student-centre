@@ -249,6 +249,27 @@ async function getUserModulesFromCourseYear(userId, courseYearId) {
             ]
           }
         ]
+      },
+      {
+        model: UserCourse,
+        as: 'user_user_course',
+        where: { course_year_id: courseYearId },
+        include: [
+          {
+            model: Course,
+            as: 'user_course_course',
+            include: [
+              {
+                model: QualificationLevel,
+                as: 'course_qualification_level'
+              }
+            ]
+          },
+          {
+            model: CourseYear,
+            as: 'user_course_course_year',
+          }
+        ]
       }
     ],
   })

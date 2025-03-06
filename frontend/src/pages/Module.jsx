@@ -20,8 +20,8 @@ const Module = () => {
     moduleService.getModuleFromModuleYear(params.id, user.token)
       .then(response => {
         console.log('Module data fetched:', response)
-        setModule(response.module)
-        setStudents(response.students)
+        setModule(response.module[0])
+        setStudents(response.module[0].students)
       })
       .catch(error => {
         console.error('Error fetching module:', error)
@@ -47,7 +47,7 @@ const Module = () => {
         student_code: student.student_code,
         forename: student.forename,
         surname: student.surname,
-        result: student.exam_results.result,
+        result: student.result,
       })),
       view: (row) => `/student/${row.id}/module/${module.module_year_id}`
     },

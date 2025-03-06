@@ -12,6 +12,8 @@ const Courses = () => {
   const [courses, setCourses] = useState()
   const [userData, setUserData] = useState()
 
+
+
   useEffect (() => {
     if(!user) {
       navigate('/')
@@ -23,11 +25,11 @@ const Courses = () => {
     const id = user.id
     userService.getAllUserCourses(id, user.token)
       .then(initialUserData => {
-        setUserData(initialUserData)
-        setCourses(initialUserData.all_courses)
+        setUserData(initialUserData.user)
+        setCourses(initialUserData.user.courses)
+        console.log(initialUserData.user.courses)
       })
   }, [user.id])
-
 
 
   if(!user.id) {

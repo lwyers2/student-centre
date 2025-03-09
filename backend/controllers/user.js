@@ -57,6 +57,24 @@ usersRouter.get(
 )
 
 usersRouter.get(
+  '/:user/modules/',
+  validateId('user'),
+  validate,
+  tokenVerification,
+  roleAndIdAuthorization(['Super User'], true),
+  async (req, res) => {
+    const userId = req.params.user
+    const user = await userService.getUserModules(userId)
+    if(!user) {
+      const error = new Error('User not found')
+      error.status = 404
+      throw error
+    }
+    res.json(user)
+  }
+)
+
+usersRouter.get(
   '/:user/modules/:courseyear',
   validateId('user'),
   validate,

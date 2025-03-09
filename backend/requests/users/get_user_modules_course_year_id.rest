@@ -1,2 +1,2 @@
-GET http://localhost:3000/api/users/1/modules/1
+GET http://localhost:3000/api/users/1/modules
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImpvaG4uZG9lQGV4YW1wbGUuY29tIiwiaWQiOjEsImlhdCI6MTc0MTI4NDI1MCwiZXhwIjoxNzQyMTQ4MjUwfQ._xtVOpIs-riX66gsMrhksO4zyj9e5xnmhifPSEdB6uw

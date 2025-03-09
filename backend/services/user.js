@@ -3,6 +3,7 @@ const { formatAllUsers } = require('../helper/formaters/user/formatAllUsers')
 const { formatUserModulesFromCourseYear } = require('../helper/formaters/user/formatUserModulesFromCourseYear')
 const { formatUsersCourseYear } = require('../helper/formaters/user/formatUsersCourseYear')
 const { formatOneUser } = require('../helper/formaters/user/formatOneUser')
+const { formatUserModules } = require('../helper/formaters/user/formatUserModules')
 const bcrypt = require('bcrypt')
 
 async function getAllUsers() {
@@ -207,6 +208,76 @@ const createUser = async ({ forename, surname, email, password, active, token, r
   })
 }
 
+async function getUserModules(userId) {
+  const user = await User.findOne({
+    where: { id: userId },
+    attributes: ['id', 'prefix', 'forename', 'surname'],
+    include: [
+      {
+        model: UserModule,
+        as: 'user_module_user',
+        //attributes: [],
+        include:
+        [
+          {
+            model: ModuleYear,
+            as: 'user_module_module_year',
+            attributes: ['id', 'year_start', 'module_id'],
+            required: true,
+            include:
+            [
+              {
+                model: User,
+                as: 'module_year_module_coordinator',
+                attributes: ['prefix', 'forename', 'surname']
+              },
+              {
+                model: Semester,
+                as: 'module_year_semester',
+
+              },
+              {
+                model: ModuleCourse,
+                as: 'module_year_module_course',
+              },
+              {
+                model: Module,
+                as: 'module_year_module',
+                attributes: ['id','title','year','code','CATs']
+              },
+            ]
+          }
+        ]
+      },
+      {
+        model: UserCourse,
+        as: 'user_user_course',
+        include: [
+          {
+            model: Course,
+            as: 'user_course_course',
+            include: [
+              {
+                model: QualificationLevel,
+                as: 'course_qualification_level'
+              }
+            ]
+          },
+          {
+            model: CourseYear,
+            as: 'user_course_course_year',
+          }
+        ]
+      }
+    ],
+  })
+  if(!user) return null
+
+  return formatUserModules(user)
+
+}
+
+
 async function getUserModulesFromCourseYear(userId, courseYearId) {
 
   const user = await User.findOne({
@@ -284,5 +355,6 @@ module.exports = {
   getUser,
   getUserCourses,
   getUserModulesFromCourseYear,
-  createUser
+  createUser,
+  getUserModules,
 }

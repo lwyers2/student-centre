@@ -123,4 +123,18 @@ usersRouter.post(
 //   }
 // )
 
+usersRouter.get(
+  '/:user/students',
+  async (req, res) => {
+    const userId = req.params.user
+    const user = await userService.getUserStudents(userId)
+    if(!user) {
+      const error = new Error('User not found')
+      error.status = 404
+      throw error
+    }
+    res.json(user)
+  }
+)
+
 module.exports = usersRouter

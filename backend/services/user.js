@@ -1,9 +1,10 @@
-const { UserModule, UserCourse, School, UserSchool, Role, Course, Module, User, QualificationLevel, CourseYear, ModuleYear, Semester, ModuleCourse } = require('../models')
+const { UserModule, UserCourse, School, UserSchool, Role, Course, Module, User, QualificationLevel, CourseYear, ModuleYear, Semester, ModuleCourse, StudentModule, Student } = require('../models')
 const { formatAllUsers } = require('../helper/formaters/user/formatAllUsers')
 const { formatUserModulesFromCourseYear } = require('../helper/formaters/user/formatUserModulesFromCourseYear')
 const { formatUsersCourseYear } = require('../helper/formaters/user/formatUsersCourseYear')
 const { formatOneUser } = require('../helper/formaters/user/formatOneUser')
 const { formatUserModules } = require('../helper/formaters/user/formatUserModules')
+const { formatUserStudents } = require('../helper/formaters/user/formatUserStudents')
 const bcrypt = require('bcrypt')
 
 async function getAllUsers() {
@@ -170,7 +171,6 @@ async function getUserCourses(userId) {
   if(!user) return null
 
   return formatUsersCourseYear(user)
-  //return user
 }
 
 const createUser = async ({ forename, surname, email, password, active, token, roleName, jobTitle, prefix }) => {
@@ -332,6 +332,42 @@ async function getUserModulesFromCourseYear(userId, courseYearId) {
   return formatUserModulesFromCourseYear(user)
 }
 
+async function getUserStudents(userId) {
+  const user = await User.findOne({
+    where: { id: userId },
+    attributes: ['id', 'prefix', 'forename', 'surname'],
+    include: [
+      {
+        model: UserModule,
+        as: 'user_module_user',
+        include: [
+          {
+            model: ModuleYear,
+            as: 'user_module_module_year',
+            include: [
+              {
+                model: StudentModule,
+                as: 'module_year_student_module',
+                include: [
+                  {
+                    model: Student,
+                    as: 'student_module_student',
+                    required: true,
+                    distinct: true,
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  })
+  if(!user) return null
+
+  return formatUserStudents(user)
+}
+
 
 module.exports = {
   getAllUsers,
@@ -340,4 +376,5 @@ module.exports = {
   getUserModulesFromCourseYear,
   createUser,
   getUserModules,
+  getUserStudents
 }

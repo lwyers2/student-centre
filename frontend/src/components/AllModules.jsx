@@ -8,7 +8,7 @@ const AllModules = ({ modules, year }) => {
     content: {
       headers: ['Title', 'Code', 'CATs', ], // Table headers
       data: modules.map((module) => ({
-        id: module.module_year_id, // Unique ID for each row
+        id: module.module_id, // Unique ID for each row
         title: module.title,
         code: module.code,
         cats: module.CATs,

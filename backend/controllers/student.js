@@ -27,7 +27,7 @@ studentsRouter.get(
   validateId('student'),
   validate,
   tokenVerification,
-  roleAuthorization(['Super User']),
+  roleAuthorization(['Super User', 'Admin', 'Teacher']),
   async (req, res, ) => {
     const studentId = req.params.student
     const student = await studentService.getOneStudentAllInfo(studentId)

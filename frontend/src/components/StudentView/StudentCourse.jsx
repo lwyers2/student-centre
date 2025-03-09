@@ -4,17 +4,15 @@ import Table from '../Table'
 const StudentCourse = ({ courses, student }) => {
 
 
+
   const getFlagCount = (course) => {
     let flagCount = 0
 
-    course.module_years.forEach((moduleYear) => {
-      moduleYear.modules.forEach((module) => {
-        if (module.student_module.flagged === 1) {
-          flagCount++
-        }
-      })
+    course.modules.map((module) => {
+      if (module.flagged === 1) {
+        flagCount++
+      }
     })
-
     return flagCount
   }
 

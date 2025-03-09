@@ -8,8 +8,6 @@ const Student = () => {
   const params = useParams()
   const [student, setStudent] = useState(null)
   const [courses, setCourses] = useState()
-  const [modules, setModules] = useState()
-  const [groupedModules, setGroupedModules] = useState({})
   const [showSection, setShowSection] = useState(true)
   const user = useSelector(state => state.user)
 
@@ -18,8 +16,8 @@ const Student = () => {
   useEffect(() => {
     studentService.getStudent(params.id, user.token)
       .then(response => {
-        setStudent(response)
-        //setCourses(response.courses)
+        setStudent(response.student)
+        setCourses(response.courses)
       })
       .catch(error => {
         console.error('Error fetching module: ', error)
@@ -32,7 +30,7 @@ const Student = () => {
     return <p>No student data available</p>
   }
 
-  console.log(student)
+  console.log(courses)
 
 
   return (

@@ -9,12 +9,12 @@ const Course = ({ course }) => {
   const tableData = {
     labels: { title: `${course.title} (${course.qualification}) ${course.code}/${courseSchedule}` },
     content: {
-      headers: ['year_start', 'year_end', 'course_co-ordinator'], // Table headers
+      headers: ['Year Start', 'Year End', 'Course Co-ordinator'], // Table headers
       data: course.course_years.map((course_year) => ({
         id: course_year.id, // Unique ID for each row
-        year_start: course_year.year_start,
-        year_end: course_year.year_end,
-        'course_co-ordinator': course_year.course_coordinator,
+        'year start': course_year.year_start,
+        'year end': course_year.year_end,
+        'course co-ordinator': course_year.course_coordinator,
       })),
       view: '/modules', // Base path for "View" links
     },

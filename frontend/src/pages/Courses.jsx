@@ -88,9 +88,7 @@ const Courses = () => {
             </div>
           </div>
           {courses.map(course => (
-            <>
-              <Course key={course.id} course={course}/>
-            </>
+            <Course key={course.course_id} course={course}/>
           ))}
         </>
       ) : (

@@ -29,6 +29,19 @@ const App = () => {
   }, [dispatch])
 
 
+  // useEffect(() => {
+  //   const handleLogoutOnClose = () => {
+  //     localStorage.removeItem('loggedUser') // Remove user from local storage
+  //     dispatch(setUser(null)) // Clear Redux state
+  //   }
+
+  //   window.addEventListener('beforeunload', handleLogoutOnClose)
+
+  //   return () => {
+  //     window.removeEventListener('beforeunload', handleLogoutOnClose)
+  //   }
+  // }, [dispatch])
+
   return (
     <Router>
       <div className="min-h-screen bg-slate-50 dark:bg-black dark:text-white flex flex-col">

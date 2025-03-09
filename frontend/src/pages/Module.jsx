@@ -40,11 +40,11 @@ const Module = () => {
   const tableData = {
     labels: { title: 'Students' },
     content: {
-      headers: [ 'student_code', 'forename', 'surname', 'email', 'result'], // Table headers
+      headers: [ 'Student Code', 'Forename', 'Surname', 'Email', 'Result'], // Table headers
       data: students.map((student) => ({
         id: student.id, // Unique ID for each row
         email: student.email,
-        student_code: student.student_code,
+        'student code': student.student_code,
         forename: student.forename,
         surname: student.surname,
         result: student.result,
@@ -52,9 +52,6 @@ const Module = () => {
       view: (row) => `/student/${row.id}/module/${module.module_year_id}`
     },
   }
-
-  console.log(module)
-  console.log(students)
 
   return (
     <div className="p-2 my-4 scroll-mt-20">

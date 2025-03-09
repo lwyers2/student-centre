@@ -17,6 +17,7 @@ import StudentModules from './pages/Student/StudentModules'
 import StudentModule from './pages/Student/StudentModule'
 import ViewModules from './pages/ViewModules'
 import ModuleSummary from './pages/ModuleSummary'
+import ViewStudents from './pages/Student/ViewStudents'
 import { setUser } from './redux/actions'
 
 const App = () => {
@@ -72,6 +73,7 @@ const App = () => {
             <Route path="student/:id/module/:moduleYearId" element={<StudentModule />}/>
             <Route path="/view-modules" element={<ViewModules/>} />
             <Route path="/module-summary/:moduleId" element={<ModuleSummary/>}/>
+            <Route path="/view-students" element={<ViewStudents/>}/>
           </Routes>
 
         </main>

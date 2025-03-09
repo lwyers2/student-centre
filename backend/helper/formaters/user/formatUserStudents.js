@@ -23,8 +23,8 @@ function formatUserStudents(user) {
       prefix: user.prefix,
       forename: user.forename,
       surname: user.surname,
-      students: uniqueStudents, // Attach the unique students array
-    }
+    },
+    students: uniqueStudents,
   }
 }
 

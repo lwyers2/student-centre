@@ -19,7 +19,7 @@ const Student = () => {
     studentService.getStudent(params.id, user.token)
       .then(response => {
         setStudent(response)
-        setCourses(response.courses)
+        //setCourses(response.courses)
       })
       .catch(error => {
         console.error('Error fetching module: ', error)

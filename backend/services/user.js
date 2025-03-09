@@ -220,33 +220,16 @@ async function getUserModules(userId) {
         include:
         [
           {
-            model: ModuleYear,
-            as: 'user_module_module_year',
-            attributes: ['id', 'year_start', 'module_id'],
-            required: true,
-            include:
-            [
-              {
-                model: User,
-                as: 'module_year_module_coordinator',
-                attributes: ['prefix', 'forename', 'surname']
-              },
-              {
-                model: Semester,
-                as: 'module_year_semester',
-
-              },
+            model: Module,
+            as: 'user_modules_module',
+            attributes: ['id','title','year','code','CATs'],
+            include: [
               {
                 model: ModuleCourse,
-                as: 'module_year_module_course',
-              },
-              {
-                model: Module,
-                as: 'module_year_module',
-                attributes: ['id','title','year','code','CATs']
-              },
+                as: 'module_module_course'
+              }
             ]
-          }
+          },
         ]
       },
       {

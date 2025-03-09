@@ -1,6 +1,8 @@
 function formatUserModules(user) {
   if (!user) return undefined // Handle case when user is undefined
 
+  // Extract course_year_ids from courses for easy lookup
+  const courseYearIds = user.user_user_course?.map(course => course.course_year_id) || []
 
   return {
     user: {
@@ -9,36 +11,6 @@ function formatUserModules(user) {
       forename: user.forename,
       surname: user.surname,
     },
-    modules: (user.user_module_user || []).map((module) => {
-      const coordinator = module.user_module_module_year?.module_year_module_coordinator
-      const moduleCoordinator = coordinator
-        ? `${coordinator.prefix || ''}. ${coordinator.forename || ''} ${coordinator.surname || ''}`
-        : undefined
-
-      // Get all course_year_ids from the user's courses
-      const userCourseYearIds = new Set(
-        (user.user_user_course || []).map((course) => course.course_year_id)
-      )
-
-      return {
-        module_id: module.module_id,
-        module_year_id: module.module_year_id,
-        title: module.user_module_module_year?.module_year_module?.title,
-        code: module.user_module_module_year?.module_year_module?.code,
-        CATs: module.user_module_module_year?.module_year_module?.CATs,
-        year: module.user_module_module_year?.module_year_module?.year,
-        year_start: module.user_module_module_year?.year_start,
-        module_coordinator: moduleCoordinator,
-        semester: module.user_module_module_year?.module_year_semester?.name,
-        // Filter course_years so it only contains those that exist in user's courses
-        course_years: (module.user_module_module_year?.module_year_module_course || [])
-          .filter((courseYear) => userCourseYearIds.has(courseYear.course_year_id)) // ✅ Only include matching course_year_id
-          .map((courseYear) => ({
-            course_year_id: courseYear.course_year_id,
-            course_id: courseYear.course_id,
-          }))
-      }
-    }),
     courses: (user.user_user_course || []).map((course) => ({
       course_id: course.course_id,
       course_year_id: course.course_year_id,
@@ -49,7 +21,38 @@ function formatUserModules(user) {
       qualification: course.user_course_course?.course_qualification_level?.qualification,
       year_start: course.user_course_course_year?.year_start,
       year_end: course.user_course_course_year?.year_end,
-    }))
+    })),
+    modules: (user.user_module_user || []).reduce((acc, module) => {
+      const moduleId = module.module_id
+
+      // Check if module already exists in accumulator
+      let existingModule = acc.find((m) => m.module_id === moduleId)
+
+      // Filter course_years based on course_year_id matching courses
+      const validCourseIds = (module.user_modules_module.module_module_course || [])
+        .filter(courseYear => courseYearIds.includes(courseYear.course_year_id))
+        .map(courseYear => courseYear.course_id)  // Extract course_id from course_year
+
+      // Only keep the first valid course_id
+      const firstValidCourseId = validCourseIds[0]
+
+      if (!existingModule && firstValidCourseId) {
+        // Add new module if it doesn't exist yet
+        acc.push({
+          module_id: module.module_id,
+          title: module.user_modules_module.title,
+          year: module.user_modules_module.year,
+          code: module.user_modules_module.code,
+          CATs: module.user_modules_module.CATs,
+          course_id: firstValidCourseId, // Only include first valid course_id
+        })
+      } else if (existingModule && firstValidCourseId) {
+        // Ensure the first valid course_id is unique and merge if needed
+        existingModule.course_id = firstValidCourseId // Only one course_id
+      }
+
+      return acc
+    }, []),
   }
 }
 

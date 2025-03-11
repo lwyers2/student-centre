@@ -1,13 +1,19 @@
 import React, { useState } from 'react'
 import Table from './Table'
 
-const CourseModule = ({ modules, year_start, year_end, year }) => {
+const CourseModule = ({ modules, year_start, year_end, year, search }) => {
 
+  const filteredModules = modules.filter((module) =>
+    module.title.toLowerCase().includes(search.toLowerCase()) ||
+    module.code.toLowerCase().includes(search.toLowerCase()) ||
+    module.semester.toLowerCase().includes(search.toLowerCase()) ||
+    module.module_coordinator.toLowerCase().includes(search.toLowerCase())
+  )
   const tableData = {
     labels: { title: `Academic Year: ${year} (${year_start}/${year_end})` },
     content: {
       headers: ['Title', 'Code', 'Module Co-ordinator', 'CATs', 'Semester'], // Table headers
-      data: modules.map((module) => ({
+      data: filteredModules.map((module) => ({
         id: module.module_year_id, // Unique ID for each row
         title: module.title,
         code: module.code,

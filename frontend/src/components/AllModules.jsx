@@ -4,7 +4,6 @@ import Table from './Table'
 const AllModules = ({ modules, year , search }) => {
 
   const filteredModules = modules.filter((module) =>
-    //console.log(search)
     module.title.toLowerCase().includes(search.toLowerCase()) ||
     module.code.toLowerCase().includes(search.toLowerCase())
   )

@@ -10,6 +10,7 @@ const StudentModule = () => {
   const [students, setStudents] = useState(null)
   const [userData, setUserData] = useState(null)
   const user = useSelector (state => state.user)
+  const [search, setSearch] = useState('')
 
 
 
@@ -54,11 +55,17 @@ const StudentModule = () => {
                 <button className="bg-slate-500 text-white font-semibold px-3 py-1 rounded hover:bg-slate-400">View</button>
               </div>
               <div className="mb-4">
-                <input className="" type="text" />
+                <input
+                  type="text"
+                  className="border border-gray-300 rounded px-2 py-1 w-full text-slate-900"
+                  placeholder="Search courses..."
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                />
               </div>
             </div>
             {
-              <AllUserStudents students= {students} />
+              <AllUserStudents students= {students} search={search}/>
             }
           </>
         ) : (

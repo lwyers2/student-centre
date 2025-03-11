@@ -1,13 +1,19 @@
 import React from 'react'
 import Table from './Table'
 
-const AllModules = ({ modules, year }) => {
+const AllModules = ({ modules, year , search }) => {
+
+  const filteredModules = modules.filter((module) =>
+    //console.log(search)
+    module.title.toLowerCase().includes(search.toLowerCase()) ||
+    module.code.toLowerCase().includes(search.toLowerCase())
+  )
 
   const tableData = {
     labels: { title: `Academic Year: ${year}` },
     content: {
       headers: ['Title', 'Code', 'CATs', ], // Table headers
-      data: modules.map((module) => ({
+      data: filteredModules.map((module) => ({
         id: module.module_id, // Unique ID for each row
         title: module.title,
         code: module.code,

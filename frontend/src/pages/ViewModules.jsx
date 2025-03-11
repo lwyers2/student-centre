@@ -13,6 +13,7 @@ const Modules = () => {
   const [modules, setModules] = useState()
   const [userData, setUserData] = useState()
   const [groupedModules, setGroupedModules] = useState({})
+  const [search, setSearch] = useState('')
 
   useEffect(() => {
     if (!user) {
@@ -71,17 +72,7 @@ const Modules = () => {
 
       {courses && (
         <>
-          <div className="border border-solid border-slate-900 dark:border-slate-600 bg-white dark:bg-gray-900 p-8 rounded-3xl shadow-xl mb-5">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-3xl font-bold text-left mb-6 text-slate-900 dark:text-white">Search</h3>
-              <button className="bg-slate-500 text-white font-semibold px-3 py-1 rounded hover:bg-slate-400">View</button>
-            </div>
-            <div className="mb-4">
-              <input className="input-field" type="text" />
-            </div>
-          </div>
-
-          <div className="border border-solid border-slate-900 dark:border-slate-600 bg-white dark:bg-gray-900 p-8 rounded-3xl shadow-xl mb-5">
+          {/* <div className="border border-solid border-slate-900 dark:border-slate-600 bg-white dark:bg-gray-900 p-8 rounded-3xl shadow-xl mb-5">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-3xl font-bold text-left mb-6 text-slate-900 dark:text-white">Filters</h3>
               <button className="bg-slate-500 text-white font-semibold px-3 py-1 rounded hover:bg-slate-400">View</button>
@@ -91,8 +82,23 @@ const Modules = () => {
               <button onClick={() => console.log('Filter by CATS')} className="bg-slate-500 text-white font-semibold px-3 py-1 rounded hover:bg-slate-400">CATS</button>
               <button onClick={() => console.log('Filter by Semester')} className="bg-slate-500 text-white font-semibold px-3 py-1 rounded hover:bg-slate-400">Semester</button>
             </div>
-          </div>
+          </div> */}
 
+          <div className="border border-solid border-slate-900 dark:border-slate-600 bg-white dark:bg-gray-900 p-8 rounded-3xl shadow-xl mb-5">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className= "text-3xl font-bold text-left  mb-6 text-slate-900 dark:text-white">Search</h3>
+              <button className="bg-slate-500 text-white font-semibold px-3 py-1 rounded hover:bg-slate-400">View</button>
+            </div>
+            <div className="mb-4">
+              <input
+                type="text"
+                className="border border-gray-300 rounded px-2 py-1 w-full text-slate-900"
+                placeholder="Search courses..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+              />
+            </div>
+          </div>
           {groupedModulesArray.length > 0 ? (
             groupedModulesArray.map((group) => (
               <div key={group.year}>
@@ -101,6 +107,7 @@ const Modules = () => {
                   key={group.year} // Use year as key for the group
                   modules={group.modulesForYear} // Pass the array of modules for the year
                   year={group.year}
+                  search={search}
                 />
               </div>
             ))

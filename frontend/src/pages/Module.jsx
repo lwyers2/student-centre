@@ -15,6 +15,7 @@ const Module = () => {
   const [module, setModule] = useState(null)
   const [students, setStudents] = useState(null)
   const user = useSelector(state => state.user)
+  const [search, setSearch] = useState('')
 
   useEffect(() => {
     moduleService.getModuleFromModuleYear(params.id, user.token)
@@ -37,11 +38,18 @@ const Module = () => {
     return <p>No student data available</p> // Handle no module found
   }
 
+  const filteredStudents = students.filter((student) =>
+    student.forename.toLowerCase().includes(search.toLowerCase()) ||
+    student.surname.toLowerCase().includes(search.toLowerCase()) ||
+    student.student_code.toLowerCase().includes(search.toLowerCase()) ||
+    student.email.toLowerCase().includes(search.toLowerCase())
+  )
+
   const tableData = {
     labels: { title: 'Students' },
     content: {
       headers: [ 'Student Code', 'Forename', 'Surname', 'Email', 'Result'], // Table headers
-      data: students.map((student) => ({
+      data: filteredStudents.map((student) => ({
         id: student.id, // Unique ID for each row
         email: student.email,
         'student code': student.student_code,
@@ -74,32 +82,18 @@ const Module = () => {
       {module ? (
         <>
           <div className="border border-solid border-slate-900 dark:border-slate-600 bg-white dark:bg-gray-900 p-8 rounded-3xl shadow-xl mb-5">
-            <h3>filter</h3>
             <div className="flex items-center justify-between mb-4">
-              <button
-                onClick="filter"
-                className="bg-slate-500 text-white font-semibold px-3 py-1 rounded hover:bg-slate-400"
-              >
-              2024/2025
-              </button>
-              <button
-                onClick="filter"
-                className="bg-slate-500 text-white font-semibold px-3 py-1 rounded hover:bg-slate-400"
-              >
-              2026/2027
-              </button>
-              <button
-                onClick="filter"
-                className="bg-slate-500 text-white font-semibold px-3 py-1 rounded hover:bg-slate-400"
-              >
-              2027/2028
-              </button>
-              <button
-                onClick="filter"
-                className="bg-slate-500 text-white font-semibold px-3 py-1 rounded hover:bg-slate-400"
-              >
-              2028/2029
-              </button>
+              <h3 className= "text-3xl font-bold text-left  mb-6 text-slate-900 dark:text-white">Search</h3>
+              <button className="bg-slate-500 text-white font-semibold px-3 py-1 rounded hover:bg-slate-400">View</button>
+            </div>
+            <div className="mb-4">
+              <input
+                type="text"
+                className="border border-gray-300 rounded px-2 py-1 w-full text-slate-900"
+                placeholder="Search students..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+              />
             </div>
           </div>
           <Table
@@ -108,7 +102,7 @@ const Module = () => {
           />
         </>
       ) : (
-        <div> no courses</div>
+        <div> no students</div>
       )
 
       }

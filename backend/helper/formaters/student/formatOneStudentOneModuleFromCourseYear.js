@@ -1,30 +1,43 @@
 function formatOneStudentOneModuleFromCourseYear(student) {
+  if (!student.student_student_course || student.student_student_course.length === 0) {
+    return {} // Return empty object if no course data exists
+  }
 
-  return student.student_student_course.map((course) => {
-    return {
+  const course = student.student_student_course[0] // Take the first course
+  const courseYear = course.student_course_course_year
+  const courseDetails = courseYear.course_year_course
+
+  // Convert all modules into an array
+  const formattedModules = courseYear.course_year_module_course.map((module) => ({
+    module_id: module.module_id,
+    module_year_id: module.module_year_id,
+    title: module.module_course_module.title,
+    code: module.module_course_module.code,
+    CATs: module.module_course_module.CATs,
+    result: module.module_course_module.module_student_module[0]?.result || null,
+    flagged: module.module_course_module.module_student_module[0]?.flagged || 0,
+    resit: module.module_course_module.module_student_module[0]?.resit || 0,
+  }))
+
+  return {
+    student: {
+      id: student.id,
+      forename: student.forename,
+      surname: student.surname,
+      code: student.student_code,
+    },
+    course: {
       course_id: course.course_id,
       course_year_id: course.course_year_id,
-      year_start: course.student_course_course_year.year_start,
-      year_end: course.student_course_course_year.year_end,
-      title: course.student_course_course_year.course_year_course.title,
-      code: course.student_course_course_year.course_year_course.code,
-      part_time: course.student_course_course_year.course_year_course.part_time,
-      qualification: course.student_course_course_year.course_year_course.course_qualification_level.qualification,
-      modules: course.student_course_course_year.course_year_module_course.map((module) => {
-        return {
-          module_id: module.module_id,
-          module_year_id: module.module_year_id,
-          title: module.module_course_module.title,
-          code: module.module_course_module.code,
-          CATs: module.module_course_module.CATs,
-          result: module.module_course_module.module_student_module[0].result,
-          flagged: module.module_course_module.module_student_module[0].flagged,
-          resit: module.module_course_module.module_student_module[0].resit,
-        }
-      })
-    }
-  })
-
+      year_start: courseYear.year_start,
+      year_end: courseYear.year_end,
+      title: courseDetails.title,
+      code: courseDetails.code,
+      part_time: courseDetails.part_time,
+      qualification: courseDetails.course_qualification_level.qualification,
+    },
+    modules: formattedModules, // Now an array!
+  }
 }
 
 module.exports = { formatOneStudentOneModuleFromCourseYear }

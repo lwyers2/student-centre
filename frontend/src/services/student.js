@@ -24,7 +24,7 @@ const getStudentModule = async (id, token, moduleYearId) => {
   return response.data
 }
 
-const getStudentModules = async (id, token, courseYearId) => {
+const getStudentModulesFromCourseYear = async (id, token, courseYearId) => {
   const response = await axios.get(`${baseUrl}/${id}/course/${courseYearId}`, {
     headers: {
       'Authorization': `Bearer ${token}`
@@ -33,4 +33,4 @@ const getStudentModules = async (id, token, courseYearId) => {
   return response.data
 }
 
-export default { getAll, getStudent, getStudentModule, getStudentModules }
+export default { getAll, getStudent, getStudentModule, getStudentModulesFromCourseYear }

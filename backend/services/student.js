@@ -175,7 +175,7 @@ async function getStudentModulesData(studentId) {
 async function getStudentModulesFromCourseYear(studentId, courseYearId) {
   const student = await Student.findOne({
     where: { id: studentId },
-    attributes: [],
+    attributes: ['id','forename', 'surname', 'student_code', 'email'],
     include: [
       {
         model: StudentCourse,

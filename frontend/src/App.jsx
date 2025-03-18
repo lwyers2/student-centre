@@ -13,11 +13,12 @@ import ModuleYearStudent from './pages/Module/ModuleYearStudent'
 import ResetPassword from './pages/ResetPassword'
 import Student from './pages/Student/Student'
 import CourseModuleYears from './pages/Module/CourseModuleYears'
-import StudentModules from './pages/Student/StudentModules'
+import StudentModules from './pages/Student/StudentCourseModules.jsx'
 import StudentModule from './pages/Student/StudentModule'
 import ViewModules from './pages/Module/ViewModules'
 import ModuleSummary from './pages/Module/ModuleSummary'
 import ViewStudents from './pages/Student/ViewStudents'
+import StudentCourseModules from './components/StudentView/StudentCourseModules.jsx'
 import { setUser } from './redux/actions'
 
 const App = () => {
@@ -74,6 +75,7 @@ const App = () => {
             <Route path="/view-modules" element={<ViewModules/>} />
             <Route path="/module-summary/:moduleId" element={<ModuleSummary/>}/>
             <Route path="/view-students" element={<ViewStudents/>}/>
+            <Route path="/student/:studentId/course/:courseId" element={<StudentCourseModules/>}/>
           </Routes>
 
         </main>

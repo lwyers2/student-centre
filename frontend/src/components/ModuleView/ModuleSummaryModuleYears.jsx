@@ -7,7 +7,7 @@ const ModuleSummaryModuleYears = ({ moduleYear }) => {
   if (moduleYear.students && Array.isArray(moduleYear.students) && moduleYear.students.length > 0) {
     // Calculate the average result
     const totalResult = moduleYear.students.reduce((acc, student) => acc + student.result, 0)
-    const averageResult = totalResult / moduleYear.students.length
+    const averageResult = Math.ceil(totalResult / moduleYear.students.length)
 
     // Count the number of flagged students
     const flaggedCount = moduleYear.students.filter(student => student.flagged === 1).length
@@ -34,7 +34,7 @@ const ModuleSummaryModuleYears = ({ moduleYear }) => {
         <div className="flex flex-wrap justify-between items-center mb-4">
           <div className="flex-1 p-2 mb-2 sm:mb-0">
             <div className="border p-4 rounded-md bg-slate-100 dark:bg-slate-700 text-slate-900 dark:text-white">
-              <p><strong>Average Result:</strong> {averageResult.toFixed(2)}%</p>
+              <p><strong>Average Result:</strong> {averageResult.toFixed(0)}%</p>
             </div>
           </div>
           <div className="flex-1 p-2 mb-2 sm:mb-0">

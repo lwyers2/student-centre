@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
-import studentService from '../../services/student'
-import StudentCourseModules from '../../components/StudentView/StudentCourseModules.jsx'
+import studentService from '../../services/student.js'
 
-const StudentModules = () => {
+const StudentCourseModules = () => {
 
   const params = useParams()
   const [student, setStudent] = useState(null)
@@ -15,6 +14,8 @@ const StudentModules = () => {
   const user = useSelector(state => state.user)
 
   const toggle = () => setShowSection(!showSection)
+
+  console.log(params)
 
   useEffect(() => {
     studentService.getStudent(params.id)
@@ -71,4 +72,4 @@ const StudentModules = () => {
   )
 }
 
-export default StudentModules
+export default StudentCourseModules

@@ -24,4 +24,6 @@ const getStudentModule = async (id, token, moduleYearId) => {
   return response.data
 }
 
+// const getStudentModules = async
+
 export default { getAll, getStudent, getStudentModule }

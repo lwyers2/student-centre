@@ -84,6 +84,27 @@ studentsRouter.get(
 )
 
 studentsRouter.get(
+  '/:student/course/:course',
+  // validateId('student'),
+  // validate,
+  // tokenVerification,
+  //roleAuthorization(['Super User']),
+  async (req, res,) => {
+    const studentId = req.params.student
+    const courseYearId = req.params.course
+    const student = await studentService.getStudentModulesFromCourseYear(studentId, courseYearId)
+    if (!student) {
+      const error = new Error('Student not found')
+      error.status = 404
+      throw error
+    }
+    res.json(student)
+  }
+)
+
+
+
+studentsRouter.get(
   '/:student/module-year/:moduleYearId',
   validateId('student'),
   validate,

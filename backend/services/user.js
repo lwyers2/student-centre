@@ -426,7 +426,7 @@ async function getUserModule(userId, moduleId) {
             ]
           }
         ]
-      }
+      },
     ]
   })
   if(!user) return null

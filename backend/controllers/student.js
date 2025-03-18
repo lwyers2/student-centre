@@ -85,9 +85,9 @@ studentsRouter.get(
 
 studentsRouter.get(
   '/:student/course/:course',
-  // validateId('student'),
-  // validate,
-  // tokenVerification,
+  validateId('student'),
+  validate,
+  tokenVerification,
   //roleAuthorization(['Super User']),
   async (req, res,) => {
     const studentId = req.params.student

@@ -93,6 +93,25 @@ usersRouter.get(
   }
 )
 
+usersRouter.get(
+  '/:user/module/:module',
+  validateId('user'),
+  validate,
+  tokenVerification,
+  roleAndIdAuthorization(['Super User'], true),
+  async (req, res) => {
+    const userId = req.params.user
+    const moduleId = req.params.module
+    const user = await userService.getUserModule(userId, moduleId)
+    if(!user) {
+      const error = new Error('User not found')
+      error.status = 404
+      throw error
+    }
+    res.json(user)
+  }
+)
+
 usersRouter.post(
   '/',
   validate,

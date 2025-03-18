@@ -5,6 +5,7 @@ const { formatUsersCourseYear } = require('../helper/formaters/user/formatUsersC
 const { formatOneUser } = require('../helper/formaters/user/formatOneUser')
 const { formatUserModules } = require('../helper/formaters/user/formatUserModules')
 const { formatUserStudents } = require('../helper/formaters/user/formatUserStudents')
+const { formatOneUserOneModule } = require('../helper/formaters/user/formatOneUserOneModule')
 const bcrypt = require('bcrypt')
 
 async function getAllUsers() {
@@ -356,7 +357,7 @@ async function getUserStudents(userId) {
                     distinct: true,
                   }
                 ]
-              }
+              },
             ]
           }
         ]
@@ -368,6 +369,71 @@ async function getUserStudents(userId) {
   return formatUserStudents(user)
 }
 
+async function getUserModule(userId, moduleId) {
+  const user = await User.findOne({
+    where: { id: userId },
+    attributes: ['id', 'prefix', 'forename', 'surname'],
+    include: [
+      {
+        model: UserModule,
+        as: 'user_module_user',
+        where: { user_id: userId, module_id: moduleId },
+        include: [
+          {
+            model: ModuleYear,
+            as: 'user_module_module_year',
+            required: true,
+            include:
+            [
+              {
+                model: User,
+                as: 'module_year_module_coordinator',
+                attributes: ['prefix', 'forename', 'surname']
+              },
+              {
+                model: Semester,
+                as: 'module_year_semester',
+
+              },
+              {
+                model: Module,
+                as: 'module_year_module',
+                attributes: ['id','title','year','code','CATs']
+              },
+              {
+                model: StudentModule,
+                as: 'module_year_student_module',
+                attributes: ['student_id', 'result', 'flagged', 'resit']
+              },
+              {
+                model: ModuleCourse,
+                as: 'module_year_module_course',
+                include:
+                [
+                  {
+                    model: CourseYear,
+                    as: 'module_course_course_year',
+                    include:
+                    [
+                      {
+                        model: Course,
+                        as: 'course_year_course'
+                      }
+                    ]
+                  }
+                ]
+              },
+            ]
+          }
+        ]
+      }
+    ]
+  })
+  if(!user) return null
+
+  return formatOneUserOneModule(user)
+}
+
 
 module.exports = {
   getAllUsers,
@@ -376,5 +442,6 @@ module.exports = {
   getUserModulesFromCourseYear,
   createUser,
   getUserModules,
-  getUserStudents
+  getUserStudents,
+  getUserModule
 }

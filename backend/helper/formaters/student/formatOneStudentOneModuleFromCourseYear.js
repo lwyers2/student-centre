@@ -14,6 +14,7 @@ function formatOneStudentOneModuleFromCourseYear(student) {
     title: module.module_course_module.title,
     code: module.module_course_module.code,
     CATs: module.module_course_module.CATs,
+    year: module.module_course_module.year,
     result: module.module_course_module.module_student_module[0]?.result || null,
     flagged: module.module_course_module.module_student_module[0]?.flagged || 0,
     resit: module.module_course_module.module_student_module[0]?.resit || 0,

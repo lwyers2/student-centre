@@ -18,7 +18,7 @@ import StudentModule from './pages/Student/StudentModule'
 import ViewModules from './pages/Module/ViewModules'
 import ModuleSummary from './pages/Module/ModuleSummary'
 import ViewStudents from './pages/Student/ViewStudents'
-import StudentCourseModules from './components/StudentView/StudentCourseModules.jsx'
+import StudentCourseModules from './pages/Student/StudentCourseModules.jsx'
 import { setUser } from './redux/actions'
 
 const App = () => {

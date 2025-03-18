@@ -5,7 +5,7 @@ import userService from '../services/user'
 import AllModules from '../components/AllModules'
 
 const Modules = () => {
-  const user = useSelector(state => state.user)  // Assuming user data is stored in state.user
+  const user = useSelector(state => state.user)
   const navigate = useNavigate()
   const params = useParams()
 
@@ -14,6 +14,9 @@ const Modules = () => {
   const [userData, setUserData] = useState()
   const [groupedModules, setGroupedModules] = useState({})
   const [search, setSearch] = useState('')
+  const [showSearch, setShowSearch] = useState(true)
+
+  const toggle = () => setShowSearch(!showSearch)
 
   useEffect(() => {
     if (!user) {
@@ -31,7 +34,7 @@ const Modules = () => {
 
         // Group modules by year
         const grouped = response.modules.reduce((acc, module) => {
-          const year = module.year || 0 // Default year if module year is missing
+          const year = module.year || 0
           if (!acc[year]) {
             acc[year] = []
           }
@@ -72,33 +75,26 @@ const Modules = () => {
 
       {courses && (
         <>
-          {/* <div className="border border-solid border-slate-900 dark:border-slate-600 bg-white dark:bg-gray-900 p-8 rounded-3xl shadow-xl mb-5">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-3xl font-bold text-left mb-6 text-slate-900 dark:text-white">Filters</h3>
-              <button className="bg-slate-500 text-white font-semibold px-3 py-1 rounded hover:bg-slate-400">View</button>
-            </div>
-            <div className="flex items-center justify-between mb-4">
-              <button onClick={() => console.log('Filter by Academic Year')} className="bg-slate-500 text-white font-semibold px-3 py-1 rounded hover:bg-slate-400">Academic Year</button>
-              <button onClick={() => console.log('Filter by CATS')} className="bg-slate-500 text-white font-semibold px-3 py-1 rounded hover:bg-slate-400">CATS</button>
-              <button onClick={() => console.log('Filter by Semester')} className="bg-slate-500 text-white font-semibold px-3 py-1 rounded hover:bg-slate-400">Semester</button>
-            </div>
-          </div> */}
-
           <div className="border border-solid border-slate-900 dark:border-slate-600 bg-white dark:bg-gray-900 p-8 rounded-3xl shadow-xl mb-5">
             <div className="flex items-center justify-between mb-4">
-              <h3 className= "text-3xl font-bold text-left  mb-6 text-slate-900 dark:text-white">Search</h3>
-              <button className="bg-slate-500 text-white font-semibold px-3 py-1 rounded hover:bg-slate-400">View</button>
+              <h3 className="text-3xl font-bold text-left mb-6 text-slate-900 dark:text-white">Search</h3>
+              <button onClick={toggle} className="bg-slate-500 text-white font-semibold px-3 py-1 rounded hover:bg-slate-400">
+                {showSearch ? 'Hide' : 'Show'}
+              </button>
             </div>
-            <div className="mb-4">
-              <input
-                type="text"
-                className="border border-gray-300 rounded px-2 py-1 w-full text-slate-900"
-                placeholder="Search courses..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-              />
-            </div>
+            {showSearch && (
+              <div className="mb-4">
+                <input
+                  type="text"
+                  className="border border-gray-300 rounded px-2 py-1 w-full text-slate-900"
+                  placeholder="Search courses..."
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                />
+              </div>
+            )}
           </div>
+
           {groupedModulesArray.length > 0 ? (
             groupedModulesArray.map((group) => (
               <div key={group.year}>

@@ -3,6 +3,7 @@ import Table from './Table'
 
 const AllModules = ({ modules, year , search }) => {
 
+
   const filteredModules = modules.filter((module) =>
     module.title.toLowerCase().includes(search.toLowerCase()) ||
     module.code.toLowerCase().includes(search.toLowerCase())

@@ -7,10 +7,10 @@
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
-import moduleService from '../services/module'
-import Table from '../components/Table'
+import moduleService from '../../services/module'
+import Table from '../../components/Table'
 
-const Module = () => {
+const ModuleYearStudent = () => {
   const params = useParams()
   const [module, setModule] = useState(null)
   const [students, setStudents] = useState(null)
@@ -57,7 +57,7 @@ const Module = () => {
         surname: student.surname,
         result: student.result,
       })),
-      view: (row) => `/student/${row.id}/module/${module.module_year_id}`
+      view: (row) => `/student/${row.id}/module-year/${module.module_year_id}`
     },
   }
 
@@ -110,4 +110,4 @@ const Module = () => {
   )
 }
 
-export default Module
+export default ModuleYearStudent

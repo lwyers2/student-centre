@@ -5,18 +5,18 @@ import Header from './components/Header'
 import Hero from './components/Hero'
 import Tools from './components/Tools'
 import UploadRecords from './pages/UploadRecords'
-import Courses from './pages/Courses'
+import ViewCourses from './pages/Course/ViewCourses'
 import Meetings from './pages/Meetings'
 import Admin from './pages/Admin'
 import Login from './pages/Login'
-import Module from './pages/Module'
+import ModuleYearStudent from './pages/Module/ModuleYearStudent'
 import ResetPassword from './pages/ResetPassword'
 import Student from './pages/Student/Student'
-import Modules from './pages/Modules'
+import CourseModuleYears from './pages/Module/CourseModuleYears'
 import StudentModules from './pages/Student/StudentModules'
 import StudentModule from './pages/Student/StudentModule'
-import ViewModules from './pages/ViewModules'
-import ModuleSummary from './pages/ModuleSummary'
+import ViewModules from './pages/Module/ViewModules'
+import ModuleSummary from './pages/Module/ModuleSummary'
 import ViewStudents from './pages/Student/ViewStudents'
 import { setUser } from './redux/actions'
 
@@ -61,16 +61,16 @@ const App = () => {
               }
             />
             <Route path="/upload-records" element={<UploadRecords />} />
-            <Route path="/view-courses" element={<Courses />} />
+            <Route path="/view-courses" element={<ViewCourses />} />
             <Route path="/meetings" element={<Meetings />} />
             <Route path="/admin" element={<Admin />} />
             <Route path="/login" element={<Login />} />
             <Route path="/reset-password" element={<ResetPassword/>} />
-            <Route path="/module/:id" element={<Module />} />
+            <Route path="/module-students/:id" element={<ModuleYearStudent />} />
             <Route path="/student/:id" element={<Student />}/>
-            <Route path="/modules/:id" element={<Modules />} />
+            <Route path="/course-year-modules/:id" element={<CourseModuleYears />} />
             <Route path="student/:id/course/:courseYearId" element={<StudentModules />}/>
-            <Route path="student/:id/module/:moduleYearId" element={<StudentModule />}/>
+            <Route path="student/:id/module-year/:moduleYearId" element={<StudentModule />}/>
             <Route path="/view-modules" element={<ViewModules/>} />
             <Route path="/module-summary/:moduleId" element={<ModuleSummary/>}/>
             <Route path="/view-students" element={<ViewStudents/>}/>

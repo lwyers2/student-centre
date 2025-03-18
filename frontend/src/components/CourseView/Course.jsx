@@ -1,5 +1,5 @@
 import React from 'react'
-import Table from './Table'
+import Table from '../Table'
 
 const Course = ({ course, search, yearStart, yearEnd }) => {
 
@@ -37,7 +37,7 @@ const Course = ({ course, search, yearStart, yearEnd }) => {
         'year end': course_year.year_end,
         'course co-ordinator': course_year.course_coordinator,
       })),
-      view: '/modules', // Base path for "View" links
+      view: '/course-year-modules', // Base path for "View" links
     },
   }
 

@@ -33,7 +33,7 @@ const CourseModule = ({ modules, year_start, year_end, year, search, semester, c
         'module co-ordinator': module.module_coordinator,
         semester: module.semester
       })),
-      view: '/module', // Base path for "View" links
+      view: '/module-students', // Base path for "View" links
     },
   }
 

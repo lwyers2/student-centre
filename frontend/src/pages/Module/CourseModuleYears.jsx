@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useSelector } from 'react-redux'
-import userService from '../services/user'
-import CourseModule from '../components/CourseModule'
+import userService from '../../services/user'
+import CourseModule from '../../components/CourseModule'
 
-const Modules = () => {
+const CourseModuleYears = () => {
   const user = useSelector(state => state.user)  // Assuming user data is stored in state.user
   const navigate = useNavigate()
   const params = useParams()
@@ -192,4 +192,4 @@ const Modules = () => {
   )
 }
 
-export default Modules
+export default CourseModuleYears

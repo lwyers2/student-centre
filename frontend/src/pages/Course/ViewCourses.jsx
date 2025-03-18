@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
-import userService from '../services/user'
+import userService from '../../services/user'
 import { useNavigate } from 'react-router-dom'
-import Course from '../components/Course'
+import Course from '../../components/CourseView/Course'
 
-const Courses = () => {
+const ViewCourses = () => {
   const user = useSelector(state => state.user)
   const navigate = useNavigate()
 
@@ -188,4 +188,4 @@ const Courses = () => {
   )
 }
 
-export default Courses
+export default ViewCourses

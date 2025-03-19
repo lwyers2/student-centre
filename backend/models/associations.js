@@ -17,6 +17,34 @@ const StudentCourse = require('./studentCourse')
 const UserModule = require('./userModule')
 const UserCourse = require('./userCourse')
 const UserSchool = require('./userSchool')
+const Letter = require('./letter')
+
+// Letter -> StudentModule (a letter is associated with a student’s performance in a specific module)
+Letter.belongsTo(StudentModule, {
+  foreignKey: 'student_module_id',
+  as: 'letter_student_module',
+  timestamps: false,
+})
+
+StudentModule.hasMany(Letter, {
+  foreignKey: 'student_module_id',
+  as: 'student_module_letter',
+  timestamps: false,
+})
+
+// Letter -> User (a letter is sent by a user, like a staff or admin)
+Letter.belongsTo(User, {
+  foreignKey: 'sent_by_user',
+  as: 'letter_user',
+  timestamps: false,
+})
+
+User.hasMany(Letter, {
+  foreignKey: 'sent_by_user',
+  as: 'user_letter',
+  timestamps: false,
+})
+
 
 //user_course (user, course, course_year)
 

@@ -18,6 +18,9 @@ const UserModule = require('./userModule')
 const StudentCourse = require('./studentCourse')
 const UserCourse = require('./userCourse')
 const UserSchool = require('./userSchool')
+const Letter = require('./letter')
+const Meeting = require('./meeting')
+const LetterTypes = require('./letterTypes')
 
 
 
@@ -45,4 +48,7 @@ module.exports = {
   UserCourse,
   UserModule,
   UserSchool,
+  Letter,
+  LetterTypes,
+  Meeting
 }

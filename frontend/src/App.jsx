@@ -19,6 +19,9 @@ import ViewModules from './pages/Module/ViewModules'
 import ModuleSummary from './pages/Module/ModuleSummary'
 import ViewStudents from './pages/Student/ViewStudents'
 import StudentCourseModules from './pages/Student/StudentCourseModules.jsx'
+import UploadRecordsViewModuleYears from './pages/Uploads/UploadRecordsViewModuleYears.jsx'
+import UploadRecordsViewCourseYears from './pages/Uploads/UploadRecordsViewCourseYear.jsx'
+import UploadModuleYearResults from './pages/Uploads/UploadModuleYearResults.jsx'
 import { setUser } from './redux/actions'
 
 const App = () => {
@@ -76,6 +79,9 @@ const App = () => {
             <Route path="/module-summary/:moduleId" element={<ModuleSummary/>}/>
             <Route path="/view-students" element={<ViewStudents/>}/>
             <Route path="/student/:studentId/course/:courseId" element={<StudentCourseModules/>}/>
+            <Route path="/upload-records/course-year" element={<UploadRecordsViewCourseYears/>}/>
+            <Route path="/upload-records/module-year" element={<UploadRecordsViewModuleYears/>}/>
+            <Route path="/upload-module-year-results/:id" element={<UploadModuleYearResults/>} />
           </Routes>
 
         </main>

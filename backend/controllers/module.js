@@ -32,7 +32,7 @@ modulesRouter.get(
     const moduleYearId = req.params.moduleYear
     const userId = req.user.id
     const userRole = req.user.role_name
-    const hasAccess=await moduleService.checkUserAccessToModule(userId, moduleYearId)
+    const hasAccess = await moduleService.checkUserAccessToModule(userId, moduleYearId)
     if(!hasAccess && (userRole !== 'Super User')) {
       return res.status(403).json({ message: 'Access denied: You are not assigned to this module.' })
     }

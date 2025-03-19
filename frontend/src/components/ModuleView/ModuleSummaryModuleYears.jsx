@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 
 const ModuleSummaryModuleYears = ({ moduleYear }) => {
   console.log(moduleYear)
@@ -49,23 +50,26 @@ const ModuleSummaryModuleYears = ({ moduleYear }) => {
           </div>
         </div>
 
-        {/* Buttons for uploading students and results */}
+        {/* Clickable boxes as links */}
         <div className="flex justify-between mt-6">
-          <button
-            className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition duration-200"
-            onClick={() => alert('Edit Results')}>
-            Edit Results
-          </button>
-          <button
-            className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition duration-200"
-            onClick={() => alert('View Module Year Students')}>
-            View Module Year Students
-          </button>
-          <button
-            className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition duration-200"
-            onClick={() => alert('Upload Results for Missing Data')}>
-            Upload Results for Missing Data
-          </button>
+          <Link
+            to={`/module-students-edit/${moduleYear.module_year_id}`}
+            className="block border border-slate-900 dark:border-slate-600 bg-white dark:bg-gray-900 p-6 rounded-2xl shadow-xl hover:shadow-2xl hover:bg-gray-100 dark:hover:bg-gray-800 transition transform hover:scale-105 text-center"
+          >
+            <h3 className="text-lg font-semibold text-slate-900 dark:text-white">Edit Results</h3>
+          </Link>
+          <Link
+            to={`/module-students/${moduleYear.module_year_id}`}
+            className="block border border-slate-900 dark:border-slate-600 bg-white dark:bg-gray-900 p-6 rounded-2xl shadow-xl hover:shadow-2xl hover:bg-gray-100 dark:hover:bg-gray-800 transition transform hover:scale-105 text-center"
+          >
+            <h3 className="text-lg font-semibold text-slate-900 dark:text-white">View Module Year Students</h3>
+          </Link>
+          <Link
+            to={`/upload-module-year-results/${moduleYear.module_year_id}`}
+            className="block border border-slate-900 dark:border-slate-600 bg-white dark:bg-gray-900 p-6 rounded-2xl shadow-xl hover:shadow-2xl hover:bg-gray-100 dark:hover:bg-gray-800 transition transform hover:scale-105 text-center"
+          >
+            <h3 className="text-lg font-semibold text-slate-900 dark:text-white">Upload Results for Missing Data</h3>
+          </Link>
         </div>
       </div>
     )
@@ -75,27 +79,29 @@ const ModuleSummaryModuleYears = ({ moduleYear }) => {
     <div className="border border-solid border-slate-900 dark:border-slate-600 bg-white dark:bg-gray-900 p-8 rounded-3xl shadow-xl mb-5">
       <div className="text-center mb-4">
         <h3 className="text-2xl font-bold text-slate-900 dark:text-white ">
-            Academic Year Start: {moduleYear.year_start}
+          Academic Year Start: {moduleYear.year_start}
         </h3>
         <p className="text-lg text-slate-900 dark:text-white">
-            Semester: {moduleYear.semester}
+          Semester: {moduleYear.semester}
         </p>
         <p className="text-lg text-slate-900 dark:text-white">
-            Module Co-ordinator: {moduleYear.module_coordinator}
+          Module Co-ordinator: {moduleYear.module_coordinator}
         </p>
       </div>
       <p>No student data available</p>
       <div className="flex justify-between mt-6">
-        <button
-          className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition duration-200"
-          onClick={() => alert('Upload students to module')}>
-            Upload Students
-        </button>
-        <button
-          className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition duration-200"
-          onClick={() => alert('Upload results for missing data')}>
-            Upload Results for Missing Data
-        </button>
+        <Link
+          to={`/upload-students/${moduleYear.module_year_id}`}
+          className="block border border-slate-900 dark:border-slate-600 bg-white dark:bg-gray-900 p-6 rounded-2xl shadow-xl hover:shadow-2xl hover:bg-gray-100 dark:hover:bg-gray-800 transition transform hover:scale-105 text-center"
+        >
+          <h3 className="text-lg font-semibold text-slate-900 dark:text-white">Upload Students</h3>
+        </Link>
+        <Link
+          to={`/upload-module-year-results/${moduleYear.module_year_id}`}
+          className="block border border-slate-900 dark:border-slate-600 bg-white dark:bg-gray-900 p-6 rounded-2xl shadow-xl hover:shadow-2xl hover:bg-gray-100 dark:hover:bg-gray-800 transition transform hover:scale-105 text-center"
+        >
+          <h3 className="text-lg font-semibold text-slate-900 dark:text-white">Upload Results for Missing Data</h3>
+        </Link>
       </div>
     </div>
   )

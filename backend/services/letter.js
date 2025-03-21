@@ -1,4 +1,4 @@
-const { StudentModule, Letter, LetterType, ModuleYear, ModuleCourse, CourseYear } = require('../models')
+const { StudentModule, Letter, LetterType, ModuleYear, ModuleCourse } = require('../models')
 
 const sendFailureLetter = async (studentId, moduleYearId, sentByUser, authorisedByStaff, typeName) => {
   try {

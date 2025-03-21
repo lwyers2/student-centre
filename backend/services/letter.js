@@ -7,7 +7,8 @@ const sendFailureLetter = async (studentId, moduleYearId, sentByUser, authorised
       where: { id: moduleYearId },
       include: {
         model: ModuleCourse,
-        as: 'module_year_module_course'
+        as: 'module_year_module_course',
+        limit: 1,
       }
     })
 
@@ -15,14 +16,18 @@ const sendFailureLetter = async (studentId, moduleYearId, sentByUser, authorised
       throw new Error(`Module year not found for ID: ${moduleYearId}`)
     }
 
-    const courseYearId = moduleYear.module_year_module_course.course_year_id
+    const courseYearId = moduleYear.module_year_module_course[0].course_year_id
 
     // Get all module years under the same course year
     const moduleYears = await ModuleYear.findAll({
+      where: { year_start: moduleYear.year_start },
       include: {
         model: ModuleCourse,
         as: 'module_year_module_course',
-        where: { course_year_id: courseYearId }
+        where:
+        {
+          course_year_id: courseYearId,
+        }
       }
     })
 
@@ -42,6 +47,8 @@ const sendFailureLetter = async (studentId, moduleYearId, sentByUser, authorised
     const letterCount = await Letter.count({
       where: { student_module_id: studentModuleIds }
     })
+
+    console.log(`Letter Count ${letterCount}`)
 
     const studentModule = await StudentModule.findOne({
       where: { student_id: studentId, module_year_id: moduleYearId }
@@ -72,7 +79,7 @@ const sendFailureLetter = async (studentId, moduleYearId, sentByUser, authorised
       return { success: true, letterCount: letterCount + 1 }
     }
 
-    return { success: false, message: "Maximum number of failure letters already sent." }
+    return { success: false, message: 'Maximum number of failure letters already sent.' }
   } catch (error) {
     console.error('Error sending letter:', error)
     return { success: false, message: error.message }

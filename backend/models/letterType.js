@@ -3,7 +3,7 @@ const { DataTypes } = require('sequelize')
 const db = require('../utils/db')
 
 
-const LetterTypes = db.define('LetterTypes', {
+const LetterType = db.define('LetterTypes', {
   id: {
     type: DataTypes.INTEGER,
     primaryKey: true,
@@ -18,4 +18,4 @@ const LetterTypes = db.define('LetterTypes', {
   timestamps: false,
 })
 
-module.exports = LetterTypes
+module.exports = LetterType

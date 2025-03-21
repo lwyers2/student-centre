@@ -11,6 +11,7 @@ const modulesRouter = require('./controllers/module')
 const usersRouter = require('./controllers/user')
 const loginRouter = require('./controllers/login')
 const logoutRouter = require('./controllers/logout')
+const letterRouter = require('./controllers/letter')
 
 
 // Initialize Sequelize and connect to DB
@@ -31,6 +32,7 @@ app.use('/api/modules', modulesRouter)
 app.use('/api/users', usersRouter)
 app.use('/api/login', loginRouter)
 app.use('/api/logout', logoutRouter)
+app.use('/api/send-letter', letterRouter)
 
 // Error handling middleware
 app.use(unknownEndpoint)

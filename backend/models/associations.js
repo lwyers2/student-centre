@@ -18,6 +18,8 @@ const UserModule = require('./userModule')
 const UserCourse = require('./userCourse')
 const UserSchool = require('./userSchool')
 const Letter = require('./letter')
+const Meeting  = require('./meeting')
+const LetterType = require('./letterType')
 
 // Letter -> StudentModule (a letter is associated with a student’s performance in a specific module)
 Letter.belongsTo(StudentModule, {
@@ -35,15 +37,98 @@ StudentModule.hasMany(Letter, {
 // Letter -> User (a letter is sent by a user, like a staff or admin)
 Letter.belongsTo(User, {
   foreignKey: 'sent_by_user',
-  as: 'letter_user',
+  as: 'letter_sent_by_user',
   timestamps: false,
 })
 
 User.hasMany(Letter, {
   foreignKey: 'sent_by_user',
-  as: 'user_letter',
+  as: 'sent_by_user_user',
   timestamps: false,
 })
+
+// Letter -> authorised_by_staff (User)
+Letter.belongsTo(User, {
+  foreignKey: 'authorised_by_staff',
+  as: 'letter_authorised_by_staff',
+  timestamps: false,
+})
+
+User.hasMany(Letter, {
+  foreignKey: 'authorised_by_staff',
+  as: 'user_authorised_by_staff',
+  timestamps: false,
+})
+
+//Letter -> Letter_type
+
+// Level -> Classification
+LetterType.hasMany(Letter, {
+  foreignKey: 'type_id',
+  as: 'letter_type_letter',
+  timestamps: false,
+})
+
+Letter.belongsTo(LetterType, {
+  foreignKey: 'type_id',
+  as: 'letter_letter_type',
+  timestamps: false,
+})
+
+// Meeting -> Student (a meeting is scheduled with a student)
+Meeting.belongsTo(Student, {
+  foreignKey: 'student_id',
+  as: 'meeting_student',
+  timestamps: false,
+})
+
+Student.hasMany(Meeting, {
+  foreignKey: 'student_id',
+  as: 'student_meeting',
+  timestamps: false,
+})
+
+// Meeting -> Module (a meeting is related to a specific module)
+Meeting.belongsTo(ModuleYear, {
+  foreignKey: 'module_year_id',
+  as: 'meeting_module',
+  timestamps: false,
+})
+
+ModuleYear.hasMany(Meeting, {
+  foreignKey: 'module_year_id',
+  as: 'module_meeting',
+  timestamps: false,
+})
+
+// Meeting -> User (academic staff) (a meeting is scheduled by an academic staff member)
+Meeting.belongsTo(User, {
+  foreignKey: 'academic_id',
+  as: 'meeting_academic',
+  timestamps: false,
+})
+
+User.hasMany(Meeting, {
+  foreignKey: 'academic_id',
+  as: 'academic_meeting',
+  timestamps: false,
+})
+
+// Meeting -> User (academic staff) (a meeting is scheduled by an academic staff member)
+Meeting.belongsTo(User, {
+  foreignKey: 'admin_staff_id',
+  as: 'meeting_academic_staff',
+  timestamps: false,
+})
+
+User.hasMany(Meeting, {
+  foreignKey: 'admin_staff_id',
+  as: 'academic_staff_meeting',
+  timestamps: false,
+})
+
+
+
 
 
 //user_course (user, course, course_year)
@@ -488,4 +573,7 @@ module.exports = {
   UserCourse,
   UserModule,
   UserSchool,
+  Meeting,
+  Letter,
+  LetterType
 }

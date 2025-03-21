@@ -20,7 +20,7 @@ const UserCourse = require('./userCourse')
 const UserSchool = require('./userSchool')
 const Letter = require('./letter')
 const Meeting = require('./meeting')
-const LetterTypes = require('./letterTypes')
+const LetterType = require('./letterType')
 
 
 
@@ -49,6 +49,6 @@ module.exports = {
   UserModule,
   UserSchool,
   Letter,
-  LetterTypes,
+  LetterType,
   Meeting
 }

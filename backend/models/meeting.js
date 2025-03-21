@@ -17,10 +17,6 @@ const Meeting = db.define('Meeting', {
     type: DataTypes.DATE,
     allowNull: false,
   },
-  coordinater_id: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-  },
   academic_id: {
     type: DataTypes.INTEGER,
     allowNull: false,
@@ -37,7 +33,7 @@ const Meeting = db.define('Meeting', {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  module_id: {
+  module_year_id: {
     type: DataTypes.INTEGER,
     allowNull: false,
   },

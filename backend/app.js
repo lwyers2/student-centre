@@ -32,7 +32,7 @@ app.use('/api/modules', modulesRouter)
 app.use('/api/users', usersRouter)
 app.use('/api/login', loginRouter)
 app.use('/api/logout', logoutRouter)
-app.use('/api/send-letter', letterRouter)
+app.use('/api/letters', letterRouter)
 
 // Error handling middleware
 app.use(unknownEndpoint)

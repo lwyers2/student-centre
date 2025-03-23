@@ -5,6 +5,7 @@ const cors = require('cors')
 const requestLogger  = require('./middleware/requestLogger')
 const errorHandler  = require('./middleware/errorHandler')
 const unknownEndpoint  = require('./middleware/unkownEndpoint')
+const path = require('path')
 const studentsRouter = require('./controllers/student')
 const coursesRouter = require('./controllers/course')
 const modulesRouter = require('./controllers/module')
@@ -13,6 +14,8 @@ const loginRouter = require('./controllers/login')
 const logoutRouter = require('./controllers/logout')
 const letterRouter = require('./controllers/letter')
 const meetingRouter = require('./controllers/meeting')
+const fileDownloadRouter = require('./controllers/download')
+const uploadRouter = require('./controllers/upload')
 
 
 // Initialize Sequelize and connect to DB
@@ -25,6 +28,7 @@ app.use(cors())
 app.use(express.static('dist'))
 app.use(express.json())
 app.use(requestLogger)
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')))
 
 // Routes
 app.use('/api/students', studentsRouter)
@@ -35,6 +39,8 @@ app.use('/api/login', loginRouter)
 app.use('/api/logout', logoutRouter)
 app.use('/api/letters', letterRouter)
 app.use('/api/meetings', meetingRouter)
+app.use('/api/download', fileDownloadRouter)
+app.use('/api/upload', uploadRouter)
 
 // Error handling middleware
 app.use(unknownEndpoint)

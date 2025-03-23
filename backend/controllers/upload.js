@@ -43,7 +43,7 @@ uploadRouter.post('/meeting-minutes', upload.single('file'), async (req, res) =>
       return res.status(400).json({ success: false, message: 'No file uploaded' })
     }
 
-    const filePath = '/uploads/' + req.file.filename  // Make path relative
+    const filePath = '/uploads/' + req.file.filename // Make path relative
     const meetingId = req.body.meetingId
 
     const meeting = await Meeting.findByPk(meetingId)
@@ -51,7 +51,16 @@ uploadRouter.post('/meeting-minutes', upload.single('file'), async (req, res) =>
       return res.status(404).json({ success: false, message: 'Meeting not found' })
     }
 
-    // Save the file path in the meeting record
+    // Check if the meeting already has meeting minutes
+    if (meeting.path_to_minutes) {
+      // File exists, delete the old file
+      const oldFilePath = path.join(__dirname, '..', meeting.path_to_minutes)
+      if (fs.existsSync(oldFilePath)) {
+        fs.unlinkSync(oldFilePath) // Delete the old file
+      }
+    }
+
+    // Save the new file path in the meeting record
     meeting.path_to_minutes = filePath
     await meeting.save()
 
@@ -69,7 +78,7 @@ uploadRouter.post('/meeting-minutes', upload.single('file'), async (req, res) =>
 // /**
 //  * 2. Route for Uploading Course Results (CSV)
 //  */
-// uploadRouter.post('/upload/results/course-year', upload.single('file'), async (req, res) => {
+// uploadRouter.post('/results/course-year', upload.single('file'), async (req, res) => {
 //   try {
 //     if (!req.file) {
 //       return res.status(400).json({ success: false, message: 'No file uploaded' })
@@ -99,7 +108,7 @@ uploadRouter.post('/meeting-minutes', upload.single('file'), async (req, res) =>
 // /**
 //  * 3. Route for Uploading Student Data (CSV)
 //  */
-// uploadRouter.post('/upload/students', upload.single('file'), async (req, res) => {
+// uploadRouter.post('/students', upload.single('file'), async (req, res) => {
 //   try {
 //     if (!req.file) {
 //       return res.status(400).json({ success: false, message: 'No file uploaded' })

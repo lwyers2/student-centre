@@ -1,7 +1,7 @@
 const fileDownloadRouter = require('express').Router()
 const path = require('path')
+const fs = require('fs')
 const { Meeting } = require('../models')  // Assuming Meeting model is in '../models'
-
 
 /**
  * Route for downloading the meeting minutes file
@@ -20,13 +20,27 @@ fileDownloadRouter.get('/meeting-minutes/:meetingId', async (req, res) => {
       return res.status(404).json({ success: false, message: 'Meeting minutes not found' })
     }
 
-    const filePath = meeting.path_to_minutes
+    const filePath = meeting.path_to_minutes  // This should be something like /uploads/1742743325247.docx
 
-    // Serve the file for download
-    res.download(filePath, (err) => {
-      if (err) {
-        return res.status(500).json({ success: false, message: 'Error downloading file', error: err.message })
+    // Construct the absolute file path
+    const absoluteFilePath = path.join(__dirname, '..', filePath)
+
+    // Check if the file exists on the server before attempting to send it
+    fs.stat(absoluteFilePath, (err, stats) => {
+      if (err || !stats.isFile()) {
+        return res.status(404).json({ success: false, message: 'File not found on the server' })
       }
+
+      // Set the headers to prompt the browser to download the file
+      res.setHeader('Content-Disposition', `attachment filename=${path.basename(absoluteFilePath)}`)
+      res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') // DOCX MIME type
+
+      // Send the file for download
+      res.sendFile(absoluteFilePath, (err) => {
+        if (err) {
+          return res.status(500).json({ success: false, message: 'Error downloading file', error: err.message })
+        }
+      })
     })
 
   } catch (error) {

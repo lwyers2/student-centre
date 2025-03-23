@@ -1,7 +1,7 @@
 const { StudentModule, Letter, LetterType, ModuleYear, ModuleCourse, User, Student, Module } = require('../models')
 const { formatAllLettersOneStudent } = require('../helper/formaters/letter/formatAllLettersOneStudent')
 
-const sendLetter = async (studentId, moduleYearId, sentByUser, authorisedByStaff, typeName) => {
+const sendLetter = async (studentId, moduleYearId, sentByUser, authorisedByStaff) => {
   // Get the module year and associated course year
   const moduleYear = await ModuleYear.findByPk(moduleYearId, {
     include: {
@@ -65,11 +65,24 @@ const sendLetter = async (studentId, moduleYearId, sentByUser, authorisedByStaff
     throw new Error(`Student module not found for student ID: ${studentId} and module year ID: ${moduleYearId}`)
   }
 
+
+  const moduleLetterCount = await Letter.count({
+    where: { student_module_id: studentModule.id }
+  })
+
+  if (moduleLetterCount >= 1) {
+    return { success: false, message: 'Maximum number of failure letters already sent for module.' }
+  }
+
+
+  let letterTypeName
+  letterCount === 0 ? letterTypeName = '1st Warning' : letterTypeName = '2nd Warning'
+
   // Find the letter type
-  const letterType = await LetterType.findOne({ where: { name: typeName } })
+  const letterType = await LetterType.findOne({ where: { name: letterTypeName } })
 
   if (!letterType) {
-    throw new Error(`Letter type not found for type name: ${typeName}`)
+    throw new Error(`Letter type not found for type name: ${letterTypeName}`)
   }
 
   // Send the letter

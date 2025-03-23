@@ -1,4 +1,4 @@
-function formatOneStudentOneModuleYear(student) {
+function formatOneStudentOneModuleYear(student, letterCount) {
   const studentStudentModule = student.student_student_module[0]
 
   if (!studentStudentModule) {
@@ -11,6 +11,8 @@ function formatOneStudentOneModuleYear(student) {
     ? `${moduleYear.module_year_module_coordinator.prefix }. ${moduleYear.module_year_module_coordinator.forename } ${moduleYear.module_year_module_coordinator.surname }`.trim()
     : undefined
 
+  const letter = studentStudentModule.student_module_letter[0]
+
   return {
     student: {
       id: student.id,
@@ -18,6 +20,7 @@ function formatOneStudentOneModuleYear(student) {
       student_code: student.student_code,
       forename: student.forename,
       surname: student.surname,
+      letter_count_for_academic_year: letterCount
     },
     module: {
       module_year_id: studentStudentModule.module_year_id,
@@ -33,6 +36,16 @@ function formatOneStudentOneModuleYear(student) {
       flagged: studentStudentModule.flagged ?? false,
       resit: studentStudentModule.resit ?? false,
     },
+    letter: letter
+      ? {
+        id: letter.id,
+        date_sent: letter.date_sent,
+        authorised: letter.authorised,
+        sent_by_user: `${letter.letter_sent_by_user.prefix}. ${letter.letter_sent_by_user.forename} ${letter.letter_sent_by_user.surname}`,
+        sent: letter.sent,
+        authorised_by_user: `${letter.letter_authorised_by_staff.prefix}. ${letter.letter_authorised_by_staff.forename} ${letter.letter_authorised_by_staff.surname}`,
+      }
+      : {}
   }
 }
 

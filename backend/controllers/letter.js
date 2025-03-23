@@ -23,9 +23,20 @@ letterRouter.get('/:studentId', async (req, res) => {
 })
 
 letterRouter.get('/', async (req, res) => {
-  const { studentId, moduleYearId } = req.body
-  const letters = await getAllLettersForStudentOneModule(studentId, moduleYearId)
-  res.json(letters)
+  const { studentId, moduleYearId } = req.query // Use req.query instead of req.body
+
+  if (!studentId || !moduleYearId) {
+    return res.status(400).json({ error: 'Missing studentId or moduleYearId' })
+  }
+
+  try {
+    const letters = await getAllLettersForStudentOneModule(studentId, moduleYearId)
+    res.json(letters)
+  } catch (error) {
+    console.error('Error fetching letters:', error)
+    res.status(500).json({ error: 'Internal server error' })
+  }
 })
+
 
 module.exports = letterRouter

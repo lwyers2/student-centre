@@ -1,4 +1,4 @@
-const { Student, Course, Module, User, QualificationLevel, CourseYear, ModuleYear, Semester, ModuleCourse, StudentModule, StudentCourse } = require('../models')
+const { Student, Course, Module, User, QualificationLevel, CourseYear, ModuleYear, Semester, ModuleCourse, StudentModule, StudentCourse, Letter, LetterType } = require('../models')
 const { formatAllStudentData } = require('../helper/formaters/student/formatAllStudentData')
 const { formatStudentCourses } = require('../helper/formaters/student/formatStudentCourses')
 const { formatStudentModules } = require('../helper/formaters/student/formatStudentModules')
@@ -268,15 +268,84 @@ async function getStudentModuleYearData(studentId, moduleYearId) {
                 as: 'module_year_module'
               },
             ]
+          },
+          {
+            model: Letter,
+            as: 'student_module_letter',
+            include: [
+              {
+                model: LetterType,
+                as: 'letter_letter_type'
+              },
+              {
+                model: User,
+                as: 'letter_sent_by_user',
+                attributes: ['prefix', 'forename', 'surname']
+              },
+              {
+                model: User,
+                as: 'letter_authorised_by_staff',
+                attributes: ['prefix', 'forename', 'surname']
+              },
+            ]
           }
         ],
       },
     ],
   })
+
+  const moduleYear = await ModuleYear.findByPk(moduleYearId, {
+    include: {
+      model: ModuleCourse,
+      as: 'module_year_module_course',
+      limit: 1,
+    }
+  })
+
+  if (!moduleYear || !moduleYear.module_year_module_course.length) {
+    throw new Error(`Module year not found or not linked to a course year (ID: ${moduleYearId})`)
+  }
+
+  const courseYearId = moduleYear.module_year_module_course[0].course_year_id
+
+  // Get all module years in the same course year
+  const moduleYearIds = await ModuleYear.findAll({
+    where: { year_start: moduleYear.year_start },
+    include: {
+      model: ModuleCourse,
+      as: 'module_year_module_course',
+      where: { course_year_id: courseYearId },
+    },
+    attributes: ['id'] // Only select the ID field for efficiency
+  }).then(moduleYears => moduleYears.map(m => m.id))
+
+  if (!moduleYearIds.length) {
+    throw new Error(`No module years found for course year ID: ${courseYearId}`)
+  }
+
+  // Get all student modules for the student in this academic year
+  const studentModuleIds = await StudentModule.findAll({
+    where: {
+      student_id: studentId,
+      module_year_id: moduleYearIds
+    },
+    attributes: ['id']
+  }).then(studentModules => studentModules.map(sm => sm.id))
+
+  if (!studentModuleIds.length) {
+    throw new Error(`No student modules found for student ID: ${studentId} in course year ID: ${courseYearId}`)
+  }
+
+  // Count failure letters sent across all modules in this academic year
+  const letterCount = await Letter.count({
+    where: { student_module_id: studentModuleIds }
+  })
+
+
   if (!student) {
     return null
   }
-  return formatOneStudentOneModuleYear(student)
+  return formatOneStudentOneModuleYear(student, letterCount)
 }
 
 module.exports = {

@@ -37,6 +37,9 @@ const Meeting = db.define('Meeting', {
     type: DataTypes.INTEGER,
     allowNull: false,
   },
+  path_to_minutes: {
+    type: DataTypes.STRING
+  }
 }, {
   tableName: 'meeting', // specify the table name
   timestamps: false,    // disable timestamps if not present in your table

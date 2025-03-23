@@ -37,7 +37,8 @@ const StudentModule = () => {
       // Send the letter
       const response = await letterService.sendLetter(student.id, module.module_year_id, user.id, user.id)
 
-      if (response.success) {
+
+      if (response === 'Letter sent successfully, meeting scheduled if necessary') {
         // Define new letter details after sending
         const newLetter = {
           date_sent: new Date().toISOString(),
@@ -53,9 +54,11 @@ const StudentModule = () => {
         // Update the module state to reflect the new letter sent
         setModule(prevModule => ({
           ...prevModule,
-          letter: true,  // Mark letter as sent
-          letter_sent_date: newLetter.date_sent,  // Add the sent date
-          sent_by: newLetter.sent_by_user  // Add who sent the letter
+        }))
+
+        setStudent(prevStudent => ({
+          ...prevStudent,
+          letter_count_for_academic_year: prevStudent.letter_count_for_academic_year + 1
         }))
 
       } else {
@@ -133,13 +136,24 @@ const StudentModule = () => {
 
 
           {/* Send Letter Button */}
-          {(!letter || Object.keys(letter).length === 0) && module.flagged ? (
+          {(!letter || Object.keys(letter).length === 0) && module.flagged && student.letter_count_for_academic_year <=1 ? (
             <button
               className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition disabled:bg-gray-400"
               onClick={handleSendLetter}
               disabled={loading}
             >
               {loading ? 'Sending...' : 'Send Letter'}
+            </button>
+          ) : null}
+
+          {/* Send Letter Button */}
+          { student.letter_count_for_academic_year >=2 ? (
+            <button
+              className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition disabled:bg-gray-400"
+              onClick={handleSendLetter}
+              disabled={loading}
+            >
+              {loading ? 'Sending...' : 'Send Meeting'}
             </button>
           ) : null}
         </>

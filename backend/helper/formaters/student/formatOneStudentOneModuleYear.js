@@ -39,11 +39,22 @@ function formatOneStudentOneModuleYear(student, letterCount) {
     letter: letter
       ? {
         id: letter.id,
-        date_sent: letter.date_sent,
+        sent: letter.sent,
         authorised: letter.authorised,
         sent_by_user: `${letter.letter_sent_by_user.prefix}. ${letter.letter_sent_by_user.forename} ${letter.letter_sent_by_user.surname}`,
-        sent: letter.sent,
+        date_sent: letter.date_sent
+          ? new Date(letter.date_sent).toLocaleString('en-GB', {
+            day: '2-digit',
+            month: 'long',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+            hour12: false
+          })
+          : undefined,
         authorised_by_user: `${letter.letter_authorised_by_staff.prefix}. ${letter.letter_authorised_by_staff.forename} ${letter.letter_authorised_by_staff.surname}`,
+        title: letter.letter_letter_type.name
       }
       : {}
   }

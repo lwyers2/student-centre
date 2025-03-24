@@ -16,7 +16,8 @@ loginRouter.post(
       email: user.email,
       forename: user.forename,
       surname: user.surname,
-      id: user.id
+      id: user.id,
+      prefix: user.prefix
     })
   })
 

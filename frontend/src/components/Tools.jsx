@@ -11,10 +11,10 @@ import Tool from './Tool'
 const Tools = ({ user }) => {
   return (
     <div className="p-6 my-12 scroll-mt-20">
-      <h2 className="text-4xl font-bold text-center sm:text-5xl mb-6 text-slate-900 dark:text-white">Tools</h2>
       {user ?
         (
           <>
+            <h2 className="text-4xl font-bold text-center sm:text-5xl mb-6 text-slate-900 dark:text-white">What would you like to do today?</h2>
             <div className="my-12 scroll-mt-20">
               <div className="list-none mx-auto my-12 flex flex-col sm:flex-row items-center gap-8">
                 <Tool
@@ -63,6 +63,7 @@ const Tools = ({ user }) => {
         :
         (
           <>
+            <h2 className="text-4xl font-bold text-center sm:text-5xl mb-6 text-slate-900 dark:text-white">What would you like to do today?</h2>
             <div className="list-none mx-auto my-12 flex flex-col sm:flex-row items-center gap-8">
               <Tool
                 linkTo="/login"

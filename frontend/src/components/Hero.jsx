@@ -15,13 +15,13 @@ const Hero = () => {
       </section>
       <br></br>
       {user ? (
-        <div className="flex flex-col-reverse justify-center sm:flex-row p-6 items-center gap-8 mb-12 scroll-mt-40">
-          <h3 className ="max-w-md text-2xl font-bold text-center text-slate-900 dark:text-white">Welcome {user.forename} {user.surname}</h3>
+        <div className="flex flex-col-reverse justify-center sm:flex-row p-1 items-center gap-8 mb-12 scroll-mt-40">
+          <h3 className ="max-w-md text-2xl font-bold text-center text-slate-900 dark:text-white">Welcome {user.prefix}. {user.forename} {user.surname}</h3>
         </div>
       )
         :
         (
-          <div className="flex flex-col-reverse justify-center sm:flex-row p-6 items-center gap-8 mb-12 scroll-mt-40">
+          <div className="flex flex-col-reverse justify-center sm:flex-row p-1 items-center gap-8 mb-12 scroll-mt-40">
             <h3 className="max-w-md text-2xl font-bold text-center text-slate-900 dark:text-white">Log in below to use admin Centre</h3>
           </div>
         )

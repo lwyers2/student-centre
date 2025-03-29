@@ -1,4 +1,4 @@
-function formatOneStudentOneModuleYear(student, letterCount) {
+function formatOneStudentOneModuleYear(student, letterCount, course) {
   const studentStudentModule = student.student_student_module[0]
 
   if (!studentStudentModule) {
@@ -21,6 +21,13 @@ function formatOneStudentOneModuleYear(student, letterCount) {
       forename: student.forename,
       surname: student.surname,
       letter_count_for_academic_year: letterCount
+    },
+    course: {
+      id: course.course_id,
+      course_year_id: course.id,
+      year_start: course.year_start,
+      year_end: course.year_end,
+      title: course.course_year_course.title,
     },
     module: {
       module_year_id: studentStudentModule.module_year_id,

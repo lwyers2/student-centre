@@ -91,7 +91,13 @@ const StudentModule = () => {
       <div>
         {student && module ? (
           <>
-            <h2 className="text-4xl font-bold text-center sm:text-5xl mb-6 text-slate-900 dark:text-white">{student.forename} {student.surname} ({student.student_code}) </h2>
+            <h2 className="text-4xl font-bold text-center sm:text-5xl mb-6 text-slate-900 dark:text-white">
+              <Link
+                to={`/student/${student.id}`}
+                className="text-blue-600 dark:text-blue-400 hover:underline font-semibold">
+                {student.forename} {student.surname} ({student.student_code})
+              </Link>
+            </h2>
             <h2 className="text-2xl font-bold text-center sm:text-3xl mb-6 text-slate-900 dark:text-white">{module.title} ({module.code}) {module.semester}</h2>
           </>
         ) : (
@@ -183,7 +189,7 @@ const StudentModule = () => {
                   </p>
                   <p>
                     <Link
-                      to="/schedule-meeting" // Use href="/schedule-meeting" if using Next.js
+                      to={`/schedule-meeting/${student.id}/module-year/${module.module_year_id}`} // Use href="/schedule-meeting" if using Next.js
                       className="text-blue-600 dark:text-blue-400 hover:underline font-semibold"
                     >
             Click here to schedule a meeting for this student

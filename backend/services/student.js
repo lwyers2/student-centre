@@ -293,7 +293,6 @@ async function getStudentModuleYearData(studentId, moduleYearId) {
       },
     ],
   })
-
   const moduleYear = await ModuleYear.findByPk(moduleYearId, {
     include: {
       model: ModuleCourse,
@@ -301,6 +300,33 @@ async function getStudentModuleYearData(studentId, moduleYearId) {
       limit: 1,
     }
   })
+
+  if (!moduleYear || !moduleYear.module_year_module_course.length) {
+    throw new Error('ModuleYear or associated ModuleCourse not found')
+  }
+
+  // Access the first ModuleCourse entry
+  const firstModuleCourse = moduleYear.module_year_module_course[0]
+
+  const studentCourses = await StudentCourse.findAll({
+    where: { course_year_id: firstModuleCourse.course_year_id }
+  })
+
+  if (!studentCourses.length) {
+    throw new Error('No StudentCourse found for the given course_year_id')
+  }
+
+  // Get the course_year_id from the first student course (or iterate if needed)
+  const firstStudentCourse = studentCourses[0]
+
+  const course = await CourseYear.findOne({
+    where: { id: firstStudentCourse.course_year_id },
+    include: {
+      model: Course,
+      as: 'course_year_course'
+    }
+  })
+
 
   if (!moduleYear || !moduleYear.module_year_module_course.length) {
     throw new Error(`Module year not found or not linked to a course year (ID: ${moduleYearId})`)
@@ -345,7 +371,7 @@ async function getStudentModuleYearData(studentId, moduleYearId) {
   if (!student) {
     return null
   }
-  return formatOneStudentOneModuleYear(student, letterCount)
+  return formatOneStudentOneModuleYear(student, letterCount, course)
 }
 
 module.exports = {

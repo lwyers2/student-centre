@@ -24,7 +24,7 @@ const Tools = ({ user }) => {
                   img={courses} alt="Studen Records"
                 />
                 <Tool
-                  linkTo="/meetings"
+                  linkTo="/view-meetings"
                   titleLabel="Meetings"
                   desLabel="View upcoming meetings"
                   img={meetings} alt="upload student results to be seen in app"

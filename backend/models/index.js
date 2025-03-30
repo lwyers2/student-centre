@@ -21,6 +21,7 @@ const UserSchool = require('./userSchool')
 const Letter = require('./letter')
 const Meeting = require('./meeting')
 const LetterType = require('./letterType')
+const ResultDescriptor = require('./resultDescriptor')
 
 
 
@@ -50,5 +51,6 @@ module.exports = {
   UserSchool,
   Letter,
   LetterType,
-  Meeting
+  Meeting,
+  ResultDescriptor
 }

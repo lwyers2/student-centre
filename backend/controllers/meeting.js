@@ -27,6 +27,24 @@ meetingRouter.get(
   }
 )
 
+meetingRouter.get(
+  '/user/:userId',
+  // validateId('meeting'),
+  //   validate,
+  //   tokenVerification,
+  //   roleAuthorization(['Super User', 'Admin', 'Teacher']),
+  async (req, res, ) => {
+    const userId = req.params.userId
+    const meetings = await meetingService.getAllUserMeetings(userId)
+    if (!meetings) {
+      const error = new Error('No Meetings found')
+      error.status = 404
+      throw error
+    }
+    res.json(meetings)
+  }
+)
+
 meetingRouter.put('/update/:meetingId', async (req, res) => {
   const { meetingId } = req.params
   const { outcome, scheduled_date, meeting_reason, academic_id, admin_staff_id } = req.body

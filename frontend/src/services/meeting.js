@@ -39,6 +39,11 @@ const getOneMeeting = async (meetingId) => {
   return response.data
 }
 
+const getAllMeetingsForOneUser = async (userId) => {
+  const response = await axios.get(`${baseUrl}/user/${userId}`)
+  return response.data
+}
+
 // Update an existing meeting (e.g., update outcome)
 const updateMeeting = async (meetingId, updatedData) => {
   try {
@@ -82,4 +87,4 @@ const deleteMeeting = async (meetingId) => {
   }
 }
 
-export default { createMeeting, getOneMeeting, updateMeeting, deleteMeeting }
+export default { createMeeting, getOneMeeting, updateMeeting, deleteMeeting, getAllMeetingsForOneUser }

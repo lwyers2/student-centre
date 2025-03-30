@@ -25,6 +25,7 @@ import UploadModuleYearResults from './pages/Uploads/UploadModuleYearResults.jsx
 import ModuleYearStudentEdit from './pages/Module/ModuleYearStudentEdit.jsx'
 import ScheduleMeeting from './pages/Meetings/ScheduleMeeting.jsx'
 import MeetingDetails from './pages/Meetings/MeetingDetails.jsx'
+import ViewAllMeetings from './pages/Meetings/ViewAllMeetings.jsx'
 import { setUser } from './redux/actions'
 
 const App = () => {
@@ -88,6 +89,7 @@ const App = () => {
             <Route path='/module-students-edit/:id' element={<ModuleYearStudentEdit/>}/>
             <Route path = '/schedule-meeting/:id/module-year/:moduleYearId' element={<ScheduleMeeting/>}/>
             <Route path ='/meeting-details/:meetingId' element={<MeetingDetails/>}/>
+            <Route path = '/view-meetings' element={<ViewAllMeetings/>}/>
           </Routes>
 
         </main>

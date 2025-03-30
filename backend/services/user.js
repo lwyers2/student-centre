@@ -1,4 +1,4 @@
-const { UserModule, UserCourse, School, UserSchool, Role, Course, Module, User, QualificationLevel, CourseYear, ModuleYear, Semester, ModuleCourse, StudentModule, Student } = require('../models')
+const { UserModule, UserCourse, School, UserSchool, Role, Course, Module, User, QualificationLevel, CourseYear, ModuleYear, Semester, ModuleCourse, StudentModule, Student, ResultDescriptor } = require('../models')
 const { formatAllUsers } = require('../helper/formaters/user/formatAllUsers')
 const { formatUserModulesFromCourseYear } = require('../helper/formaters/user/formatUserModulesFromCourseYear')
 const { formatUsersCourseYear } = require('../helper/formaters/user/formatUsersCourseYear')
@@ -404,7 +404,14 @@ async function getUserModule(userId, moduleId) {
               {
                 model: StudentModule,
                 as: 'module_year_student_module',
-                attributes: ['student_id', 'result', 'flagged', 'resit']
+                attributes: ['student_id', 'result', 'flagged', 'resit'],
+                include: [
+                  {
+                    model: ResultDescriptor,
+                    as: 'student_module_result_descriptor',
+                    attributes: ['descriptor']
+                  }
+                ]
               },
               {
                 model: ModuleCourse,

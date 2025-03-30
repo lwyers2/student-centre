@@ -34,6 +34,10 @@ const StudentModule = db.define('StudentModule', {
   resit: {
     type: DataTypes.TINYINT,
     allowNull: false,
+  },
+  descriptor_id: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
   }
 },
 {

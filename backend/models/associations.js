@@ -20,6 +20,7 @@ const UserSchool = require('./userSchool')
 const Letter = require('./letter')
 const Meeting  = require('./meeting')
 const LetterType = require('./letterType')
+const ResultDescriptor = require('./resultDescriptor')
 
 // Letter -> StudentModule (a letter is associated with a student’s performance in a specific module)
 Letter.belongsTo(StudentModule, {
@@ -469,6 +470,18 @@ StudentModule.belongsTo(ModuleYear, {
   timestamps: false,
 })
 
+ResultDescriptor.hasMany(StudentModule, {
+  foreignKey: 'descriptor_id',
+  as: 'result_descriptor_student_module',
+  timestamps: false
+})
+
+StudentModule.belongsTo(ResultDescriptor, {
+  foreignKey: 'descriptor_id',
+  as: 'student_module_result_descriptor',
+  timestamps: false
+})
+
 //end of student_module table
 
 //user_school table (user, school)
@@ -588,5 +601,6 @@ module.exports = {
   UserSchool,
   Meeting,
   Letter,
-  LetterType
+  LetterType,
+  ResultDescriptor
 }

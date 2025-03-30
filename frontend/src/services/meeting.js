@@ -33,4 +33,53 @@ const createMeeting = async (studentId, moduleYearId, scheduledDate, academicId,
   }
 }
 
-export default { createMeeting }
+// Get a single meeting
+const getOneMeeting = async (meetingId) => {
+  const response = await axios.get(`${baseUrl}/${meetingId}`)
+  return response.data
+}
+
+// Update an existing meeting (e.g., update outcome)
+const updateMeeting = async (meetingId, updatedData) => {
+  try {
+    const response = await axios.put(`${baseUrl}/update/${meetingId}`, updatedData)
+
+    if (response.data.success && response.data.meeting) {
+      console.log('Meeting updated successfully:', response.data.meeting)
+      return {
+        success: true,
+        message: 'Meeting updated successfully',
+        meeting: response.data.meeting, // Updated meeting data
+      }
+    } else {
+      console.error('Meeting update failed:', response.data.message)
+      return { success: false, message: response.data.message }
+    }
+  } catch (error) {
+    console.error('Error updating meeting:', error.response?.data || error.message)
+    return { success: false, message: 'An error occurred while updating the meeting' }
+  }
+}
+
+// Delete a meeting
+const deleteMeeting = async (meetingId) => {
+  try {
+    const response = await axios.delete(`${baseUrl}/delete/${meetingId}`)
+
+    if (response.data.success) {
+      console.log('Meeting deleted successfully')
+      return {
+        success: true,
+        message: 'Meeting deleted successfully',
+      }
+    } else {
+      console.error('Meeting deletion failed:', response.data.message)
+      return { success: false, message: response.data.message }
+    }
+  } catch (error) {
+    console.error('Error deleting meeting:', error.response?.data || error.message)
+    return { success: false, message: 'An error occurred while deleting the meeting' }
+  }
+}
+
+export default { createMeeting, getOneMeeting, updateMeeting, deleteMeeting }

@@ -117,26 +117,26 @@ CourseYear.hasMany(Meeting, {
 // Meeting -> User (academic staff) (a meeting is scheduled by an academic staff member)
 Meeting.belongsTo(User, {
   foreignKey: 'academic_id',
-  as: 'meeting_academic',
+  as: 'meeting_academic_staff',
   timestamps: false,
 })
 
 User.hasMany(Meeting, {
   foreignKey: 'academic_id',
-  as: 'academic_meeting',
+  as: 'academic_staff_meeting',
   timestamps: false,
 })
 
 // Meeting -> User (academic staff) (a meeting is scheduled by an academic staff member)
 Meeting.belongsTo(User, {
   foreignKey: 'admin_staff_id',
-  as: 'meeting_academic_staff',
+  as: 'meeting_admin_staff',
   timestamps: false,
 })
 
 User.hasMany(Meeting, {
   foreignKey: 'admin_staff_id',
-  as: 'academic_staff_meeting',
+  as: 'admin_staff_meeting',
   timestamps: false,
 })
 

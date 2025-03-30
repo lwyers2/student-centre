@@ -1,44 +1,52 @@
 import React, { useEffect, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import studentService from '../../services/student'
 import { useSelector } from 'react-redux'
+import meetingService from '../../services/meeting'
+import uploadService from '../../services/upload'
 import userService from '../../services/user'
-import meetingService from '../../services/meeting' // Import meeting service
+import downloadService from '../../services/download'
+import { format } from 'date-fns'
+import { ToastContainer, toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 
-const ScheduleMeeting = () => {
+const MeetingDetails = () => {
   const params = useParams()
-  const navigate = useNavigate() // Initialize useNavigate
-  const [module, setModule] = useState(null)
-  const [student, setStudent] = useState(null)
+  const navigate = useNavigate()
+  const [meeting, setMeeting] = useState(null)
+  const [courseId, setCourseId] = useState(null)
+  const [showUploadForm, setShowUploadForm] = useState(false)
+  const [file, setFile] = useState(null)
+  const [outcome, setOutcome] = useState('')
+  const [scheduledDate, setScheduledDate] = useState('')  // New state for scheduled date
+  const [meetingReason, setMeetingReason] = useState('')  // New state for meeting reason
+  const [isEditing, setIsEditing] = useState(false) // New state for editing mode
   const user = useSelector((state) => state.user)
-  const [course, setCourse] = useState(null)
   const [adminStaff, setAdminStaff] = useState([])
   const [teachingStaff, setTeachingStaff] = useState([])
-
-  // Form state
-  const [selectedAdmin, setSelectedAdmin] = useState('')
-  const [selectedTeacher, setSelectedTeacher] = useState('')
-  const [meetingDate, setMeetingDate] = useState('')
-  const [meetingReason, setMeetingReason] = useState('')
+  const [selectedAdminStaff, setSelectedAdminStaff] = useState(null)
+  const [selectedTeachingStaff, setSelectedTeachingStaff] = useState(null)
 
   useEffect(() => {
-    studentService
-      .getStudentModule(params.id, user.token, params.moduleYearId)
+    meetingService.getOneMeeting(params.meetingId)
       .then((response) => {
-        setStudent(response.student)
-        setModule(response.module)
-        setCourse(response.course)
+        setMeeting(response)
+        setCourseId(response.course_year_id)
+        setOutcome(response.outcome || '') // Default outcome to empty
+        setScheduledDate(response.scheduled_date || '') // Set default scheduled date
+        setMeetingReason(response.meeting_reason || '') // Set default meeting reason
+        setSelectedAdminStaff(response.meeting_admin_staff.id) // Set default selected admin staff
+        setSelectedTeachingStaff(response.meeting_academic_staff.id) // Set default selected teaching staff
       })
       .catch((error) => {
-        console.error('Error fetching module: ', error)
+        console.error('Error fetching meeting:', error)
       })
-  }, [params.id, params.moduleYearId, user.token])
+  }, [params.meetingId])
 
   useEffect(() => {
-    if (!course || !course.course_year_id) return
+    if (!courseId) return
 
     userService
-      .getUsersFromCourseYear(user.id, course.course_year_id, user.token)
+      .getUsersFromCourseYear(user.id, courseId, user.token)
       .then((response) => {
         setAdminStaff(response.admin_staff || [])
         setTeachingStaff(response.teaching_staff || [])
@@ -46,152 +54,258 @@ const ScheduleMeeting = () => {
       .catch((error) => {
         console.error('Error fetching staff: ', error)
       })
-  }, [course])
+  }, [courseId])
 
-  const handleSubmit = async (e) => {
-    e.preventDefault()
-
-    const meetingData = {
-      studentId: student?.id,
-      moduleYearId: module?.module_year_id,
-      scheduledDate: meetingDate,
-      academicId: selectedTeacher,
-      adminStaffId: selectedAdmin,
-      meetingReason: meetingReason,
-    }
-
-    console.log('Meeting Scheduled:', meetingData)
-
-    // Call the meetingService to create the meeting
-    const result = await meetingService.createMeeting(
-      meetingData.studentId,
-      meetingData.moduleYearId,
-      meetingData.scheduledDate,
-      meetingData.academicId,
-      meetingData.adminStaffId,
-      meetingData.meetingReason
-    )
-
-    console.log(`result: ${result}`)
-
-    if (result.success) {
-      alert('Meeting scheduled successfully!')
-
-      // Redirect to the MeetingDetails page
-      navigate(`/meeting-details/${result.meeting.id}`) // Use the meeting ID from the response to redirect
-    } else {
-      alert('Failed to schedule the meeting: ' + result.message)
+  const handleDelete = async () => {
+    if (window.confirm('Are you sure you want to delete this meeting?')) {
+      try {
+        await meetingService.deleteMeeting(meeting.id, user.token)
+        toast.success('Meeting deleted successfully')
+        navigate('/meetings')
+      } catch (error) {
+        toast.error('Failed to delete meeting')
+        console.error('Error deleting meeting:', error)
+      }
     }
   }
 
+  const handleFileChange = (e) => {
+    setFile(e.target.files[0])
+  }
+
+  const handleUpload = async (e) => {
+    e.preventDefault()
+
+    if (!file) {
+      toast.error('Please select a file to upload.')
+      return
+    }
+
+    const formData = new FormData()
+    formData.append('meetingId', meeting.id) // Ensure meetingId is correctly set
+    formData.append('file', file) // Attach file
+
+    try {
+      await uploadService.uploadMinutes(meeting.id, file, user.token)
+
+      // After upload success, update the outcome
+      const updatedMeeting = await meetingService.updateMeeting(meeting.id, { outcome })
+
+      toast.success('Minutes uploaded and outcome updated successfully!')
+      setShowUploadForm(false)
+
+      // Refresh meeting data
+      setMeeting(updatedMeeting.meeting)
+    } catch (error) {
+      toast.error(error.message || 'Failed to upload minutes or update outcome.')
+      console.error('Error uploading minutes:', error)
+    }
+  }
+
+  // Function to handle downloading the meeting minutes
+  const handleDownload = () => {
+    if (meeting && meeting.path_to_minutes) {
+      downloadService.downloadMinutes(meeting.id)
+    } else {
+      toast.error('No meeting minutes available for download.')
+    }
+  }
+
+  const handleEditToggle = () => {
+    setIsEditing(!isEditing)
+  }
+
+  const handleSave = async () => {
+    try {
+      const updatedMeeting = await meetingService.updateMeeting(meeting.id, {
+        outcome,
+        scheduled_date: scheduledDate,  // Ensure the backend receives scheduledDate
+        meeting_reason: meetingReason,   // Ensure the backend receives meetingReason
+        academic_id:  parseInt(selectedTeachingStaff, 10),  // Correctly name academic staff ID
+        admin_staff_id: parseInt(selectedAdminStaff, 10)  // Correctly name admin staff ID
+      })
+
+      if (updatedMeeting.success) {
+        setMeeting(updatedMeeting.meeting)  // Update the meeting state
+        setIsEditing(false)  // Disable edit mode
+        toast.success('Meeting updated successfully!')
+      } else {
+        toast.error('Failed to update meeting: ' + updatedMeeting.message)
+      }
+    } catch (error) {
+      toast.error('Failed to update meeting.')
+      console.error('Error updating meeting:', error)
+    }
+  }
+
+
+  if (!meeting) return <p>Loading meeting details...</p>
+
+  // Ensure meeting.meeting_student and other properties exist before rendering
+  if (!meeting.meeting_student || !meeting.meeting_academic_staff || !meeting.meeting_admin_staff) {
+    return <p>Loading additional meeting details...</p>
+  }
+
+  console.log(adminStaff)
+
   return (
-    <div className="p-2 my-4 scroll-mt-20">
+    <div className="max-w-2xl mx-auto mt-6 p-6 bg-white dark:bg-gray-800 dark:text-white shadow-md rounded-lg">
+      <h2 className="text-xl font-bold mb-4">Meeting Details</h2>
+
+      <p><strong>Student:</strong> {meeting.meeting_student.forename} {meeting.meeting_student.surname} ({meeting.meeting_student.email})</p>
+
+      {/* Editable Scheduled Date */}
       <div>
-        {student && module && course ? (
-          <h2 className="text-4xl font-bold text-center sm:text-5xl mb-6 text-slate-900 dark:text-white">
-            Schedule Meeting
-          </h2>
+        <strong>Scheduled Date:</strong>
+        {isEditing ? (
+          <input
+            type="datetime-local"
+            value={scheduledDate}
+            onChange={(e) => setScheduledDate(e.target.value)}
+            className="mt-1 p-2 w-full border rounded bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
+          />
         ) : (
-          <p>Student or module not found</p>
+          <p>{format(new Date(meeting.scheduled_date), 'PPP p')}</p>
         )}
       </div>
 
-      {user ? null : <p>Please log in to view your courses.</p>}
+      {/* Editable Meeting Reason */}
+      <div>
+        <strong>Meeting Reason:</strong>
+        {isEditing ? (
+          <input
+            type="text"
+            value={meetingReason}
+            onChange={(e) => setMeetingReason(e.target.value)}
+            placeholder="Enter meeting reason..."
+            className="mt-1 p-2 w-full border rounded bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
+          />
+        ) : (
+          <p>{meeting.meeting_reason}</p>
+        )}
+      </div>
 
-      {module && student && course ? (
-        <>
-          <h2 className="text-2xl font-bold text-center sm:text-3xl mb-6 text-slate-900 dark:text-white">
-            Academic Year: {module.year_start}/{module.year_start + 1}
-          </h2>
+      {/* Editable Outcome */}
+      <div>
+        <strong>Outcome:</strong>
+        {isEditing ? (
+          <input
+            type="text"
+            value={outcome}
+            onChange={(e) => setOutcome(e.target.value)}
+            placeholder="Enter outcome..."
+            className="mt-1 p-2 w-full border rounded bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
+          />
+        ) : (
+          <p>{meeting.outcome}</p>
+        )}
+      </div>
 
-          <h2 className="text-2xl font-bold text-center sm:text-3xl mb-6 text-slate-900 dark:text-white">
-            {student.forename} {student.surname} ({student.student_code})
-          </h2>
-
-          <h2 className="text-2xl font-bold text-center sm:text-3xl mb-6 text-slate-900 dark:text-white">
-            <strong>Course:</strong> {course.title}
-          </h2>
-
-          {/* Meeting Scheduling Form */}
-          <form
-            onSubmit={handleSubmit}
-            className="max-w-xl mx-auto bg-white dark:bg-gray-900 p-6 rounded-lg shadow-lg"
+      {/* Staff dropdowns */}
+      <div>
+        <strong>Academic Staff:</strong>
+        {isEditing ? (
+          <select
+            value={selectedTeachingStaff}
+            onChange={(e) => setSelectedTeachingStaff(e.target.value)}
+            className="mt-1 p-2 w-full border rounded bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
           >
-            {/* Teaching Staff */}
-            <div className="mb-4">
-              <label className="block text-gray-700 dark:text-white font-bold mb-2">Select Teaching Staff</label>
-              <select
-                value={selectedTeacher}
-                onChange={(e) => setSelectedTeacher(e.target.value)}
-                className="w-full p-2 border rounded-lg dark:bg-gray-800 dark:text-white"
-                required
-              >
-                <option value="">Select a teacher</option>
-                {teachingStaff.map((teacher) => (
-                  <option key={teacher.id} value={teacher.id}>
-                    {teacher.name}
-                  </option>
-                ))}
-              </select>
-            </div>
+            {teachingStaff.map((staff) => (
+              <option key={staff.id} value={staff.id}>
+                {staff.name}
+              </option>
+            ))}
+          </select>
+        ) : (
+          <p>{meeting.meeting_academic_staff.prefix} {meeting.meeting_academic_staff.forename} {meeting.meeting_academic_staff.surname}</p>
+        )}
+      </div>
 
-            {/* Admin Staff */}
-            <div className="mb-4">
-              <label className="block text-gray-700 dark:text-white font-bold mb-2">Select Admin Staff</label>
-              <select
-                value={selectedAdmin}
-                onChange={(e) => setSelectedAdmin(e.target.value)}
-                className="w-full p-2 border rounded-lg dark:bg-gray-800 dark:text-white"
-                required
-              >
-                <option value="">Select an admin</option>
-                {adminStaff.map((admin) => (
-                  <option key={admin.id} value={admin.id}>
-                    {admin.name}
-                  </option>
-                ))}
-              </select>
-            </div>
+      <div>
+        <strong>Admin Staff:</strong>
+        {isEditing ? (
+          <select
+            value={selectedAdminStaff}
+            onChange={(e) => setSelectedAdminStaff(e.target.value)}
+            className="mt-1 p-2 w-full border rounded bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
+          >
+            {adminStaff.map((staff) => (
+              <option key={staff.id} value={staff.id}>
+                {staff.name}
+              </option>
+            ))}
+          </select>
+        ) : (
+          <p>{meeting.meeting_admin_staff.prefix} {meeting.meeting_admin_staff.forename} {meeting.meeting_admin_staff.surname}</p>
+        )}
+      </div>
 
-            {/* Meeting Date & Time */}
-            <div className="mb-4">
-              <label className="block text-gray-700 dark:text-white font-bold mb-2">Meeting Date & Time</label>
+      {meeting.path_to_minutes ? (
+        <p><strong>Minutes Uploaded</strong></p>
+      ) : (
+        <p className="text-red-500">No minutes uploaded.</p>
+      )}
+
+      <div className="flex space-x-4 mt-4">
+        {/* Edit and Save button */}
+        <button onClick={handleEditToggle} className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+          {isEditing ? 'Cancel Edit' : 'Edit Meeting'}
+        </button>
+        {isEditing && (
+          <button onClick={handleSave} className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
+            Save Changes
+          </button>
+        )}
+
+        <button onClick={() => setShowUploadForm(!showUploadForm)} className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
+          {showUploadForm ? 'Cancel' : 'Upload Minutes'}
+        </button>
+        <button onClick={handleDelete} className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">
+          Delete Meeting
+        </button>
+
+        {/* Add download button */}
+        {meeting.path_to_minutes && (
+          <button onClick={handleDownload} className="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600">
+            Download Minutes
+          </button>
+        )}
+      </div>
+
+      {showUploadForm && (
+        <div className="mt-6 p-4 bg-gray-100 dark:bg-gray-700 rounded-lg">
+          <h3 className="text-lg font-bold mb-2">Upload Minutes & Update Outcome</h3>
+          <form onSubmit={handleUpload} className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Upload Document</label>
               <input
-                type="datetime-local"
-                value={meetingDate}
-                onChange={(e) => setMeetingDate(e.target.value)}
-                className="w-full p-2 border rounded-lg dark:bg-gray-800 dark:text-white"
-                required
+                type="file"
+                onChange={handleFileChange}
+                className="mt-1 p-2 w-full border rounded bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
               />
             </div>
 
-            {/* Reason for Meeting */}
-            <div className="mb-4">
-              <label className="block text-gray-700 dark:text-white font-bold mb-2">Reason for Meeting</label>
-              <textarea
-                value={meetingReason}
-                onChange={(e) => setMeetingReason(e.target.value)}
-                rows="4"
-                className="w-full p-2 border rounded-lg dark:bg-gray-800 dark:text-white"
-                placeholder="Enter the reason for the meeting..."
-                required
-              ></textarea>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Update Outcome</label>
+              <input
+                type="text"
+                value={outcome}
+                onChange={(e) => setOutcome(e.target.value)}
+                placeholder="Enter outcome..."
+                className="mt-1 p-2 w-full border rounded bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
+              />
             </div>
 
-            {/* Submit Button */}
-            <button
-              type="submit"
-              className="w-full bg-blue-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-blue-600"
-            >
-              Schedule Meeting
+            <button type="submit" className="w-full bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
+              Submit
             </button>
           </form>
-        </>
-      ) : (
-        <div>No Module to view</div>
+        </div>
       )}
+
+      <ToastContainer />
     </div>
   )
 }
 
-export default ScheduleMeeting
+export default MeetingDetails

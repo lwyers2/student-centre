@@ -25,8 +25,48 @@ meetingRouter.get(
     }
     res.json(meeting)
   }
-
 )
+
+meetingRouter.put('/update/:meetingId', async (req, res) => {
+  const { meetingId } = req.params
+  const { outcome, scheduled_date, meeting_reason, academic_id, admin_staff_id } = req.body
+
+  // Log the incoming data to debug
+  console.log('Request Body:', req.body)
+
+  try {
+    const updatedMeeting = await meetingService.updateMeeting(meetingId, {
+      outcome,
+      scheduled_date,
+      meeting_reason,
+      academic_id,
+      admin_staff_id,
+    })
+
+    return res.status(200).json({
+      success: true,
+      message: 'Meeting updated successfully',
+      meeting: updatedMeeting,
+    })
+  } catch (error) {
+    console.error('Error updating meeting:', error)
+    return res.status(500).json({
+      success: false,
+      message: 'Error updating meeting',
+    })
+  }
+})
+
+
+
+// DELETE route to delete a meeting
+meetingRouter.delete('/delete/:meetingId', async (req, res) => {
+  const { meetingId } = req.params
+  const result = await meetingService.deleteMeeting(meetingId)
+  res.status(200).json(result)
+
+})
+
 
 
 

@@ -38,6 +38,7 @@ const upload = multer({
  * 1. Route for Uploading Meeting Minutes (.docx, .doc)
  */
 uploadRouter.post('/meeting-minutes', upload.single('file'), async (req, res) => {
+
   try {
     if (!req.file) {
       return res.status(400).json({ success: false, message: 'No file uploaded' })

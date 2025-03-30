@@ -1,4 +1,4 @@
-const { Meeting, ModuleYear, ModuleCourse, Letter, StudentModule } = require('../models')
+const { Meeting, ModuleYear, ModuleCourse, Letter, StudentModule, Student, User } = require('../models')
 
 const createMeeting = async (studentId, moduleYearId, scheduledDate, academicId, adminStaffId, meetingReason, courseYearId) => {
 
@@ -77,19 +77,87 @@ const createMeeting = async (studentId, moduleYearId, scheduledDate, academicId,
 const getOneMeeting = async (meetingId) => {
   const meeting = await Meeting.findOne({
     where : { id: meetingId },
-    // include: [{
-    //   model: ModuleYear,
-    //   as: 'meeting_module_year',
-    //   include: [
-    //     {
-    //       model: ModuleCourse,
-    //       as: 'module_year_module_course'
-    //     }
-    //   ]
-    // }]
+    include:
+    [
+      {
+        model: Student,
+        as: 'meeting_student',
+      },
+      {
+        model: User,
+        as: 'meeting_academic_staff',
+        attributes: ['id', 'prefix', 'forename', 'surname']
+      },
+      {
+        model: User,
+        as: 'meeting_admin_staff',
+        attributes: ['id', 'prefix', 'forename', 'surname']
+      }
+    ]
   })
 
   return meeting
 }
 
-module.exports = { createMeeting, getOneMeeting }
+const updateMeeting = async (meetingId, updateData) => {
+  const meeting = await Meeting.findByPk(meetingId, {
+    include: [
+      { model: Student, as: 'meeting_student' },
+      {
+        model: User,
+        as: 'meeting_academic_staff',
+        attributes: ['id', 'prefix', 'forename', 'surname'],
+      },
+      {
+        model: User,
+        as: 'meeting_admin_staff',
+        attributes: ['id', 'prefix', 'forename', 'surname'],
+      },
+    ],
+  })
+
+  if (!meeting) {
+    throw new Error('Meeting not found')
+  }
+
+  // Update the meeting with new data
+  await meeting.update(updateData)
+
+  // Fetch the updated meeting again to ensure the changes are reflected
+  const updatedMeeting = await Meeting.findByPk(meetingId, {
+    include: [
+      { model: Student, as: 'meeting_student' },
+      {
+        model: User,
+        as: 'meeting_academic_staff',
+        attributes: ['id', 'prefix', 'forename', 'surname'],
+      },
+      {
+        model: User,
+        as: 'meeting_admin_staff',
+        attributes: ['id', 'prefix', 'forename', 'surname'],
+      },
+    ],
+  })
+
+  return updatedMeeting
+}
+
+
+
+
+
+// Function to delete a meeting
+const deleteMeeting = async (meetingId) => {
+  const meeting = await Meeting.findByPk(meetingId)
+
+  if (!meeting) {
+    throw new Error('Meeting not found')
+  }
+
+  // Delete the meeting
+  await meeting.destroy()
+  return { success: true, message: 'Meeting deleted successfully' }
+}
+
+module.exports = { createMeeting, getOneMeeting, updateMeeting, deleteMeeting }

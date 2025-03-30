@@ -1,4 +1,4 @@
-const { Student, Course, Module, User, ModuleYear, ModuleCourse, Semester, CourseYear, QualificationLevel, UserModule, StudentModule } = require('../models')
+const { Student, Course, Module, User, ModuleYear, ModuleCourse, Semester, CourseYear, QualificationLevel, UserModule, StudentModule, ResultDescriptor } = require('../models')
 
 
 async function getAllModules() {
@@ -82,6 +82,10 @@ async function getModuleFromModuleYear(moduleYearId) {
               {
                 model: Student,
                 as: 'student_module_student'
+              },
+              {
+                model: ResultDescriptor,
+                as: 'student_module_result_descriptor'
               }
             ]
           }

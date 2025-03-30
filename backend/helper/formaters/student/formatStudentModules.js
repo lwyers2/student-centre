@@ -11,6 +11,7 @@ function formatStudentModules(student) {
       CATs: studentModule.student_module_module_year?.module_year_module?.CATs ?? undefined,
       year: studentModule.student_module_module_year?.module_year_module?.year ?? undefined,
       result: studentModule.result ?? undefined,
+      result_descriptor: studentModule.student_module_result_descriptor.descriptor,
       flagged: studentModule.flagged ?? undefined,
       resit: studentModule.resit ?? undefined,  // Default value for resit if missing
     }))

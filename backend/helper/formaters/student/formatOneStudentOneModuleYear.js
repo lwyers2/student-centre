@@ -40,6 +40,7 @@ function formatOneStudentOneModuleYear(student, letterCount, course) {
       CATs: moduleYear.module_year_module?.CATs || undefined,
       year: moduleYear.module_year_module?.year || undefined,
       result: studentStudentModule.result ?? undefined,
+      result_descriptor: studentStudentModule.student_module_result_descriptor.descriptor,
       flagged: studentStudentModule.flagged ?? false,
       resit: studentStudentModule.resit ?? false,
     },

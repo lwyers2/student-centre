@@ -59,6 +59,7 @@ function formatAllStudentData(student) {
           result: studentModule.result,
           flagged: studentModule.flagged,
           resit: studentModule.resit,
+          result_descriptor: studentModule.student_module_result_descriptor.descriptor
         })
       }
     })

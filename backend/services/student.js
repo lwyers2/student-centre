@@ -1,4 +1,4 @@
-const { Student, Course, Module, User, QualificationLevel, CourseYear, ModuleYear, Semester, ModuleCourse, StudentModule, StudentCourse, Letter, LetterType } = require('../models')
+const { Student, Course, Module, User, QualificationLevel, CourseYear, ModuleYear, Semester, ModuleCourse, StudentModule, StudentCourse, Letter, LetterType, ResultDescriptor } = require('../models')
 const { formatAllStudentData } = require('../helper/formaters/student/formatAllStudentData')
 const { formatStudentCourses } = require('../helper/formaters/student/formatStudentCourses')
 const { formatStudentModules } = require('../helper/formaters/student/formatStudentModules')
@@ -47,6 +47,10 @@ async function getOneStudentAllInfo(studentId) {
                 as: 'module_year_module_course'
               }
             ]
+          },
+          {
+            model: ResultDescriptor,
+            as: 'student_module_result_descriptor'
           }
         ],
       },
@@ -161,6 +165,10 @@ async function getStudentModulesData(studentId) {
                 as: 'module_year_module_course'
               }
             ]
+          },
+          {
+            model: ResultDescriptor,
+            as: 'student_module_result_descriptor'
           }
         ],
       },
@@ -217,7 +225,13 @@ async function getStudentModulesFromCourseYear(studentId, courseYearId) {
                       {
                         model: StudentModule,
                         as: 'module_student_module',
-                        where: { student_id: studentId }
+                        where: { student_id: studentId },
+                        include: [
+                          {
+                            model: ResultDescriptor,
+                            as: 'student_module_result_descriptor'
+                          }
+                        ]
                       }
                     ]
                   }
@@ -288,6 +302,10 @@ async function getStudentModuleYearData(studentId, moduleYearId) {
                 attributes: ['prefix', 'forename', 'surname']
               },
             ]
+          },
+          {
+            model: ResultDescriptor,
+            as: 'student_module_result_descriptor'
           }
         ],
       },

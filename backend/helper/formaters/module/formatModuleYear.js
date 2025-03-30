@@ -21,7 +21,8 @@ function formatModuleYear(module) {
         email: studentModule.student_module_student ? studentModule.student_module_student.email : undefined,
         result: studentModule.result,
         flagged: studentModule.flagged,
-        resit: studentModule.resit
+        resit: studentModule.resit,
+        result_descriptor: studentModule.student_module_result_descriptor.descriptor
       })) : []
     }))
   }

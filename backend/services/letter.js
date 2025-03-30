@@ -1,4 +1,4 @@
-const { StudentModule, Letter, LetterType, ModuleYear, ModuleCourse, User, Student, Module } = require('../models')
+const { StudentModule, Letter, LetterType, ModuleYear, ModuleCourse, User, Student, Module, ResultDescriptor } = require('../models')
 const { formatAllLettersOneStudent } = require('../helper/formaters/letter/formatAllLettersOneStudent')
 
 const sendLetter = async (studentId, moduleYearId, sentByUser, authorisedByStaff) => {
@@ -141,6 +141,10 @@ async function getAllLettersForStudent(studentId) {
           {
             model: ModuleYear,
             as: 'student_module_module_year'
+          },
+          {
+            model: ResultDescriptor,
+            as: 'student_module_result_descriptor'
           }
         ]
       }
@@ -188,6 +192,10 @@ async function getAllLettersForStudentOneModule(studentId, moduleYearId) {
           {
             model: ModuleYear,
             as: 'student_module_module_year'
+          },
+          {
+            model: ResultDescriptor,
+            as: 'student_module_result_descriptor'
           }
         ]
       }

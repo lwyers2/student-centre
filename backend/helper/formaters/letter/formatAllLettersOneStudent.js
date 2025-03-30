@@ -14,7 +14,8 @@ function formatAllLettersOneStudent(letters) {
       title: letter.letter_student_module.student_module_module.title,
       year: letter.letter_student_module.student_module_module.year,
       code: letter.letter_student_module.student_module_module.code,
-      year_start: letter.letter_student_module.student_module_module_year.year_start
+      year_start: letter.letter_student_module.student_module_module_year.year_start,
+      result_descriptor: letter.letter_student_module.student_module_result_descriptor.descriptor
     },
     student: {
       id: letter.letter_student_module.student_module_student.id,

@@ -18,6 +18,7 @@ function formatOneStudentOneModuleFromCourseYear(student) {
     result: module.module_course_module.module_student_module[0]?.result || null,
     flagged: module.module_course_module.module_student_module[0]?.flagged || 0,
     resit: module.module_course_module.module_student_module[0]?.resit || 0,
+    result_descriptor: module.module_course_module.module_student_module[0]?.student_module_result_descriptor.descriptor
   }))
 
   return {

@@ -58,7 +58,6 @@ const ScheduleMeeting = () => {
       academicId: selectedTeacher,
       adminStaffId: selectedAdmin,
       meetingReason: meetingReason,
-      courseYearId: course.course_year_id,
     }
 
     console.log('Meeting Scheduled:', meetingData)
@@ -70,8 +69,7 @@ const ScheduleMeeting = () => {
       meetingData.scheduledDate,
       meetingData.academicId,
       meetingData.adminStaffId,
-      meetingData.meetingReason,
-      meetingData.courseYearId
+      meetingData.meetingReason
     )
 
     console.log(`result: ${result}`)

@@ -101,6 +101,19 @@ ModuleYear.hasMany(Meeting, {
   timestamps: false,
 })
 
+// Meeting -> CourseYear (a meeting is related to a specific module)
+Meeting.belongsTo(CourseYear, {
+  foreignKey: 'course_year_id',
+  as: 'meeting_course_year',
+  timestamps: false,
+})
+
+CourseYear.hasMany(Meeting, {
+  foreignKey: 'course_year_id',
+  as: 'course_year_meeting',
+  timestamps: false,
+})
+
 // Meeting -> User (academic staff) (a meeting is scheduled by an academic staff member)
 Meeting.belongsTo(User, {
   foreignKey: 'academic_id',

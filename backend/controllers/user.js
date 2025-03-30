@@ -124,6 +124,20 @@ usersRouter.post(
 )
 
 
+usersRouter.get(
+  '/course-year/:courseYear',
+  async (req, res) => {
+    const courseYearId = req.params.courseYear
+    const users = await userService.getUsersFromCourseYear(courseYearId)
+    if(!users) {
+      const error = new Error('No users found')
+      error.status = 404
+      throw error
+    }
+    res.json(users)
+  }
+)
+
 //I don't think I'll use this
 // usersRouter.get(
 //   '/:user/students/:student',

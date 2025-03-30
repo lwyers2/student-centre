@@ -6,6 +6,7 @@ const { formatOneUser } = require('../helper/formaters/user/formatOneUser')
 const { formatUserModules } = require('../helper/formaters/user/formatUserModules')
 const { formatUserStudents } = require('../helper/formaters/user/formatUserStudents')
 const { formatOneUserOneModule } = require('../helper/formaters/user/formatOneUserOneModule')
+const { formatUsersFromCourseYears } = require('../helper/formaters/user/formatUsersFromCourseYear')
 const bcrypt = require('bcrypt')
 
 async function getAllUsers() {
@@ -435,6 +436,27 @@ async function getUserModule(userId, moduleId) {
 }
 
 
+async function getUsersFromCourseYear(courseYearId) {
+  const users = await UserCourse.findAll({
+    where: { course_year_id: courseYearId },
+    include: [
+      {
+        model: User,
+        as: 'user_course_user',
+        attributes: ['id', 'prefix', 'forename', 'surname' ],
+        include: [
+          {
+            model: Role,
+            as: 'user_role',
+            attributes: ['name']
+          },
+        ]
+      }
+    ]
+  })
+  return formatUsersFromCourseYears(users)
+}
+
 module.exports = {
   getAllUsers,
   getUser,
@@ -443,5 +465,6 @@ module.exports = {
   createUser,
   getUserModules,
   getUserStudents,
-  getUserModule
+  getUserModule,
+  getUsersFromCourseYear
 }

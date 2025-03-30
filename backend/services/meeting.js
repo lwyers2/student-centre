@@ -1,6 +1,6 @@
 const { Meeting, ModuleYear, ModuleCourse, Letter, StudentModule } = require('../models')
 
-const createMeeting = async (studentId, moduleYearId, scheduledDate, academicId, adminStaffId, meetingReason) => {
+const createMeeting = async (studentId, moduleYearId, scheduledDate, academicId, adminStaffId, meetingReason, courseYearId) => {
 
   const moduleYear = await ModuleYear.findByPk(moduleYearId, {
     include: {
@@ -15,7 +15,6 @@ const createMeeting = async (studentId, moduleYearId, scheduledDate, academicId,
     throw new Error(`Module year ID ${moduleYearId} not found or not linked to a course year.`)
   }
 
-  const courseYearId = moduleYear.module_year_module_course[0].course_year_id
 
   // Run module year and student module queries in parallel for efficiency
   const [moduleYears, studentModules] = await Promise.all([
@@ -67,6 +66,7 @@ const createMeeting = async (studentId, moduleYearId, scheduledDate, academicId,
     academic_id: academicId,
     admin_staff_id: adminStaffId,
     meeting_reason: meetingReason,
+    course_year_id: courseYearId
   })
 
   console.log(`Meeting scheduled successfully for student ID ${studentId} in module year ID ${moduleYearId}.`)
@@ -74,4 +74,22 @@ const createMeeting = async (studentId, moduleYearId, scheduledDate, academicId,
   return meeting
 }
 
-module.exports = { createMeeting }
+const getOneMeeting = async (meetingId) => {
+  const meeting = await Meeting.findOne({
+    where : { id: meetingId },
+    // include: [{
+    //   model: ModuleYear,
+    //   as: 'meeting_module_year',
+    //   include: [
+    //     {
+    //       model: ModuleCourse,
+    //       as: 'module_year_module_course'
+    //     }
+    //   ]
+    // }]
+  })
+
+  return meeting
+}
+
+module.exports = { createMeeting, getOneMeeting }

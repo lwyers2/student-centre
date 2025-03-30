@@ -39,6 +39,10 @@ const Meeting = db.define('Meeting', {
   },
   path_to_minutes: {
     type: DataTypes.STRING
+  },
+  course_year_id: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
   }
 }, {
   tableName: 'meeting', // specify the table name

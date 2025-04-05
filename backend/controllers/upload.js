@@ -3,13 +3,14 @@ const path = require('path')
 const fs = require('fs')
 const uploadRouter = require('express').Router()
 const { processStudentCSV } = require('../services/upload')
-const { Meeting, } = require('../models')
+const { Meeting } = require('../models')
 const { validateCSVs } = require('../validators/validateCSVs')
+const { uploadResults } = require('../services/uploadResults')
 
 const studentRequiredFields = ['forename', 'surname', 'email', 'student_code', 'course_title', 'course_year_start']
+const resultsRequiredFields = ['student_code', 'module_code', 'module_year_start', 'module_year', 'result', 'result_descriptor']
 
-
-// 1. Configure Multer Storage for All Upload Types
+// 🔧 Configure Multer Storage
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     const uploadPath = 'uploads/'
@@ -19,116 +20,66 @@ const storage = multer.diskStorage({
     cb(null, uploadPath)
   },
   filename: (req, file, cb) => {
-    cb(null, Date.now() + path.extname(file.originalname)) // Save with timestamp
+    cb(null, Date.now() + path.extname(file.originalname))
   }
 })
 
 const upload = multer({
-  storage: storage,
-  limits: { fileSize: 10 * 1024 * 1024 }, // 10MB limit per file
+  storage,
+  limits: { fileSize: 10 * 1024 * 1024 },
   fileFilter: (req, file, cb) => {
-    const allowedTypes = /docx|doc|csv/ // Allow .docx, .doc, .csv files
+    const allowedTypes = /docx|doc|csv/
     const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase())
     const mimeType = allowedTypes.test(file.mimetype)
-
     if (extname && mimeType) {
-      return cb(null, true)
+      cb(null, true)
     } else {
       cb(new Error('Only .docx, .doc, .csv files are allowed.'))
     }
   }
 })
 
-/**
- * 1. Route for Uploading Meeting Minutes (.docx, .doc)
- */
+// 📎 Utility to get file path
+const getFilePath = (req) => req.file?.path
+
+// 📝 Upload Meeting Minutes
 uploadRouter.post('/meeting-minutes', upload.single('file'), async (req, res) => {
+  const filePath = '/uploads/' + req.file.filename
+  const meetingId = req.body.meetingId
 
-  try {
-    if (!req.file) {
-      return res.status(400).json({ success: false, message: 'No file uploaded' })
-    }
-
-    const filePath = '/uploads/' + req.file.filename // Make path relative
-    const meetingId = req.body.meetingId
-
-    const meeting = await Meeting.findByPk(meetingId)
-    if (!meeting) {
-      return res.status(404).json({ success: false, message: 'Meeting not found' })
-    }
-
-    // Check if the meeting already has meeting minutes
-    if (meeting.path_to_minutes) {
-      // File exists, delete the old file
-      const oldFilePath = path.join(__dirname, '..', meeting.path_to_minutes)
-      if (fs.existsSync(oldFilePath)) {
-        fs.unlinkSync(oldFilePath) // Delete the old file
-      }
-    }
-
-    // Save the new file path in the meeting record
-    meeting.path_to_minutes = filePath
-    await meeting.save()
-
-    res.status(200).json({
-      success: true,
-      message: 'Meeting minutes uploaded successfully',
-      filePath: filePath,
-      meeting: meeting
-    })
-  } catch (error) {
-    res.status(500).json({ success: false, message: 'Error uploading file', error: error.message })
+  const meeting = await Meeting.findByPk(meetingId)
+  if (!meeting) {
+    return res.status(404).json({ success: false, message: 'Meeting not found' })
   }
+
+  if (meeting.path_to_minutes) {
+    const oldFilePath = path.join(__dirname, '..', meeting.path_to_minutes)
+    if (fs.existsSync(oldFilePath)) fs.unlinkSync(oldFilePath)
+  }
+
+  meeting.path_to_minutes = filePath
+  await meeting.save()
+
+  res.status(200).json({
+    success: true,
+    message: 'Meeting minutes uploaded successfully',
+    filePath,
+    meeting
+  })
 })
 
-// /**
-//  * 2. Route for Uploading Course Results (CSV)
-//  */
-// uploadRouter.post('/results/course-year', upload.single('file'), async (req, res) => {
-//   try {
-//     if (!req.file) {
-//       return res.status(400).json({ success: false, message: 'No file uploaded' })
-//     }
-
-//     const courseYearId = req.body.courseYearId
-//     const courseYear = await CourseYear.findByPk(courseYearId)
-//     if (!courseYear) {
-//       return res.status(404).json({ success: false, message: 'Course year not found' })
-//     }
-
-//     // Process CSV file temporarily in memory
-//     const fileData = req.file.buffer // The file content is stored in memory
-//     // Add logic for parsing CSV (not implemented yet)
-
-//     res.status(200).json({
-//       success: true,
-//       message: 'Course results CSV uploaded and processed successfully',
-//       fileSize: req.file.size,
-//       courseYearId: courseYearId
-//     })
-//   } catch (error) {
-//     res.status(500).json({ success: false, message: 'Error uploading file', error: error.message })
-//   }
-// })
-
-// /**
-//  * 3. Route for Uploading Student Data (CSV)
-//  */
+// 🧾 Upload Student CSV
 uploadRouter.post('/students', upload.single('file'), async (req, res) => {
-  if (!req.file) {
+  const filePath = getFilePath(req)
+  if (!filePath) {
     return res.status(400).json({ success: false, message: 'No file uploaded' })
   }
 
-  const filePath = req.file.path
-
-  // Validate CSV before processing it
   await validateCSVs(filePath, studentRequiredFields)
 
-  // If validation passes, process the CSV
   const result = await processStudentCSV(filePath)
 
-  // Check if result contains stats, if not, return an error
-  if (!result || !result.stats) {
+  if (!result?.stats) {
     return res.status(500).json({
       success: false,
       message: 'Unexpected error processing CSV data',
@@ -136,29 +87,37 @@ uploadRouter.post('/students', upload.single('file'), async (req, res) => {
     })
   }
 
-  // Destructure stats from result
-  const { stats } = result
-  const { studentsAdded, studentCourseLinks, studentModuleAssignments } = stats
+  const { studentsAdded, studentCourseLinks, studentModuleAssignments } = result.stats
 
-  // Send back a successful response with the stats
-  return res.status(200).json({
+  res.status(200).json({
     success: true,
     message: 'CSV uploaded and processed successfully',
-    totalRecords: studentsAdded,  // Using studentsAdded as total records
+    totalRecords: studentsAdded,
     stats: {
       studentsAdded,
       studentCourseLinks,
       studentModuleAssignments,
-    },
+    }
   })
 })
 
+// 📊 Upload Course Year Results
+uploadRouter.post('/results/:courseYearId', upload.single('file'), async (req, res) => {
+  const filePath = getFilePath(req)
+  if (!filePath) {
+    return res.status(400).json({ success: false, message: 'No file uploaded' })
+  }
 
+  await validateCSVs(filePath, resultsRequiredFields)
 
+  const result = await uploadResults(req.params.courseYearId, filePath)
 
-
-
-
+  res.status(200).json({
+    success: true,
+    message: 'Course year results processed successfully',
+    stats: result
+  })
+})
 
 
 

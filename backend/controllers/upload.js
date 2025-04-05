@@ -2,7 +2,12 @@ const multer = require('multer')
 const path = require('path')
 const fs = require('fs')
 const uploadRouter = require('express').Router()
-const { Meeting, CourseYear, Student } = require('../models')
+const { processStudentCSV } = require('../services/upload')
+const { Meeting, } = require('../models')
+const { validateCSVs } = require('../validators/validateCSVs')
+
+const studentRequiredFields = ['forename', 'surname', 'email', 'student_code', 'course_title', 'course_year_start']
+
 
 // 1. Configure Multer Storage for All Upload Types
 const storage = multer.diskStorage({
@@ -109,24 +114,35 @@ uploadRouter.post('/meeting-minutes', upload.single('file'), async (req, res) =>
 // /**
 //  * 3. Route for Uploading Student Data (CSV)
 //  */
-// uploadRouter.post('/students', upload.single('file'), async (req, res) => {
-//   try {
-//     if (!req.file) {
-//       return res.status(400).json({ success: false, message: 'No file uploaded' })
-//     }
+uploadRouter.post('/students',
+  upload.single('file'),
+  async (req, res) => {
+    if (!req.file) {
+      return res.status(400).json({ success: false, message: 'No file uploaded' })
+    }
 
-//     // Process CSV file temporarily in memory
-//     const fileData = req.file.buffer // The file content is stored in memory
-//     // Add logic for parsing CSV (not implemented yet)
+    const filePath = req.file.path
 
-//     res.status(200).json({
-//       success: true,
-//       message: 'Student data CSV uploaded and processed successfully',
-//       fileSize: req.file.size
-//     })
-//   } catch (error) {
-//     res.status(500).json({ success: false, message: 'Error uploading file', error: error.message })
-//   }
-// })
+    // Validate CSV before processing it
+    await validateCSVs(filePath, studentRequiredFields)
+
+    // If validation passes, process the CSV
+    const { students, stats } = await processStudentCSV(filePath)
+
+    res.status(200).json({
+      success: true,
+      message: 'CSV uploaded and processed successfully',
+      totalRecords: students.length,
+      stats // includes studentsAdded, studentCourseLinks, studentModuleAssignments
+    })
+  }
+)
+
+
+
+
+
+
+
 
 module.exports = uploadRouter

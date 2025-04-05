@@ -130,7 +130,7 @@ const StudentModule = () => {
           <div className="flex flex-wrap justify-between items-center mb-4">
             <div className="flex-1 p-2 mb-2 sm:mb-0">
               <div className="border border-slate-900 dark:border-slate-600 bg-white dark:bg-gray-900 rounded-3xl shadow-xl p-4  text-center">
-                <p><strong>Result:</strong> {module.result}</p>
+                <p><strong>Result:</strong> {module.result}{module.result_descriptor}</p>
               </div>
             </div>
             <div className="flex-1 p-2 mb-2 sm:mb-0">

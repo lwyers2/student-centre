@@ -114,29 +114,46 @@ uploadRouter.post('/meeting-minutes', upload.single('file'), async (req, res) =>
 // /**
 //  * 3. Route for Uploading Student Data (CSV)
 //  */
-uploadRouter.post('/students',
-  upload.single('file'),
-  async (req, res) => {
-    if (!req.file) {
-      return res.status(400).json({ success: false, message: 'No file uploaded' })
-    }
+uploadRouter.post('/students', upload.single('file'), async (req, res) => {
+  if (!req.file) {
+    return res.status(400).json({ success: false, message: 'No file uploaded' })
+  }
 
-    const filePath = req.file.path
+  const filePath = req.file.path
 
-    // Validate CSV before processing it
-    await validateCSVs(filePath, studentRequiredFields)
+  // Validate CSV before processing it
+  await validateCSVs(filePath, studentRequiredFields)
 
-    // If validation passes, process the CSV
-    const { students, stats } = await processStudentCSV(filePath)
+  // If validation passes, process the CSV
+  const result = await processStudentCSV(filePath)
 
-    res.status(200).json({
-      success: true,
-      message: 'CSV uploaded and processed successfully',
-      totalRecords: students.length,
-      stats // includes studentsAdded, studentCourseLinks, studentModuleAssignments
+  // Check if result contains stats, if not, return an error
+  if (!result || !result.stats) {
+    return res.status(500).json({
+      success: false,
+      message: 'Unexpected error processing CSV data',
+      error: 'Missing or malformed stats',
     })
   }
-)
+
+  // Destructure stats from result
+  const { stats } = result
+  const { studentsAdded, studentCourseLinks, studentModuleAssignments } = stats
+
+  // Send back a successful response with the stats
+  return res.status(200).json({
+    success: true,
+    message: 'CSV uploaded and processed successfully',
+    totalRecords: studentsAdded,  // Using studentsAdded as total records
+    stats: {
+      studentsAdded,
+      studentCourseLinks,
+      studentModuleAssignments,
+    },
+  })
+})
+
+
 
 
 

@@ -25,22 +25,23 @@ async function validateCSVs(filePath, requiredFields) {
       })
       .on('end', () => {
         if (missingDataRows.length > 0) {
-          // Send the error with \n for line breaks in the JSON response
-          const errorMessage = `Missing data found in the following rows:\n${formatMissingFieldsMessage(missingDataRows)}`
-          reject(new Error(errorMessage)) // Reject with the error
+          // Return structured error message
+          const errorResponse = {
+            message: 'Missing data found in some rows.',
+            errors: missingDataRows.map((rowData, index) => ({
+              row: index + 1,  // Row numbers are 1-based
+              missingFields: rowData.missingFields,
+            }))
+          }
+          reject(errorResponse) // Reject with the structured error object
         } else {
           resolve('CSV is valid - no missing data')
         }
       })
-      .on('error', reject)
+      .on('error', (err) => {
+        reject({ message: 'Error while processing the file', error: err }) // Handle stream error
+      })
   })
-}
-
-// Helper function to format missing fields for the response
-function formatMissingFieldsMessage(missingDataRows) {
-  return missingDataRows.map((rowData, index) => {
-    return `Row ${index + 1}: Missing fields - ${rowData.missingFields.join(', ')}.`
-  }).join('\n')  // Join with \n for plain text output
 }
 
 module.exports = { validateCSVs }

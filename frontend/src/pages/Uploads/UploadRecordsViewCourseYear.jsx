@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux'
+import uploadService from '../../services/upload'
 import userService from '../../services/user'
 
 const UploadRecordsViewCourseYears = () => {
@@ -9,10 +10,16 @@ const UploadRecordsViewCourseYears = () => {
   const [selectedYear, setSelectedYear] = useState(null)
   const [selectedCourseYearId, setSelectedCourseYearId] = useState(null)
   const [selectedFile, setSelectedFile] = useState(null)
+  const [uploading, setUploading] = useState(false) // For showing the upload loading state
+  const [uploadProgress, setUploadProgress] = useState(0)
+  const [processing, setProcessing] = useState(false)
+
+
 
   // Fetch courses on mount
   useEffect(() => {
     if (user.id && user.token) {
+      // Assuming you already have a function that fetches courses for the user
       userService
         .getAllUserCourses(user.id, user.token)
         .then((response) => {
@@ -46,15 +53,41 @@ const UploadRecordsViewCourseYears = () => {
     setSelectedFile(e.target.files[0])
   }
 
-  // Handle form submission (Placeholder for future upload logic)
-  const handleUpload = () => {
-    if (!selectedFile) {
-      alert('Please select a CSV file to upload.')
+  // Handle form submission (actual file upload logic)
+  const handleUpload = async () => {
+    if (!selectedFile || !selectedCourseYearId) {
+      alert('Please make all selections and choose a file.')
       return
     }
-    console.log(`Uploading ${selectedFile.name} for Course Year ID: ${selectedCourseYearId}`)
-    // TODO: Implement actual file upload logic
+
+    try {
+      setUploading(true)
+      setProcessing(false)
+
+      const response = await uploadService.uploadResults(
+        selectedCourseYearId,
+        selectedFile,
+        user.token
+      )
+
+      setUploading(false)
+      setProcessing(true)
+
+      // Simulate a short processing delay (or wait for real backend response)
+      setTimeout(() => {
+        setProcessing(false)
+        alert('File uploaded and processed successfully!')
+      }, 2000)
+
+    } catch (error) {
+      console.error('Error uploading file:', error)
+      setUploading(false)
+      setProcessing(false)
+      alert('Failed to upload file. Please try again.')
+    }
   }
+
+
 
   return (
     <div className="p-6 my-6">
@@ -108,7 +141,7 @@ const UploadRecordsViewCourseYears = () => {
       {selectedCourseYearId && (
         <div className="border border-solid border-slate-900 dark:border-slate-600 bg-white dark:bg-gray-900 p-6 rounded-3xl shadow-xl mt-5">
           <h3 className="text-2xl font-semibold text-center text-slate-900 dark:text-white mb-4">
-      Upload CSV File
+            Upload CSV File
           </h3>
           <div className="flex flex-col items-center">
             {/* Styled File Input */}
@@ -124,16 +157,26 @@ const UploadRecordsViewCourseYears = () => {
             {/* Upload Button */}
             <button
               onClick={handleUpload}
-              className="mt-4 bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition"
+              className={`mt-4 px-6 py-2 rounded-lg transition ${uploading ? 'bg-gray-500 cursor-not-allowed' : 'bg-blue-600 text-white hover:bg-blue-700'}`}
+              disabled={uploading}
             >
-        Upload
+              {uploading ? 'Uploading...' : 'Upload'}
             </button>
           </div>
           {selectedFile && (
             <p className="mt-2 text-center text-sm text-slate-700 dark:text-slate-300">
-        Selected file: {selectedFile.name}
+              Selected file: {selectedFile.name}
             </p>
           )}
+        </div>
+      )}
+
+      {(processing || uploading) &&  (
+        <div className="mt-4 text-center">
+          <p className="text-blue-600 dark:text-blue-300 text-lg font-medium">
+      Processing data...
+          </p>
+          <div className="mt-2 w-10 h-10 mx-auto border-4 border-blue-400 border-t-transparent rounded-full animate-spin" />
         </div>
       )}
 

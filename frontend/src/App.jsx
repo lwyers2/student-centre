@@ -7,7 +7,7 @@ import Tools from './components/Tools'
 import UploadRecords from './pages/Uploads/UploadRecords'
 import ViewCourses from './pages/Course/ViewCourses'
 import Meetings from './pages/Meetings'
-import Admin from './pages/Admin'
+import Admin from './pages/Admin/Admin.jsx'
 import Login from './pages/Login'
 import ModuleYearStudent from './pages/Module/ModuleYearStudent'
 import ResetPassword from './pages/ResetPassword'
@@ -26,6 +26,15 @@ import ModuleYearStudentEdit from './pages/Module/ModuleYearStudentEdit.jsx'
 import ScheduleMeeting from './pages/Meetings/ScheduleMeeting.jsx'
 import MeetingDetails from './pages/Meetings/MeetingDetails.jsx'
 import ViewAllMeetings from './pages/Meetings/ViewAllMeetings.jsx'
+import UploadStudents from './pages/Uploads/UploadStudents.jsx'
+import AssignModuleYearsToUser from './pages/Admin/AssignModuleYearsToUser.jsx'
+import AssignCourseYearsToUser from './pages/Admin/AssignCourseYearsToUser.jsx'
+import EditCourseYears from './pages/Admin/EditCourseYears.jsx'
+import EditModules from './pages/Admin/EditModules.jsx'
+import EditModuleYears from './pages/Admin/EditModuleYears.jsx'
+import EditCourses from './pages/Admin/EditCourses.jsx'
+import UsersAdmin from './pages/Admin/UsersAdmin.jsx'
+import EditStudents from './pages/Admin/EditStudents.jsx'
 import { setUser } from './redux/actions'
 
 const App = () => {
@@ -87,9 +96,18 @@ const App = () => {
             <Route path="/upload-records/module-year" element={<UploadRecordsViewModuleYears/>}/>
             <Route path="/upload-module-year-results/:id" element={<UploadModuleYearResults/>} />
             <Route path='/module-students-edit/:id' element={<ModuleYearStudentEdit/>}/>
-            <Route path = '/schedule-meeting/:id/module-year/:moduleYearId' element={<ScheduleMeeting/>}/>
+            <Route path ='/schedule-meeting/:id/module-year/:moduleYearId' element={<ScheduleMeeting/>}/>
             <Route path ='/meeting-details/:meetingId' element={<MeetingDetails/>}/>
-            <Route path = '/view-meetings' element={<ViewAllMeetings/>}/>
+            <Route path ='/view-meetings' element={<ViewAllMeetings/>}/>
+            <Route path='/upload-students' element={<UploadStudents/>}/>
+            <Route path="/edit-course-years" element={<EditCourseYears />} />
+            <Route path="/edit-modules" element={<EditModules />} />
+            <Route path="/edit-module-years" element={<EditModuleYears />} />
+            <Route path='/assign-module-years-to-users' element={<AssignModuleYearsToUser/>}/>
+            <Route path='/assign-course-years-to-users' element={<AssignCourseYearsToUser/>}/>
+            <Route path='/edit-courses' element={<EditCourses/>}/>
+            <Route path='/users-admin' element={<UsersAdmin/>}/>
+            <Route path='/edit-students' element={<EditStudents/>}/>
           </Routes>
 
         </main>

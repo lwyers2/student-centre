@@ -66,6 +66,13 @@ const getUsersFromCourseYear = async (id, courseYearId, token) => {
   return response.data
 }
 
+const getUsersFromSchool = async (schoolId) => {
+  const response = await axios.get(`${baseUrl}/school/${schoolId}`, {
+
+  })
+  return response.data
+}
+
 export default {
   getAll,
   getUser,
@@ -74,4 +81,6 @@ export default {
   getUserModules,
   getUserStudents,
   getUserOneModule,
-  getUsersFromCourseYear, }
+  getUsersFromCourseYear,
+  getUsersFromSchool
+}

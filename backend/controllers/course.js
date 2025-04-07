@@ -1,45 +1,43 @@
 const coursesRouter = require('express').Router()
-const Course = require('../models/course')
-//const Module = require('../models/module')
-const User = require('../models/user')
-const QualificationLevel = require('../models/qualificationLevel')
-const CourseYear = require('../models/courseYear')
+const courseService = require('../services/course')
+const tokenVerification = require('../middleware/tokenVerification')
+const roleAndIdAuthorization = require('../middleware/roleAndIdAuthorization')
+const { validate } = require('../middleware/validate')
 
-coursesRouter.get('/', async (request, response) => {
-  try {
-    const courses = await Course.findAll({
-      attributes: ['title', 'years', 'code', 'part_time'],
-      include: [
-        {
-          model: QualificationLevel,
-          as: 'qualification_level',
-          attributes: ['qualification'],
-        },
-        {
-          model: CourseYear,
-          as: 'course_years',
-          attributes: ['id', 'year_start', 'year_end'],
-          include: [
-            {
-              model: User,
-              as: 'course_co-ordinator',
-              attributes: ['forename', 'surname']
-            }
-          ],
-        }
-      ]
-    })
-    response.json(courses)
-  } catch (error) {
-    console.log(error)
-    response.status(500).json({ error: 'failed to fetch courses',
-      details: error.message,
-    })
+
+
+coursesRouter.get(
+  '/',
+  validate,
+  tokenVerification,
+  roleAndIdAuthorization(['Super User'], true),
+  async (req, res) => {
+
+    const courses = await courseService.getAllCourses()
+    if(!courses) {
+      const error = new Error('Courses not found')
+      error.status = 404
+      throw error
+    }
+    res.json(courses)
+  })
+
+coursesRouter.get(
+  '/:courseId',
+  validate,
+  tokenVerification,
+  roleAndIdAuthorization(['Super User'], true),
+  async (req, res) => {
+    const courseId = req.params.courseId
+    const course = await courseService.getOneCourse(courseId)
+    if(!course) {
+      const error = new Error('Course not found')
+      error.status = 404
+      throw error
+    }
+    res.json(course)
   }
-})
-
-
-
+)
 
 
 module.exports = coursesRouter

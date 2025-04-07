@@ -138,23 +138,19 @@ usersRouter.get(
   }
 )
 
-//I don't think I'll use this
-// usersRouter.get(
-//   '/:user/students/:student',
-//   validateId('user'),
-//   async (req, res) => {
-//     const userId = req.params.user
-//     const studentId = req.params.student
-//     console.log(studentId)
-//     const user = await userService.getUserStudent(userId, studentId)
-//     if(!user) {
-//       const error = new Error('User not found')
-//       error.status = 404
-//       throw error
-//     }
-//     res.json(user)
-//   }
-// )
+usersRouter.get(
+  '/school/:schoolId',
+  async (req, res) => {
+    const schoolId = req.params.schoolId
+    const users = await userService.getUsersFromSchool(schoolId)
+    if(!users) {
+      const error = new Error('No users found')
+      error.status = 404
+      throw error
+    }
+    res.json(users)
+  }
+)
 
 usersRouter.get(
   '/:user/students',

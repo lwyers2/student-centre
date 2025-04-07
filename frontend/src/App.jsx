@@ -35,6 +35,7 @@ import EditModuleYears from './pages/Admin/EditModuleYears.jsx'
 import EditCourses from './pages/Admin/EditCourses.jsx'
 import UsersAdmin from './pages/Admin/UsersAdmin.jsx'
 import EditStudents from './pages/Admin/EditStudents.jsx'
+import EditCourse from './pages/Course/EditCourse.jsx'
 import { setUser } from './redux/actions'
 
 const App = () => {
@@ -108,6 +109,7 @@ const App = () => {
             <Route path='/edit-courses' element={<EditCourses/>}/>
             <Route path='/users-admin' element={<UsersAdmin/>}/>
             <Route path='/edit-students' element={<EditStudents/>}/>
+            <Route path='/edit-course/:courseId' element={<EditCourse/>}/>
           </Routes>
 
         </main>

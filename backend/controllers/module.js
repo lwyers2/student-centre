@@ -23,6 +23,24 @@ modulesRouter.get(
 )
 
 modulesRouter.get(
+  '/:moduleId',
+  validateId('moduleId'),
+  validate,
+  tokenVerification,
+  roleAndIdAuthorization(['Super User'], true),
+  async (req, res) => {
+    const moduleId = req.params.moduleId
+    const module = await moduleService.getModule(moduleId)
+    if (!module) {
+      const error = new Error('Module not found')
+      error.status = 404
+      throw error
+    }
+    res.json(module)
+  }
+)
+
+modulesRouter.get(
   '/module-year/:moduleYear',
   validateId('moduleYear'),
   validate,

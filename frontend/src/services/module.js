@@ -1,13 +1,21 @@
 import axios from 'axios'
 const baseUrl = '/api/modules'
 
-const getAll = async credentials => {
-  const response = await axios.get(baseUrl, credentials)
+const getAll = async token => {
+  const response = await axios.get(baseUrl, {
+    headers: {
+      'Authorization' : `Bearer ${token}`
+    }
+  })
   return response.data
 }
 
-const getModule = async id => {
-  const response = await axios.get(`${baseUrl}/${id}`)
+const getModule = async (id, token) => {
+  const response = await axios.get(`${baseUrl}/${id}`, {
+    headers: {
+      'Authorization' : `Bearer ${token}`
+    }
+  })
   return response.data
 }
 

@@ -20,40 +20,17 @@ const Admin = () => {
           onClick={() => navigate('/edit-courses')}
         >
           <h3 className="text-2xl font-semibold text-slate-900 dark:text-white">
-            Edit Courses
+            Manage Courses
           </h3>
         </div>
 
         {/* Edit Course Years */}
         <div
           className="border border-solid border-slate-900 dark:border-slate-600 bg-white dark:bg-gray-900 p-8 py-12 rounded-3xl shadow-xl text-center cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-300 mb-8"
-          onClick={() => navigate('/edit-course-years')}
-        >
-          <h3 className="text-2xl font-semibold text-slate-900 dark:text-white">
-            Edit Course Years
-          </h3>
-        </div>
-      </div>
-
-      {/* Second Row */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-y-8 gap-x-6">
-        {/* Edit Modules */}
-        <div
-          className="border border-solid border-slate-900 dark:border-slate-600 bg-white dark:bg-gray-900 p-8 py-12 rounded-3xl shadow-xl text-center cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-300 mb-8"
           onClick={() => navigate('/edit-modules')}
         >
           <h3 className="text-2xl font-semibold text-slate-900 dark:text-white">
-            Edit Modules
-          </h3>
-        </div>
-
-        {/* Edit Module Years */}
-        <div
-          className="border border-solid border-slate-900 dark:border-slate-600 bg-white dark:bg-gray-900 p-8 py-12 rounded-3xl shadow-xl text-center cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-300 mb-8"
-          onClick={() => navigate('/edit-module-years')}
-        >
-          <h3 className="text-2xl font-semibold text-slate-900 dark:text-white">
-            Edit Module Years
+            Manage Modules
           </h3>
         </div>
       </div>
@@ -66,7 +43,7 @@ const Admin = () => {
           onClick={() => navigate('/users-admin')}
         >
           <h3 className="text-2xl font-semibold text-slate-900 dark:text-white">
-            Add Users
+            Manage Users
           </h3>
         </div>
 

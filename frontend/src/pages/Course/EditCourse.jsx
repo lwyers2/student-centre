@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux'
 import { useNavigate, useParams } from 'react-router-dom'
 import courseService from '../../services/course'
 import userService from '../../services/user'
+import qualificationsService from '../../services/qualifications'
 
 const EditCourse = () => {
   const user = useSelector(state => state.user)
@@ -16,6 +17,8 @@ const EditCourse = () => {
   const [teacherFromSchool, setTeacherUsersFromSchool] = useState(null)
   const [editingYears, setEditingYears] = useState({})
   const [showAddYear, setShowAddYear] = useState(false)
+  const [qualifications, setQualifications] = useState([])
+
 
   const params = useParams()
 
@@ -46,7 +49,7 @@ const EditCourse = () => {
           setUsers([])
         })
     }
-  }, [user?.id, params.courseId])
+  }, [user.token, params.courseId])
 
   useEffect(() => {
     if(course?.id && course?.school_id) {
@@ -56,7 +59,20 @@ const EditCourse = () => {
           setTeacherUsersFromSchool(response.teaching_staff)
         })
     }
-  }, [course?.school_id])
+  }, [course?.school_id, user.token])
+
+  useEffect(() => {
+    if (course) {
+      qualificationsService.getAll(user.token)
+        .then(response => {
+          setQualifications(response)
+        })
+        .catch(err => {
+          console.error(err)
+          alert('Failed to fetch qualifications')
+        })
+    }
+  }, [course, user.token])
 
   const handleCourseChange = (e) => {
     const { name, value, type, checked } = e.target
@@ -112,10 +128,15 @@ const EditCourse = () => {
   if (!user?.id) return <div>Loading user...</div>
   if (!course) return <div>Loading course...</div>
 
+  console.log(qualifications)
+
   return (
     <div className="w-full max-w-4xl mx-auto p-4 my-6">
       <h2 className="text-4xl font-bold text-center mb-8 text-slate-900 dark:text-white">
         Edit Course
+      </h2>
+      <h2 className="text-4xl font-bold text-center mb-8 text-slate-900 dark:text-white">
+        {course.title} ({course.code})
       </h2>
 
       {/* Course Details Form */}
@@ -124,8 +145,19 @@ const EditCourse = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 dark:text-black">
           <input name="title" value={formState.title} onChange={handleCourseChange} className="p-2 rounded border" placeholder="Title" />
           <input name="code" value={formState.code} onChange={handleCourseChange} className="p-2 rounded border" placeholder="Code" />
-          <input name="qualification" value={formState.qualification} onChange={handleCourseChange} className="p-2 rounded border" placeholder="Qualification" />
-          <label className="flex items-center gap-2 col-span-full dark:text-white">
+          <select
+            name="qualification"
+            value={formState.qualification}
+            onChange={handleCourseChange}
+            className="p-2 rounded border"
+          >
+            <option value="">Select Qualification</option>
+            {qualifications.map(q => (
+              <option key={q.id} value={q.qualification}>
+                {q.qualification}
+              </option>
+            ))}
+          </select>          <label className="flex items-center gap-2 col-span-full dark:text-white">
             <input type="checkbox" name="part_time" checked={formState.part_time} onChange={handleCourseChange} />
             Part Time
           </label>

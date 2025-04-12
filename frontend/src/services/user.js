@@ -1,8 +1,12 @@
 import axios from 'axios'
 const baseUrl = '/api/users'
 
-const getAll = async credentials => {
-  const response = await axios.get(baseUrl, credentials)
+const getAll = async token => {
+  const response = await axios.get(baseUrl, {
+    headers: {
+      'Authorization' : `Bearer ${token}`
+    }
+  })
   return response.data
 }
 
@@ -73,6 +77,26 @@ const getUsersFromSchool = async (schoolId) => {
   return response.data
 }
 
+const getUsersFromModule = async (token, moduleId) => {
+  const response = await axios.get(`${baseUrl}/module/${moduleId}`, {
+    headers: {
+      'Authorization' : `Bearer ${token}`
+    }
+
+  })
+  return response.data
+
+}
+
+const getUsersFromModuleYear = async (token, moduleYearId) => {
+  const response = await axios.get(`${baseUrl}/module-year/${moduleYearId}`, {
+    heaeders: {
+      'Authorization' : `Bearer ${token}`
+    }
+  })
+  return response.data
+}
+
 export default {
   getAll,
   getUser,
@@ -82,5 +106,7 @@ export default {
   getUserStudents,
   getUserOneModule,
   getUsersFromCourseYear,
-  getUsersFromSchool
+  getUsersFromSchool,
+  getUsersFromModule,
+  getUsersFromModuleYear
 }

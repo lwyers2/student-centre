@@ -166,4 +166,22 @@ usersRouter.get(
   }
 )
 
+usersRouter.get(
+  '/module/:moduleId',
+  validateId('moduleId'),
+  validate,
+  tokenVerification,
+  roleAndIdAuthorization(['Super User'], true),
+  async (req, res) => {
+    const moduleId = req.params.moduleId
+    const users = await userService.getUsersFromModule(moduleId)
+    if(!users) {
+      const error = new Error('No users found')
+      error.status = 404
+      throw error
+    }
+    res.json(users)
+  }
+)
+
 module.exports = usersRouter

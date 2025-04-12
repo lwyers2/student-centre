@@ -8,11 +8,12 @@ const { formatUserStudents } = require('../helper/formaters/user/formatUserStude
 const { formatOneUserOneModule } = require('../helper/formaters/user/formatOneUserOneModule')
 const { formatUsersFromCourseYears } = require('../helper/formaters/user/formatUsersFromCourseYear')
 const { formatUsersFromSchool } = require('../helper/formaters/user/formatUsersFromSchool')
+const { formatUsersFromModule } = require('../helper/formaters/user/formatUsersFromModule')
 const bcrypt = require('bcrypt')
 
 async function getAllUsers() {
   const users = await User.findAll({
-    attributes: ['id', 'forename', 'surname', 'email', 'active', 'date_created', 'date_updated'],
+    attributes: ['id', 'prefix', 'forename', 'surname', 'email', 'active', 'date_created', 'date_updated'],
     include: [
       {
         model: UserSchool,
@@ -487,6 +488,29 @@ async function getUsersFromSchool(schoolId) {
   return formatUsersFromSchool(users)
 }
 
+const getUsersFromModule = async (moduleId) => {
+  const users = await User.findAll({
+    include: [
+      {
+        model: UserModule,
+        where: { module_id: moduleId },
+        attributes: [],
+        as: 'user_module_user',
+      },
+      {
+        model: Role,
+        as: 'user_role',
+        attributes: ['name'],
+      }
+    ],
+    attributes: ['id', 'prefix', 'forename', 'surname'],
+    distinct: true
+  })
+  if(!users) return null
+  //return users
+  return formatUsersFromModule(users)
+}
+
 module.exports = {
   getAllUsers,
   getUser,
@@ -497,5 +521,6 @@ module.exports = {
   getUserStudents,
   getUserModule,
   getUsersFromCourseYear,
-  getUsersFromSchool
+  getUsersFromSchool,
+  getUsersFromModule,
 }

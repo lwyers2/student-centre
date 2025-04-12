@@ -69,7 +69,7 @@ async function getModule(moduleId) {
           {
             model: User,
             as: 'module_year_module_coordinator',
-            attributes: ['forename', 'surname']
+            attributes: ['forename', 'surname', 'prefix']
           },
           {
             model: Semester,
@@ -83,6 +83,7 @@ async function getModule(moduleId) {
   if(!module) return null
 
   return formatOneModule(module)
+
 }
 
 

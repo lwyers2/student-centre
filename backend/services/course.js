@@ -2,6 +2,7 @@
 const { Course, School, QualificationLevel, CourseYear, User, UserCourse, Role } = require('../models')
 const { formatAllCourses } = require('../helper/formaters/course/formatAllCourses')
 const { formatOneCourse } = require('../helper/formaters/course/formatOneCourse')
+const { formatAllCoursesFromSchool } = require('../helper/formaters/course/formatAllCoursesFromSchool')
 
 async function getAllCourses() {
   const courses = await Course.findAll({
@@ -78,7 +79,44 @@ async function getOneCourse(courseId) {
   //return course
 }
 
+async function getCoursesFromSchool(schoolId) {
+  const courses = await Course.findAll({
+    where: {
+      school_id: schoolId
+    },
+    attributes: ['id','title', 'years', 'code', 'part_time'],
+    include:
+    [
+      {
+        model: QualificationLevel,
+        as: 'course_qualification_level',
+        attributes: ['qualification'],
+      },
+      {
+        model: School,
+        as: 'course_school',
+        attributes: ['school_name']
+      },
+      {
+        model: CourseYear,
+        as: 'course_course_year',
+        include:
+        [
+          {
+            model: User,
+            as: 'course_year_course_coordinator',
+            attributes: ['id', 'forename', 'surname', 'prefix']
+          }
+        ]
+      }
+    ]
+  })
+  if(!courses) return null
+  return formatAllCoursesFromSchool(courses)
+}
+
 module.exports = {
   getAllCourses,
   getOneCourse,
+  getCoursesFromSchool,
 }

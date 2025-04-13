@@ -20,7 +20,7 @@ const getOneCourse = async (token, courseId) => {
 }
 
 const getCoursesFromSchool = async (token, schoolId) => {
-  const response = await axios.get(`${baseUrl}/school/${schoolId}`,{
+  const response = await axios.get(`${baseUrl}/schools/${schoolId}`,{
     headers: {
       'Authorization' : `Bearer ${token}`
     }
@@ -30,5 +30,6 @@ const getCoursesFromSchool = async (token, schoolId) => {
 
 export default {
   getAll,
-  getOneCourse
+  getOneCourse,
+  getCoursesFromSchool
 }

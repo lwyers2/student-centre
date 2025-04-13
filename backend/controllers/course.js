@@ -40,7 +40,7 @@ coursesRouter.get(
 )
 
 coursesRouter.get(
-  ':schoolId',
+  '/schools/:schoolId',
   validate,
   tokenVerification,
   roleAndIdAuthorization(['Super User'], true),

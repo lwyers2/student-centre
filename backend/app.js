@@ -18,6 +18,7 @@ const fileDownloadRouter = require('./controllers/download')
 const qualificationsRouter = require('./controllers/qualifications')
 const rolesRouter = require('./controllers/role')
 const schoolsRouter = require('./controllers/school')
+const resetPasswordRouter = require('./controllers/resetPassword')
 const uploadRouter = require('./controllers/upload')
 
 
@@ -47,6 +48,7 @@ app.use('/api/upload', uploadRouter)
 app.use('/api/qualifications', qualificationsRouter)
 app.use('/api/roles', rolesRouter)
 app.use('/api/schools', schoolsRouter)
+app.use('/api/reset-password', resetPasswordRouter)
 
 // Error handling middleware
 app.use(unknownEndpoint)

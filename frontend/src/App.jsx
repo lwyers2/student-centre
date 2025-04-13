@@ -37,6 +37,10 @@ import UsersAdmin from './pages/Admin/UsersAdmin.jsx'
 import EditStudents from './pages/Admin/EditStudents.jsx'
 import EditCourse from './pages/Course/EditCourse.jsx'
 import EditModule from './pages/Module/EditModule.jsx'
+import EditUser from './pages/User/EditUser.jsx'
+import AddUser from './pages/User/AddUser.jsx'
+import AddCoursesToUser from './pages/User/AddCoursesToUser.jsx'
+import AddModulesToUser from './pages/User/AddModulesToUser.jsx'
 import { setUser } from './redux/actions'
 
 const App = () => {
@@ -112,6 +116,10 @@ const App = () => {
             <Route path='/edit-students' element={<EditStudents/>}/>
             <Route path='/edit-course/:courseId' element={<EditCourse/>}/>
             <Route path='/edit-module/:moduleId' element={<EditModule/>}/>
+            <Route path='/users/:userId/edit' element={<EditUser/>}/>
+            <Route path='/users/new' element={<AddUser/>}/>
+            <Route path='/users/:userId/add-courses' element={<AddCoursesToUser/>}/>
+            <Route path='/users/:userId/add-modules' element={<AddModulesToUser/>}/>
           </Routes>
 
         </main>

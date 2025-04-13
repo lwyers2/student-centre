@@ -1,39 +1,68 @@
-// AssignModulesToUser.jsx
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { useSelector } from 'react-redux'
+
+import userService from '../../services/user'
 
 const AssignModuleYearsToUser = () => {
-  const [users, setUsers] = useState(['User 1', 'User 2', 'User 3'])
-  const [modules, setModules] = useState(['Module A', 'Module B', 'Module C'])
-  const [selectedUser, setSelectedUser] = useState('')
-  const [selectedModule, setSelectedModule] = useState('')
+  const [users, setUsers] = useState([])
+  const user = useSelector((state) => state.user)
+  const [searchTerm, setSearchTerm] = useState('')
+  const navigate = useNavigate()
 
-  const handleAssignModule = () => {
-    if (selectedUser && selectedModule) {
-      alert(`Assigned ${selectedModule} to ${selectedUser}`)
-      // Add logic to save this assignment, e.g., API call
-    } else {
-      alert('Please select both a user and a module.')
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const response = await userService.getAll(user.token) // adjust if your method is different
+        setUsers(response)
+      } catch (err) {
+        console.error('Failed to load users:', err)
+      }
     }
-  }
+
+    fetchUsers()
+  }, [])
+
+
+
+  const filteredUsers = users.filter((user) =>
+    user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    user.email.toLowerCase().includes(searchTerm.toLowerCase())
+  )
+
+
+  console.log(users)
 
   return (
-    <div>
-      <h2>Assign Module to User</h2>
-      <select onChange={(e) => setSelectedUser(e.target.value)} value={selectedUser}>
-        <option value="">Select User</option>
-        {users.map((user, index) => (
-          <option key={index} value={user}>{user}</option>
-        ))}
-      </select>
+    <div className="max-w-4xl mx-auto p-4">
+      <h2 className="text-3xl font-bold mb-6">Select Users to Add Modules</h2>
 
-      <select onChange={(e) => setSelectedModule(e.target.value)} value={selectedModule}>
-        <option value="">Select Module</option>
-        {modules.map((module, index) => (
-          <option key={index} value={module}>{module}</option>
-        ))}
-      </select>
+      <div className="flex items-center justify-between mb-4">
+        <input
+          type="text"
+          placeholder="Search by name or email"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="p-2 border rounded w-full max-w-md mr-4"
+        />
+      </div>
 
-      <button onClick={handleAssignModule}>Assign Module</button>
+      <ul className="space-y-2">
+        {filteredUsers.map((user) => (
+          <li
+            key={user.id}
+            className="p-4 border rounded hover:bg-gray-100 cursor-pointer"
+            onClick={() => navigate(`/users/${user.id}/add-modules`)}
+          >
+            <div className="font-semibold">{user.name}</div>
+            <div className="text-sm text-gray-600">{user.email}</div>
+            <div className="text-sm text-gray-500 italic">{user.role}</div>
+          </li>
+        ))}
+        {filteredUsers.length === 0 && (
+          <li className="text-gray-500 italic">No users found.</li>
+        )}
+      </ul>
     </div>
   )
 }

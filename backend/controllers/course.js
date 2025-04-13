@@ -39,5 +39,22 @@ coursesRouter.get(
   }
 )
 
+coursesRouter.get(
+  ':schoolId',
+  validate,
+  tokenVerification,
+  roleAndIdAuthorization(['Super User'], true),
+  async (req, res) => {
+    const schoolId = req.params.schoolId
+    const courses = await courseService.getCoursesFromSchool(schoolId)
+    if(!courses) {
+      const error = new Error('Courses not found')
+      error.status = 404
+      throw error
+    }
+    res.json(courses)
+  }
+)
+
 
 module.exports = coursesRouter

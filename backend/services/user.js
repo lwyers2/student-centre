@@ -9,6 +9,7 @@ const { formatOneUserOneModule } = require('../helper/formaters/user/formatOneUs
 const { formatUsersFromCourseYears } = require('../helper/formaters/user/formatUsersFromCourseYear')
 const { formatUsersFromSchool } = require('../helper/formaters/user/formatUsersFromSchool')
 const { formatUsersFromModule } = require('../helper/formaters/user/formatUsersFromModule')
+const { formatUserDetails } = require('../helper/formaters/user/formatUserDetails')
 const bcrypt = require('bcrypt')
 
 async function getAllUsers() {
@@ -42,7 +43,7 @@ async function getAllUsers() {
 async function getUser(userId) {
   const user = await User.findOne({
     where: { id: userId },
-    attributes: ['id', 'forename', 'surname', 'email', 'active', 'date_created', 'date_updated'],
+    attributes: ['id', 'prefix','forename', 'surname', 'email', 'active', 'date_created', 'date_updated', 'job_title'],
     include: [
       {
         model: UserSchool,
@@ -129,8 +130,35 @@ async function getUser(userId) {
     ],
   })
   return formatOneUser(user)
-
 }
+
+async function getOneUserDetails(userId) {
+  const user = await User.findOne({
+    where: { id: userId },
+    attributes: ['id', 'prefix','forename', 'surname', 'email', 'active', 'date_created', 'date_updated', 'job_title'],
+    include: [
+      {
+        model: UserSchool,
+        as: 'user_user_school',
+        include: [
+          {
+            model: School,
+            as: 'user_school_school'
+          }
+        ],
+        required: true,
+      },
+      {
+        model: Role,
+        as: 'user_role',
+        required: true,
+      },
+    ],
+  })
+  if(!user) return null
+  return formatUserDetails(user)
+}
+
 
 async function getUserCourses(userId) {
 
@@ -523,4 +551,5 @@ module.exports = {
   getUsersFromCourseYear,
   getUsersFromSchool,
   getUsersFromModule,
+  getOneUserDetails
 }

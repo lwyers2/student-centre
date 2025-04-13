@@ -23,6 +23,8 @@ const UsersAdmin = () => {
     fetchUsers()
   }, [])
 
+
+
   const filteredUsers = users.filter((user) =>
     user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     user.email.toLowerCase().includes(searchTerm.toLowerCase())

@@ -10,8 +10,21 @@ const getAll = async token => {
   return response.data
 }
 
-const getUser = async id => {
-  const response = await axios.get(`${baseUrl}/${id}`)
+const getUser = async (id, token) => {
+  const response = await axios.get(`${baseUrl}/${id}`, {
+    headers: {
+      'Authorization' : `Bearer ${token}`
+    }
+  })
+  return response.data
+}
+
+const getUserDetails = async (id, token) => {
+  const response = await axios.get(`${baseUrl}/user-details/${id}`, {
+    headers: {
+      'Authorization' : `Bearer ${token}`
+    }
+  })
   return response.data
 }
 
@@ -108,5 +121,6 @@ export default {
   getUsersFromCourseYear,
   getUsersFromSchool,
   getUsersFromModule,
-  getUsersFromModuleYear
+  getUsersFromModuleYear,
+  getUserDetails,
 }

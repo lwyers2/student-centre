@@ -16,6 +16,8 @@ const letterRouter = require('./controllers/letter')
 const meetingRouter = require('./controllers/meeting')
 const fileDownloadRouter = require('./controllers/download')
 const qualificationsRouter = require('./controllers/qualifications')
+const rolesRouter = require('./controllers/role')
+const schoolsRouter = require('./controllers/school')
 const uploadRouter = require('./controllers/upload')
 
 
@@ -43,6 +45,8 @@ app.use('/api/meetings', meetingRouter)
 app.use('/api/download', fileDownloadRouter)
 app.use('/api/upload', uploadRouter)
 app.use('/api/qualifications', qualificationsRouter)
+app.use('/api/roles', rolesRouter)
+app.use('/api/schools', schoolsRouter)
 
 // Error handling middleware
 app.use(unknownEndpoint)

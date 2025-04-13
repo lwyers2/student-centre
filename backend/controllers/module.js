@@ -64,4 +64,22 @@ modulesRouter.get(
   }
 )
 
+modulesRouter.get(
+  '/course-year/:courseYearId',
+  validateId('courseYearId'),
+  validate,
+  tokenVerification,
+  roleAndIdAuthorization(['Super User'], true),
+  async (req, res) => {
+    const courseYearId = req.params.courseYearId
+    const modules = await moduleService.getModulesFromCourseYear(courseYearId)
+    if (!modules || modules.length === 0) {
+      const error = new Error('Modules not found')
+      error.status = 404
+      throw error
+    }
+    res.json(modules)
+  }
+)
+
 module.exports = modulesRouter

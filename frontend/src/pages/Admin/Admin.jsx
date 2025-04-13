@@ -59,7 +59,7 @@ const Admin = () => {
       </div>
 
       {/* Fourth Row */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-y-8 gap-x-6">
+      <div className="grid grid-cols-1 md:grid-cols-1 gap-y-8 gap-x-6">
         {/* Assign Users to Course Years */}
         <div
           className="border border-solid border-slate-900 dark:border-slate-600 bg-white dark:bg-gray-900 p-8 py-12 rounded-3xl shadow-xl text-center cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-300 mb-8"
@@ -67,16 +67,6 @@ const Admin = () => {
         >
           <h3 className="text-2xl font-semibold text-slate-900 dark:text-white">
             Assign Users to Course Years
-          </h3>
-        </div>
-
-        {/* Edit Students */}
-        <div
-          className="border border-solid border-slate-900 dark:border-slate-600 bg-white dark:bg-gray-900 p-8 py-12 rounded-3xl shadow-xl text-center cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-300 mb-8"
-          onClick={() => navigate('/edit-students')}
-        >
-          <h3 className="text-2xl font-semibold text-slate-900 dark:text-white">
-            Edit Students
           </h3>
         </div>
       </div>

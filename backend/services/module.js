@@ -1,5 +1,6 @@
 const { Student, Course, Module, User, ModuleYear, ModuleCourse, Semester, CourseYear, QualificationLevel, UserModule, StudentModule, ResultDescriptor } = require('../models')
 const { formatOneModule } = require('../helper/formaters/module/formatOneModule')
+const { formatModulesFromCourseYear } = require('../helper/formaters/module/formatModulesFromCourseYear')
 
 async function getAllModules() {
   const modules = await Module.findAll({
@@ -140,9 +141,38 @@ async function checkUserAccessToModule(userId, moduleYearId) {
 }
 
 
+async function getModulesFromCourseYear(courseYearId) {
+  const modules = await ModuleCourse.findAll({
+    where: { course_year_id: courseYearId },
+    include: [
+      {
+        model: ModuleYear,
+        as: 'module_course_module_year',
+        attributes: ['id', 'year_start', ],
+        include: [
+          {
+            model: Semester,
+            as: 'module_year_semester',
+            attributes: ['id', 'name']
+          },
+        ],
+      },
+      {
+        model: Module,
+        as: 'module_course_module',
+        attributes: ['id', 'title', 'code', 'year', 'CATs'],
+      }
+    ],
+  })
+  if(!modules) return null
+
+  return formatModulesFromCourseYear(modules)
+}
+
 module.exports = {
   getAllModules,
   getModuleFromModuleYear,
   checkUserAccessToModule,
   getModule,
+  getModulesFromCourseYear
 }

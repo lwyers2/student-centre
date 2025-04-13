@@ -85,6 +85,18 @@ meetingRouter.delete('/delete/:meetingId', async (req, res) => {
 
 })
 
+meetingRouter.get('/student/:studentId', async (req, res) => {
+  const studentId = req.params.studentId
+  const meetings = await meetingService.getAllMeetingsForStudent(studentId)
+  if (!meetings) {
+    const error = new Error('No Meetings found')
+    error.status = 404
+    throw error
+  }
+  res.json(meetings)
+}
+)
+
 
 
 

@@ -53,7 +53,7 @@ resetPasswordRouter.post('/', async (req, res) => {
       res.status(200).send('Password reset email sent with the new password')
     })
   } catch (err) {
-    console.error("Error processing reset password request: ", err);  // Log the actual error
+    console.error('Error processing reset password request: ', err)  // Log the actual error
     res.status(500).send('Error processing request')
   }
 })

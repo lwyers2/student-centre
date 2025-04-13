@@ -1,4 +1,4 @@
-const { Meeting, ModuleYear, ModuleCourse, Letter, StudentModule, Student, User } = require('../models')
+const { Meeting, ModuleYear, ModuleCourse, Letter, StudentModule, Student, User, Module } = require('../models')
 const { Op } = require('sequelize')
 
 const createMeeting = async (studentId, moduleYearId, scheduledDate, academicId, adminStaffId, meetingReason, courseYearId) => {
@@ -186,4 +186,39 @@ const getAllUserMeetings = async (userId) => {
   return meetings
 }
 
-module.exports = { createMeeting, getOneMeeting, updateMeeting, deleteMeeting, getAllUserMeetings }
+const getAllMeetingsForStudent = async (studentId) => {
+  const meetings = await Meeting.findAll({
+    where: { student_id: studentId },
+    include: [
+      {
+        model: ModuleYear,
+        as: 'meeting_module',
+        include: [
+          {
+            model: Module,
+            as: 'module_year_module',
+          },
+          {
+            model: StudentModule,
+            as: 'module_year_student_module',
+            where: { student_id: studentId },
+          }
+        ]
+      },
+      {
+        model: User,
+        as: 'meeting_academic_staff',
+        attributes: ['id', 'prefix', 'forename', 'surname'],
+      },
+      {
+        model: User,
+        as: 'meeting_admin_staff',
+        attributes: ['id', 'prefix', 'forename', 'surname'],
+      },
+    ]
+  })
+
+  return meetings
+}
+
+module.exports = { createMeeting, getOneMeeting, updateMeeting, deleteMeeting, getAllUserMeetings, getAllMeetingsForStudent }

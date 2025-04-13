@@ -2,13 +2,20 @@ import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import studentService from '../../services/student'
+import letterService from '../../services/letter'
 import StudentCourse from '../../components/StudentView/StudentCourse'
+import StudentLetters from '../../components/StudentView/StudentLetters'
+import meetingService from '../../services/meeting'
+import StudentMeetings from '../../components/StudentView/StudentMeetings'
 
 const Student = () => {
   const params = useParams()
   const [student, setStudent] = useState(null)
   const [courses, setCourses] = useState()
   const [showSection, setShowSection] = useState(true)
+  const [letters, setLetters] = useState([])
+  const [meetings, setMeetings] = useState([])
+
   const user = useSelector(state => state.user)
 
   const toggle = () => setShowSection(!showSection)
@@ -24,13 +31,35 @@ const Student = () => {
       })
   }, [params.id])
 
+  useEffect(() => {
+    letterService.getAllLettersForStudent(params.id)
+      .then(response => {
+        setLetters(response)
+      })
+      .catch(error => {
+        console.error('Error fetching letters: ', error)
+      })
+  }
+  , [params.id])
+
+  useEffect(() => {
+    meetingService.getAllMeetingsForStudent(params.id)
+      .then(response => {
+        setMeetings(response)
+      })
+      .catch(error => {
+        console.error('Error fetching meetings: ', error)
+      })
+  }, [params.id])
+
 
 
   if(!student) {
     return <p>No student data available</p>
   }
 
-  console.log(courses)
+
+  console.log(meetings)
 
 
   return (
@@ -49,9 +78,8 @@ const Student = () => {
             (
               <>
                 <StudentCourse courses= {courses} student = {student}/>
-                <p>Letters Sent</p>
-                <p>Previous Meetings</p>
-                <p>Upcoming meetings</p>
+                <StudentLetters letters={letters} student={student} />
+                <StudentMeetings meetings={meetings} student={student} />
               </>
             )
             :

@@ -42,6 +42,7 @@ import AddUser from './pages/User/AddUser.jsx'
 import AddCoursesToUser from './pages/User/AddCoursesToUser.jsx'
 import AddModulesToUser from './pages/User/AddModulesToUser.jsx'
 import { setUser } from './redux/actions'
+import ProtectedRoute from './components/ProtectedRoute.jsx'
 
 const App = () => {
   const dispatch = useDispatch()
@@ -86,7 +87,7 @@ const App = () => {
             <Route path="/upload-records" element={<UploadRecords />} />
             <Route path="/view-courses" element={<ViewCourses />} />
             <Route path="/meetings" element={<Meetings />} />
-            <Route path="/admin" element={<Admin />} />
+            <Route path="/admin" element={<ProtectedRoute><Admin /> </ProtectedRoute>} />
             <Route path="/login" element={<Login />} />
             <Route path="/reset-password" element={<ResetPassword/>} />
             <Route path="/module-students/:id" element={<ModuleYearStudent />} />
@@ -106,20 +107,20 @@ const App = () => {
             <Route path ='/meeting-details/:meetingId' element={<MeetingDetails/>}/>
             <Route path ='/view-meetings' element={<ViewAllMeetings/>}/>
             <Route path='/upload-students' element={<UploadStudents/>}/>
-            <Route path="/edit-course-years" element={<EditCourseYears />} />
-            <Route path="/edit-modules" element={<EditModules />} />
-            <Route path="/edit-module-years" element={<EditModuleYears />} />
-            <Route path='/assign-module-years-to-users' element={<AssignModuleYearsToUser/>}/>
-            <Route path='/assign-course-years-to-users' element={<AssignCourseYearsToUser/>}/>
-            <Route path='/edit-courses' element={<EditCourses/>}/>
-            <Route path='/users-admin' element={<UsersAdmin/>}/>
-            <Route path='/edit-students' element={<EditStudents/>}/>
-            <Route path='/edit-course/:courseId' element={<EditCourse/>}/>
-            <Route path='/edit-module/:moduleId' element={<EditModule/>}/>
-            <Route path='/users/:userId/edit' element={<EditUser/>}/>
-            <Route path='/users/new' element={<AddUser/>}/>
-            <Route path='/users/:userId/add-courses' element={<AddCoursesToUser/>}/>
-            <Route path='/users/:userId/add-modules' element={<AddModulesToUser/>}/>
+            <Route path="/edit-course-years" element={<ProtectedRoute><EditCourseYears />  </ProtectedRoute>} />
+            <Route path="/edit-modules" element={<ProtectedRoute> <EditModules />  </ProtectedRoute>} />
+            <Route path="/edit-module-years" element={<ProtectedRoute> <EditModuleYears />  </ProtectedRoute>} />
+            <Route path='/assign-module-years-to-users' element={<ProtectedRoute> <AssignModuleYearsToUser/> </ProtectedRoute>}/>
+            <Route path='/assign-course-years-to-users' element={<ProtectedRoute> <AssignCourseYearsToUser/> </ProtectedRoute>}/>
+            <Route path='/edit-courses' element={<ProtectedRoute> <EditCourses/> </ProtectedRoute>}/>
+            <Route path='/users-admin' element={<ProtectedRoute> <UsersAdmin/> </ProtectedRoute>}/>
+            <Route path='/edit-students' element={<ProtectedRoute> <EditStudents/> </ProtectedRoute>}/>
+            <Route path='/edit-course/:courseId' element={<ProtectedRoute> <EditCourse/> </ProtectedRoute>}/>
+            <Route path='/edit-module/:moduleId' element={<ProtectedRoute> <EditModule/> </ProtectedRoute>}/>
+            <Route path='/users/:userId/edit' element={<ProtectedRoute> <EditUser/> </ProtectedRoute>}/>
+            <Route path='/users/new' element={<ProtectedRoute> <AddUser/> </ProtectedRoute>}/>
+            <Route path='/users/:userId/add-courses' element={<ProtectedRoute><AddCoursesToUser/> </ProtectedRoute>}/>
+            <Route path='/users/:userId/add-modules' element={<ProtectedRoute> <AddModulesToUser/> </ProtectedRoute>}/>
           </Routes>
 
         </main>

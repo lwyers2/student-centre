@@ -87,4 +87,15 @@ const deleteMeeting = async (meetingId) => {
   }
 }
 
-export default { createMeeting, getOneMeeting, updateMeeting, deleteMeeting, getAllMeetingsForOneUser }
+
+const getAllMeetingsForStudent = async (studentId) => {
+  try {
+    const response = await axios.get(`${baseUrl}/student/${studentId}`)
+    return response.data
+  } catch (error) {
+    console.error('Error fetching meetings for student:', error)
+    throw error
+  }
+}
+
+export default { createMeeting, getOneMeeting, updateMeeting, deleteMeeting, getAllMeetingsForOneUser, getAllMeetingsForStudent }

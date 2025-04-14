@@ -206,6 +206,8 @@ describe('formatOneUser', () => {
       date_created: undefined,
       date_updated: undefined,
       is_active: undefined,
+      job_title: '',
+      prefix: '',
       schools: [],
       role: null,
       courses: [],

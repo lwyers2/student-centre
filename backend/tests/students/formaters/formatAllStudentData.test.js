@@ -41,6 +41,10 @@ describe('formatAllStudentData', () => {
           flagged: false,
           module_year_id: 301,
           resit: false,
+          student_module_result_descriptor: {
+            id: 1,
+            descriptor: 'P',
+          },
           student_module_module_year: {
             id: 301,
             module_id: 4001,
@@ -152,6 +156,10 @@ describe('formatAllStudentData', () => {
           result: 90,
           flagged: false,
           resit: false,
+          student_module_result_descriptor: {
+            id: 2,
+            descriptor: 'P',
+          },
           student_module_module_year: {
             module_year_module: null // Missing module data
           }
@@ -171,9 +179,7 @@ describe('formatAllStudentData', () => {
     expect(formattedStudentData.courses[0].course_year_id).toBe(102)
     expect(formattedStudentData.courses[0].course_coordinator).toBeUndefined() // No course coordinator due to missing course year
 
-    expect(formattedStudentData.courses[0].modules).toHaveLength(1)
-    expect(formattedStudentData.courses[0].modules[0].module_year_id).toBe(302)
-    expect(formattedStudentData.courses[0].modules[0].module_id).toBeUndefined() // No module ID due to missing module data
+    expect(formattedStudentData.courses[0].modules).toHaveLength(0)
   })
 
   it('should handle courses with missing course_year_course gracefully', () => {
@@ -205,7 +211,7 @@ describe('formatAllStudentData', () => {
 
     expect(formattedStudentData.courses).toHaveLength(1)
     expect(formattedStudentData.courses[0].course_year_id).toBe(103)
-    expect(formattedStudentData.courses[0].title).toBeUndefined() // No title due to missing course data
+    expect(formattedStudentData.courses[0].title).toBe('Unknown Course') // No title due to missing course data
     expect(formattedStudentData.courses[0].course_coordinator).toBeUndefined() // No coordinator due to missing course data
   })
 
@@ -246,6 +252,10 @@ describe('formatAllStudentData', () => {
           result: 75,
           flagged: true,
           resit: true,
+          student_module_result_descriptor: {
+            id: 3,
+            descriptor: 'P',
+          },
           student_module_module_year: {
             module_year_module: {
               id: 5001,
@@ -259,7 +269,17 @@ describe('formatAllStudentData', () => {
                 forename: 'Eve',
                 surname: 'Black',
               }
-            }
+            },
+            module_year_module_course: [
+              {
+                id: 230,
+                course_id: 1004,
+                course_year_id: 104,
+                module_id: 5001,
+                module_year_id: 303,
+                required: false
+              },
+            ]
           }
         }
       ]

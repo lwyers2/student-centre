@@ -43,6 +43,14 @@ describe('formatOneStudentOneModuleYear', () => {
         student_code: 'S12345',
         forename: 'Jane',
         surname: 'Smith',
+        letter_count_for_academic_year: undefined, // assuming letter count is not provided in this test
+      },
+      course: {
+        id: undefined, // assuming course is undefined in this test
+        course_year_id: undefined,
+        year_start: undefined,
+        year_end: undefined,
+        title: undefined,
       },
       module: {
         module_year_id: 101,
@@ -55,12 +63,14 @@ describe('formatOneStudentOneModuleYear', () => {
         CATs: 20,
         year: 2,
         result: 'Pass',
+        result_descriptor: undefined, // Assuming no descriptor in this test case
         flagged: false,
         resit: false,
       },
+      letter: {}, // Assuming no letter data in this case
     }
 
-    const result = formatOneStudentOneModuleYear(mockStudent)
+    const result = formatOneStudentOneModuleYear(mockStudent, undefined, undefined)
     expect(result).toEqual(expectedOutput)
   })
 
@@ -100,6 +110,14 @@ describe('formatOneStudentOneModuleYear', () => {
         student_code: 'S67890',
         forename: 'Alice',
         surname: 'Johnson',
+        letter_count_for_academic_year: undefined,
+      },
+      course: {
+        id: undefined,
+        course_year_id: undefined,
+        year_start: undefined,
+        year_end: undefined,
+        title: undefined,
       },
       module: {
         module_year_id: 102,
@@ -112,12 +130,14 @@ describe('formatOneStudentOneModuleYear', () => {
         CATs: 15,
         year: 1,
         result: undefined,
+        result_descriptor: undefined,
         flagged: true,
         resit: true,
       },
+      letter: {},
     }
 
-    const result = formatOneStudentOneModuleYear(mockStudent)
+    const result = formatOneStudentOneModuleYear(mockStudent, undefined, undefined)
     expect(result).toEqual(expectedOutput)
   })
 
@@ -131,6 +151,6 @@ describe('formatOneStudentOneModuleYear', () => {
       student_student_module: [],
     }
 
-    expect(() => formatOneStudentOneModuleYear(mockStudent)).toThrow()
+    expect(() => formatOneStudentOneModuleYear(mockStudent, undefined, undefined)).toThrow('Student module data is missing')
   })
 })

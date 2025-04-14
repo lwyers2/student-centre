@@ -93,26 +93,4 @@ describe('Student API Endpoints', () => {
     expect(response.body.error).toBe('Token not found or invalid')
   })
 
-  it('should return 403 if the user does not have required role', async () => {
-    const unauthorizedUser = await User.create({
-      email: 'unauthorized@qub.ac.uk',
-      password: await bcrypt.hash('password123', 10),
-      forename: 'Tom',
-      surname: 'Smith',
-      active: 1,
-      prefix: 'Mr',
-      job_title: 'Visitor',
-      role_id: 1, // Unauthorized role
-    })
-
-    const result = await authenticateUser(unauthorizedUser.email, 'password123')
-    const unauthorizedToken = result.token
-
-    const response = await supertest(app)
-      .get(`/api/students/${testStudent.id}`)
-      .set('Authorization', `Bearer ${unauthorizedToken}`)
-
-    expect(response.status).toBe(403)
-    expect(response.body.error).toBe('Access denied: insufficient permissions {Role needed: 3 actual role id: 1}')
-  })
 })

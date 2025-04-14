@@ -16,6 +16,10 @@ describe('formatStudentModules', () => {
           module_id: 202,
           module_year_id: 101,
           student_id: 1,
+          student_module_result_descriptor: {
+            id: 1,
+            descriptor: 'P'
+          },
           student_module_module_year: {
             id: 101,
             module_id: 202,
@@ -53,6 +57,10 @@ describe('formatStudentModules', () => {
             }
           },
           result: 90,
+          student_module_result_descriptor: {
+            id: 1,
+            descriptor: 'P'
+          },
           flagged: 0,
           resit: 0,
           module_id: 203,
@@ -75,6 +83,7 @@ describe('formatStudentModules', () => {
           flagged: 0,
           resit: 0,
           module_coordinator: 'Dr. Alice Smith',
+          result_descriptor: 'P'
         },
         {
           module_year_id: 102,
@@ -88,6 +97,7 @@ describe('formatStudentModules', () => {
           flagged: 0,
           resit: 0,
           module_coordinator: 'Prof. Bob Johnson',
+          result_descriptor: 'P'
         }
       ]
     }
@@ -143,12 +153,17 @@ describe('formatStudentModules', () => {
           resit: 0,
           module_id: 202,
           module_year_id: 101,
+          student_module_result_descriptor: {
+            id: 1,
+            descriptor: 'P'
+          },
         },
         {
           student_module_module_year: {
             id: 102,
             module_id: 203,
             year_start: 2023,
+
             module_year_module: {
               id: 203,
               title: 'Mathematics',
@@ -161,7 +176,11 @@ describe('formatStudentModules', () => {
           flagged: 0,
           resit: 0,
           module_id:203,
-          module_year_id: 102
+          module_year_id: 102,
+          student_module_result_descriptor: {
+            id: 1,
+            descriptor: 'P'
+          },
         }
       ]
     }
@@ -181,6 +200,7 @@ describe('formatStudentModules', () => {
           flagged: 0,
           resit: 0,
           module_coordinator: 'undefined. undefined undefined',
+          result_descriptor: 'P'
         },
         {
           module_year_id: 102,
@@ -194,6 +214,7 @@ describe('formatStudentModules', () => {
           flagged: 0,
           resit: 0,
           module_coordinator: 'undefined. undefined undefined',
+          result_descriptor: 'P'
         }
       ]
     }

@@ -3,9 +3,6 @@ const bcrypt = require('bcrypt')
 const app = require('../../app')
 const { User, AuthenticationUser } = require('../../models')
 
-//TODO:
-//Account deleteion when implemented
-
 
 describe('POST /login', () => {
   let testUser

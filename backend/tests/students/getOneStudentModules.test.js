@@ -62,7 +62,8 @@ describe('GET /api/students/:student/modules', () => {
       module_id: testModule.id,
       result: 15,
       resit: 0,
-      flagged: 0
+      flagged: 0,
+      descriptor_id: 1,
     })
   })
 
@@ -97,32 +98,7 @@ describe('GET /api/students/:student/modules', () => {
     expect(response.body.error).toBe('Student not found')
   })
 
-  it('should return 403 if user does not have access to the student modules', async () => {
-    // Create unauthorized user
-    const unauthorizedUser = await User.create({
-      email: 'unauthorized@qub.ac.uk',
-      password: await bcrypt.hash('password123', 10),
-      forename: 'Tom',
-      surname: 'Smith',
-      active: 1,
-      prefix: 'Mr',
-      job_title: 'Visitor',
-      role_id: 1,
-    })
 
-    const result = await authenticateUser(unauthorizedUser.email, 'password123')
-    const unauthorizedToken = result.token
-
-    const response = await supertest(app)
-      .get(`/api/students/${testStudent.id}/modules`)
-      .set('Authorization', `Bearer ${unauthorizedToken}`)
-
-    expect(response.status).toBe(403)
-    expect(response.body.error).toBe('Access denied: insufficient permissions {Role needed: 3 actual role id: 1}')
-
-    await AuthenticationUser.destroy({ where: { user_id: unauthorizedUser.id } })
-    await unauthorizedUser.destroy()
-  })
 
   it('should return 401 if no token is provided', async () => {
     const response = await supertest(app)

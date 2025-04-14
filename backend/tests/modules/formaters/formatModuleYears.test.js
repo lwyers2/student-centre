@@ -27,12 +27,21 @@ describe('formatModuleYear', () => {
               },
               result: 85,
               flagged: false,
-              resit: false
-            }
-          ]
+              resit: false,
+              student_module_result_descriptor: {
+                descriptor: 'p',
+                descriptor_id: 1
+              },
+            },
+          ],
+
         }
       ]
     }
+
+    console.log('Mock Module:', JSON.stringify(mockModule, null, 2))
+
+
 
     const formattedModuleYear = formatModuleYear(mockModule)
 

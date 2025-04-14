@@ -1,24 +1,9 @@
-//TODO:
-// student_module
-
 const { seedLevels } = require('./seedLevels')
 const { seedClassifications } = require('./seedClassifications')
 const { seedSchools } = require('./seedSchools')
 const { seedQualificationLevels } = require('./seedQualificationLevels')
-const { seedCourses } = require('./seedCourses')
 const { seedRoles } = require('./seedRoles')
-const { seedUsers } = require('./seedUsers')
-const { seedCourseYears } = require('./seedCourseYears')
-const { seedUserCourses } = require('./seedUserCourses')
-const { seedUserSchools } = require('./seedUserSchools')
-const { seedModules } = require('./seedModules')
 const { seedSemesters } = require('./seedSemesters')
-const { seedModuleYears } = require('./seedModuleYears')
-const { seedModuleCourses } = require('./seedModuleCourses')
-const { seedUserModules } = require('./seedUserModules')
-const { seedStudents } = require('./seedStudents')
-const { seedStudentCourses } = require('./seedStudentCourses')
-const { seedStudentModules } = require('./seedStudentModules')
 const { seedResultDescriptors } = require('./seedResultDescriptors')
 
 async function populateTestDatabase() {
@@ -26,27 +11,15 @@ async function populateTestDatabase() {
     console.log('Seeding test database...')
     const levels = await seedLevels()
     await seedClassifications(levels)
-    const resultDescriptors = seedResultDescriptors()
+    await seedResultDescriptors()
 
-    const qualificationLevels = await seedQualificationLevels(levels)
-    const schools = await seedSchools()
-    const courses = await seedCourses(schools, qualificationLevels)
+    await seedQualificationLevels(levels)
+    await seedSchools()
 
-    const roles = await seedRoles()
-    const users = await seedUsers(roles)
+    await seedRoles()
 
-    const courseYears = await seedCourseYears(courses, users)
-    await seedUserCourses(users, courseYears, courses)
-    await seedUserSchools(users, schools)
 
-    const modules = await seedModules()
-    const semesters = await seedSemesters()
-    const moduleYears = await seedModuleYears(modules, semesters, users)
-    await seedModuleCourses(courses, courseYears, modules, moduleYears)
-    await seedUserModules(users, modules, moduleYears)
-    const students = await seedStudents()
-    await seedStudentCourses(students, courses, courseYears)
-    await seedStudentModules(students, modules, moduleYears, resultDescriptors)
+    await seedSemesters()
 
     console.log('Test database seeded successfully')
   } catch (error) {

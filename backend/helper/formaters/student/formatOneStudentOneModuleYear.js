@@ -1,5 +1,5 @@
 function formatOneStudentOneModuleYear(student, letterCount, course) {
-  const studentStudentModule = student.student_student_module[0]
+  const studentStudentModule = student.student_student_module && student.student_student_module[0]
 
   if (!studentStudentModule) {
     throw new Error('Student module data is missing')
@@ -8,10 +8,15 @@ function formatOneStudentOneModuleYear(student, letterCount, course) {
   const moduleYear = studentStudentModule.student_module_module_year || {}
   const semester = moduleYear.module_year_semester?.name || undefined
   const moduleCoordinator = moduleYear.module_year_module_coordinator
-    ? `${moduleYear.module_year_module_coordinator.prefix }. ${moduleYear.module_year_module_coordinator.forename } ${moduleYear.module_year_module_coordinator.surname }`.trim()
+    ? `${moduleYear.module_year_module_coordinator.prefix}. ${moduleYear.module_year_module_coordinator.forename} ${moduleYear.module_year_module_coordinator.surname}`.trim()
     : undefined
 
-  const letter = studentStudentModule.student_module_letter[0]
+  const letter = studentStudentModule.student_module_letter && studentStudentModule.student_module_letter[0]
+    ? studentStudentModule.student_module_letter[0]
+    : undefined
+
+  // Handle the case where course is undefined or missing
+  const courseData = course || {}
 
   return {
     student: {
@@ -23,11 +28,11 @@ function formatOneStudentOneModuleYear(student, letterCount, course) {
       letter_count_for_academic_year: letterCount
     },
     course: {
-      id: course.course_id,
-      course_year_id: course.id,
-      year_start: course.year_start,
-      year_end: course.year_end,
-      title: course.course_year_course.title,
+      id: courseData.course_id,
+      course_year_id: courseData.id,
+      year_start: courseData.year_start,
+      year_end: courseData.year_end,
+      title: courseData.course_year_course?.title || undefined,
     },
     module: {
       module_year_id: studentStudentModule.module_year_id,
@@ -40,7 +45,7 @@ function formatOneStudentOneModuleYear(student, letterCount, course) {
       CATs: moduleYear.module_year_module?.CATs || undefined,
       year: moduleYear.module_year_module?.year || undefined,
       result: studentStudentModule.result ?? undefined,
-      result_descriptor: studentStudentModule.student_module_result_descriptor.descriptor,
+      result_descriptor: studentStudentModule.student_module_result_descriptor?.descriptor || undefined,
       flagged: studentStudentModule.flagged ?? false,
       resit: studentStudentModule.resit ?? false,
     },
@@ -58,13 +63,13 @@ function formatOneStudentOneModuleYear(student, letterCount, course) {
             hour: '2-digit',
             minute: '2-digit',
             second: '2-digit',
-            hour12: false
+            hour12: false,
           })
           : undefined,
         authorised_by_user: `${letter.letter_authorised_by_staff.prefix}. ${letter.letter_authorised_by_staff.forename} ${letter.letter_authorised_by_staff.surname}`,
-        title: letter.letter_letter_type.name
+        title: letter.letter_letter_type.name,
       }
-      : {}
+      : {},
   }
 }
 

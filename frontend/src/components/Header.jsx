@@ -5,15 +5,14 @@ import { logoutUser } from '../redux/actions'
 import { useNavigate } from 'react-router-dom'
 import logo from '../img/queens-university-belfast-logo.png'
 
-
 const Header = () => {
   const user = useSelector(state => state.user)
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
-  const handleLogout =  (event) => {
+  const handleLogout = (event) => {
     event.preventDefault()
-    try{
+    try {
       dispatch(logoutUser())
       localStorage.removeItem('loggedUser')
       navigate('/')
@@ -24,7 +23,7 @@ const Header = () => {
 
   console.log(user)
 
-  return(
+  return (
     <header className="qub-red text-white top-0 z-10 w-full sticky">
       <div className="mx-auto p-2 flex justify-between items-center w-full">
         <div className="flex items-center">
@@ -39,29 +38,36 @@ const Header = () => {
         </div>
         <div>
           <button id="mobile-open-button" className="text-3xl sm:hidden focus:outline-none">
-          &#9776;
+            &#9776;
           </button>
           <nav id="mobile-menu"
             className="hidden sm:block space-x-8 text-xl pr-6"
             aria-label="main">
             {user ? (
-              <>
-                <Link to="/upload-records" className="hover:opacity-60">Upload Records</Link>
-                <Link to="/view-courses" className="hover:opacity-60">View Courses</Link>
-                <Link to="/view-modules" className="hover:opacity-60">View Modules</Link>
-                <Link to="/view-students" className="hover:opacity-60">View Students</Link>
-                <Link to="/view-meetings" className="hover:opacity-60">Meetings</Link>
-                <Link to="/admin" className="hover:opacity-60">Admin</Link>
-                <button
-                  onClick={handleLogout}
-                  className="hover:opacity-60 "
-                >Log Out</button>
-              </>
-            )
-              :
-              (
-                <Link to="/login" className="hover:opacity-60">Log in</Link>
-              )}
+              user.role === 3 ? (
+                <>
+                  <Link to="/admin" className="hover:opacity-60">Admin</Link>
+                  <button
+                    onClick={handleLogout}
+                    className="hover:opacity-60"
+                  >Log Out</button>
+                </>
+              ) : (
+                <>
+                  <Link to="/upload-records" className="hover:opacity-60">Upload Records</Link>
+                  <Link to="/view-courses" className="hover:opacity-60">View Courses</Link>
+                  <Link to="/view-modules" className="hover:opacity-60">View Modules</Link>
+                  <Link to="/view-students" className="hover:opacity-60">View Students</Link>
+                  <Link to="/view-meetings" className="hover:opacity-60">Meetings</Link>
+                  <button
+                    onClick={handleLogout}
+                    className="hover:opacity-60"
+                  >Log Out</button>
+                </>
+              )
+            ) : (
+              <Link to="/login" className="hover:opacity-60">Log in</Link>
+            )}
           </nav>
         </div>
       </div>

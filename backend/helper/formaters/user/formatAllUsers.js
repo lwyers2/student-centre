@@ -8,7 +8,6 @@ function formatAllUsers(users) {
     return {
       id: user.id,
       name,
-      surname,
       email: user.email || '',
       active: user.active ?? null,
       date_created: user.date_created ?? null,

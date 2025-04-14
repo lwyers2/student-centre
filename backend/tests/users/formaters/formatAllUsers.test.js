@@ -11,6 +11,7 @@ describe('formatAllUsers', () => {
         active: 1,
         date_created: '2023-01-01',
         date_updated: '2023-02-01',
+        prefix: 'Mr',
         is_active: true,
         user_user_school: [
           {
@@ -25,7 +26,7 @@ describe('formatAllUsers', () => {
 
     // Check if the formatted users contain the expected properties
     expect(formattedUsers[0]).toHaveProperty('id', 1)
-    expect(formattedUsers[0]).toHaveProperty('forename', 'John')
+    expect(formattedUsers[0]).toHaveProperty('name', 'Mr. John Doe')
     expect(formattedUsers[0]).toHaveProperty('role', 'Admin')
     expect(formattedUsers[0].schools).toHaveLength(1)
     expect(formattedUsers[0].schools[0]).toHaveProperty('school', 'University A')
@@ -38,6 +39,7 @@ describe('formatAllUsers', () => {
         id: 2,
         forename: 'Jane',
         surname: 'Smith',
+        prefix: 'Ms',
         email: 'jane.smith@example.com',
         user_role: { name: 'Student' },
         user_user_school: [] // No associated schools
@@ -56,6 +58,7 @@ describe('formatAllUsers', () => {
         id: 3,
         forename: 'Anna',
         surname: 'Taylor',
+        prefix: 'Dr',
         email: 'anna.taylor@example.com',
         user_role: { name: 'Lecturer' },
         // user_user_school is missing
@@ -74,6 +77,7 @@ describe('formatAllUsers', () => {
         id: 4,
         forename: 'Jake',
         surname: 'Wilson',
+        prefix: 'Mr',
         email: 'jake.wilson@example.com',
         user_user_school: [{ user_school_school: { school_name: 'University C', id: 3 } }],
         user_role: null // No role
@@ -92,6 +96,7 @@ describe('formatAllUsers', () => {
         id: 5,
         forename: 'Bob',
         surname: 'Johnson',
+        prefix: null,
         email: 'bob.johnson@example.com',
         user_role: null, // null role
         user_user_school: undefined, // undefined school
@@ -103,15 +108,14 @@ describe('formatAllUsers', () => {
     // Check if the user is formatted correctly with null/undefined values
     expect(formattedUsers[0]).toEqual({
       id: 5,
-      forename: 'Bob',
-      surname: 'Johnson',
+      name: 'Bob Johnson',
       email: 'bob.johnson@example.com',
-      active: undefined,
-      date_created: undefined,
-      date_updated: undefined,
+      active: null,
+      date_created: null,
+      date_updated: null,
       is_active: false,
       schools: [],
-      role: undefined
+      role: undefined,
     })
   })
 
@@ -130,8 +134,7 @@ describe('formatAllUsers', () => {
     const formattedUsers = formatAllUsers(mockUsers)
 
     // Check if the user fields are handled when they are empty strings
-    expect(formattedUsers[0].forename).toBe('')
-    expect(formattedUsers[0].surname).toBe('')
+    expect(formattedUsers[0].name).toBe('')
     expect(formattedUsers[0].email).toBe('')
     expect(formattedUsers[0].schools[0].school_name).toBeUndefined()
   })

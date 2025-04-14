@@ -18,7 +18,7 @@ const ModuleYearStudent = () => {
   const [search, setSearch] = useState('')
 
   useEffect(() => {
-    moduleService.getModuleFromModuleYear(params.id, user.token)
+    moduleService.getModuleFromModuleYear(params.moduleYearId, user.token)
       .then(response => {
         console.log('Module data fetched:', response)
         setModule(response.module[0])
@@ -27,7 +27,7 @@ const ModuleYearStudent = () => {
       .catch(error => {
         console.error('Error fetching module:', error)
       })
-  }, [params.id])
+  }, [params.moduleYearId, user.token])
 
 
   if (!module) {

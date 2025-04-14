@@ -15,7 +15,7 @@ const StudentModule = () => {
   const user = useSelector(state => state.user)
 
   useEffect(() => {
-    studentService.getStudentModule(params.id, user.token, params.moduleYearId)
+    studentService.getStudentModule(params.studentId, user.token, params.moduleYearId)
       .then(response => {
         setStudent(response.student)
         setModule(response.module)
@@ -25,7 +25,7 @@ const StudentModule = () => {
       .catch(error => {
         console.error('Error fetching module: ', error)
       })
-  }, [params.id])
+  }, [params.studentId, params.moduleYearId, user.token])
 
   console.log(user)
 

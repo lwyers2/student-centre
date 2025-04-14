@@ -22,6 +22,8 @@ const Header = () => {
     }
   }
 
+  console.log(user)
+
   return(
     <header className="qub-red text-white top-0 z-10 w-full sticky">
       <div className="mx-auto p-2 flex justify-between items-center w-full">

@@ -14,7 +14,7 @@ const UploadModuleYearResults = () => {
   useEffect(() => {
     if (user.id && user.token) {
       moduleService
-        .getModuleFromModuleYear(params.id, user.token)
+        .getModuleFromModuleYear(params.moduleYearId, user.token)
         .then((response) => {
           setModule(response.module[0] || {})
           setModuleYearId(response.module[0]?.module_year_id || null)
@@ -23,7 +23,7 @@ const UploadModuleYearResults = () => {
           console.error('Error fetching module: ', error)
         })
     }
-  }, [user.id, user.token])
+  }, [params.moduleYearId, user.id, user.token])
 
   // Handle file selection
   const handleFileChange = (e) => {

@@ -21,7 +21,7 @@ const Student = () => {
   const toggle = () => setShowSection(!showSection)
 
   useEffect(() => {
-    studentService.getStudent(params.id, user.token)
+    studentService.getStudent(params.studentId, user.token)
       .then(response => {
         setStudent(response.student)
         setCourses(response.courses)
@@ -29,7 +29,7 @@ const Student = () => {
       .catch(error => {
         console.error('Error fetching module: ', error)
       })
-  }, [params.id])
+  }, [params.studentId, user.token])
 
   useEffect(() => {
     letterService.getAllLettersForStudent(params.id)

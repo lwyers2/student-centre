@@ -17,8 +17,8 @@ const StudentCourseModules = () => {
   const user = useSelector(state => state.user)
 
   useEffect(() => {
-    if (params.id && params.courseYearId) {
-      studentService.getStudentModulesFromCourseYear(params.id, user.token, params.courseYearId)
+    if (params.studentId && params.courseYearId) {
+      studentService.getStudentModulesFromCourseYear(params.studentId, user.token, params.courseYearId)
         .then(response => {
           setStudent(response.student)
           setCourse(response.course)
@@ -46,7 +46,7 @@ const StudentCourseModules = () => {
           console.error('Error fetching module: ', error)
         })
     }
-  }, [params.id, params.courseYearId, user.token])
+  }, [params.studentId, params.courseYearId, user.token])
 
   // Extract unique values for filtering
   const uniqueYears = [...new Set(modules?.map(module => module.year))].sort()

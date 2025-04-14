@@ -9,7 +9,7 @@ loginRouter.post(
   validateLogin,
   async (req, res) => {
     const { email, password } = req.body
-    const { token, user } = await authenticateUser(email, password)
+    const { token, user, accessibleModuleYears, accessableCourseYears, accessibleCourses, accessibleModules } = await authenticateUser(email, password)
 
     res.status(200).json({
       token,
@@ -17,7 +17,12 @@ loginRouter.post(
       forename: user.forename,
       surname: user.surname,
       id: user.id,
-      prefix: user.prefix
+      prefix: user.prefix,
+      role: user.role_id,
+      accessible_module_years: accessibleModuleYears,
+      accessible_course_years: accessableCourseYears,
+      accessible_courses: accessibleCourses,
+      accessible_modules: accessibleModules,
     })
   })
 

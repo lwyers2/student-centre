@@ -2,7 +2,7 @@
 
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
-const { User, AuthenticationUser } = require('../models')
+const { User, AuthenticationUser, UserModule, UserCourse } = require('../models')
 const { AuthError } = require('../utils/errors')
 
 const generateToken = (user) => {
@@ -15,6 +15,8 @@ const authenticateUser = async (email, password) => {
   if (!user){
     throw new AuthError('Email not found', 401)
   }
+
+
 
   const passwordCorrect = await bcrypt.compare(password, user.password)
   if (!passwordCorrect){
@@ -35,7 +37,8 @@ const authenticateUser = async (email, password) => {
   await user.save()
 
   const token = generateToken(user)
-  const expiresAt = new Date(Date.now() + 60 * 60 * 1000 * 240) // 240 hours
+  //Token expires in 24 hours
+  const expiresAt = new Date(Date.now() + 60 * 60 * 1000 * 24)
 
   await AuthenticationUser.create({
     token,
@@ -45,7 +48,42 @@ const authenticateUser = async (email, password) => {
     is_active: true,
   })
 
-  return { token, user }
+
+  let accessibleModuleYears = []
+  let accessableCourseYears = []
+  let accessibleModules = []
+  let accessibleCourses = []
+
+
+  if (user.role_id === 2 || user.role_id === 1) {
+    const moduleYearRecords = await UserModule.findAll({
+      where: { user_id: user.id },
+      attributes: ['module_year_id'],
+    })
+    accessibleModuleYears = moduleYearRecords.map(m => m.module_year_id)
+
+    const courseYearRecords = await UserCourse.findAll({
+      where: { user_id: user.id },
+      attributes: ['course_year_id'],
+    })
+    accessableCourseYears = courseYearRecords.map(c => c.course_year_id)
+
+    const moduleRecords = await UserModule.findAll({
+      where: { user_id: user.id },
+      attributes: ['module_id'],
+    })
+    accessibleModules = moduleRecords.map(m => m.module_id)
+      .filter((value, index, self) => self.indexOf(value) === index) // Remove duplicates using filter
+
+    const courseRecords = await UserCourse.findAll({
+      where: { user_id: user.id },
+      attributes: ['course_id'],
+    })
+    accessibleCourses = courseRecords.map(c => c.course_id)
+      .filter((value, index, self) => self.indexOf(value) === index) // Remove duplicates using filter
+  }
+
+  return { token, user, accessibleModuleYears, accessableCourseYears, accessibleCourses, accessibleModules }
 }
 
 module.exports = { authenticateUser }

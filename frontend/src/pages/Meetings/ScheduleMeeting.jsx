@@ -23,7 +23,7 @@ const ScheduleMeeting = () => {
 
   useEffect(() => {
     studentService
-      .getStudentModule(params.id, user.token, params.moduleYearId)
+      .getStudentModule(params.studentId, user.token, params.moduleYearId)
       .then((response) => {
         setStudent(response.student)
         setModule(response.module)
@@ -32,7 +32,7 @@ const ScheduleMeeting = () => {
       .catch((error) => {
         console.error('Error fetching module: ', error)
       })
-  }, [params.id, params.moduleYearId, user.token])
+  }, [params.studentId, params.moduleYearId, user.token])
 
   useEffect(() => {
     if (!course || !course.course_year_id) return

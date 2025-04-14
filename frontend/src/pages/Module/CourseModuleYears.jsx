@@ -28,7 +28,7 @@ const CourseModuleYears = () => {
 
   useEffect(() => {
     const id = user.id
-    const courseYearId = params.id
+    const courseYearId = params.courseYearId
     userService.getUserModulesCourseYear(id, courseYearId, user.token)
       .then(response => {
         setUserData(response.user)
@@ -45,7 +45,7 @@ const CourseModuleYears = () => {
       .catch(error => {
         console.error(`Error fetching modules: ${error}`)
       })
-  }, [params.id])
+  }, [params.courseYearId, user.id, user.token])
 
 
   console.log(modules)

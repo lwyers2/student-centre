@@ -47,7 +47,7 @@ coursesRouter.get(
   async (req, res) => {
     const schoolId = req.params.schoolId
     const courses = await courseService.getCoursesFromSchool(schoolId)
-    if(!courses) {
+    if(!courses || courses.length === 0) {
       const error = new Error('Courses not found')
       error.status = 404
       throw error

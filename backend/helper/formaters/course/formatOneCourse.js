@@ -12,7 +12,7 @@ function formatOneCourse(course) {
         forename: user.forename,
         surname: user.surname,
         prefix: user.prefix,
-        role: user.user_role.name
+        role: user.user_role?.name ? user.user_role.name : null,
       })
     }
   }

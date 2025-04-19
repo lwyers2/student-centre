@@ -11,10 +11,6 @@ meetingRouter.post('/create', async (req, res) => {
 
 meetingRouter.get(
   '/:meetingId',
-  // validateId('meeting'),
-  //   validate,
-  //   tokenVerification,
-  //   roleAuthorization(['Super User', 'Admin', 'Teacher']),
   async (req, res, ) => {
     const meetingId = req.params.meetingId
     const meeting = await meetingService.getOneMeeting(meetingId)
@@ -29,10 +25,7 @@ meetingRouter.get(
 
 meetingRouter.get(
   '/user/:userId',
-  // validateId('meeting'),
-  //   validate,
-  //   tokenVerification,
-  //   roleAuthorization(['Super User', 'Admin', 'Teacher']),
+
   async (req, res, ) => {
     const userId = req.params.userId
     const meetings = await meetingService.getAllUserMeetings(userId)

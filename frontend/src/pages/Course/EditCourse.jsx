@@ -13,7 +13,7 @@ const EditCourse = () => {
   const navigate = useNavigate()
   const [course, setCourse] = useState(null)
   const [courseYears, setCourseYears] = useState([])
-  const [newYear, setNewYear] = useState({ year_start: '', year_end: '', course_coordinator: '' })
+  const [newYear, setNewYear] = useState({ year_start: 2020, year_end: '', course_coordinator: '' })
   const [formState, setFormState] = useState({ title: '', code: '', qualification: '', part_time: false, })
   const [users, setUsers] = useState([])
   const [adminUsersFromSchool, setAdminUsersFromSchool] = useState(null)
@@ -184,6 +184,7 @@ const EditCourse = () => {
         handleNewYearChange={handleNewYearChange}
         handleNewYearSubmit={handleNewYearSubmit}
         users={users}
+        courseYearsAmount={course.years}
       />
     </div>
   )

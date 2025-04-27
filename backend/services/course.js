@@ -152,10 +152,89 @@ async function updateCourseYear(courseId, courseYearId, courseCoordinatorId) {
   return updatedCourseYear  // Return the updated CourseYear object
 }
 
+async function addCourseYear(courseId, yearStart, courseLength, courseCoordinatorId) {
+  if (!yearStart || !courseLength) {
+    const error = new Error('Year start and course length are required')
+    error.status = 400
+    throw error
+  }
+
+  const yearEnd = Number(yearStart) + Number(courseLength)
+
+  if (Number(yearStart) < 2020) {
+    const error = new Error('Year start cannot be less than 2020')
+    error.status = 400
+    throw error
+  }
+
+  if (Number(yearStart) > yearEnd) {
+    const error = new Error('Year start cannot be greater than year end')
+    error.status = 400
+    throw error
+  }
+
+  const course = await Course.findByPk(courseId)
+
+  if (!course) {
+    const error = new Error('Course not found')
+    error.status = 404
+    throw error
+  }
+
+  const courseCoordinator = await User.findByPk(courseCoordinatorId)
+
+  if (!courseCoordinator) {
+    const error = new Error('Course Coordinator not found')
+    error.status = 404
+    throw error
+  }
+
+  // 🔥 Check start year first
+  const hasSameStartYear = await CourseYear.findOne({
+    where: {
+      course_id: course.id,
+      year_start: yearStart
+    }
+  })
+
+  if (hasSameStartYear) {
+    const error = new Error('A course year with the same start year already exists')
+    error.status = 400
+    throw error
+  }
+
+  // 🔥 Check end year separately
+  const hasSameEndYear = await CourseYear.findOne({
+    where: {
+      course_id: course.id,
+      year_end: yearEnd
+    }
+  })
+
+  if (hasSameEndYear) {
+    const error = new Error('A course year with the same end year already exists')
+    error.status = 400
+    throw error
+  }
+
+  // Create the course year
+  const courseYear = await CourseYear.create({
+    course_id: course.id,
+    year_start: yearStart,
+    year_end: yearEnd,
+    course_coordinator: courseCoordinatorId
+  })
+
+  return courseYear
+}
+
+
+
 
 module.exports = {
   getAllCourses,
   getOneCourse,
   getCoursesFromSchool,
-  updateCourseYear
+  updateCourseYear,
+  addCourseYear,
 }

@@ -85,22 +85,26 @@ coursesRouter.post('/add-course-year/course/:courseId',
   roleAndIdAuthorization(['Super User'], true),
   async (req, res) => {
     const { courseId } = req.params
-    const { year_start, year_end, course_coordinator } = req.body
+    const { yearStart, courseYears, courseCoordinatorId } = req.body
 
-    // Call the service to add a new course year
-    const newCourseYear = await courseService.addCourseYear(courseId, year_start, year_end, course_coordinator)
+    if (!yearStart || !courseYears) {
+      const error = new Error('Missing required fields: yearStart or courseYears')
+      error.status = 400
+      throw error
+    }
 
-    // Check if the course was found and updated
+    const newCourseYear = await courseService.addCourseYear(courseId, yearStart, courseYears, courseCoordinatorId)
+
     if (!newCourseYear) {
       const error = new Error('Course not found')
       error.status = 404
       throw error
     }
 
-    // Return the new course year
-    res.json(newCourseYear)
+    res.status(201).json(newCourseYear)
   }
 )
+
 
 
 

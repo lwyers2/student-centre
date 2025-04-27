@@ -6,7 +6,8 @@ const AddCourseYearForm = ({
   newYear,
   handleNewYearChange,
   handleNewYearSubmit,
-  users
+  users,
+  courseYearsAmount,
 }) => {
   return (
     <div className="mb-8">
@@ -34,11 +35,12 @@ const AddCourseYearForm = ({
             <input
               name="year_end"
               type="number"
-              value={newYear.year_end}
-              onChange={handleNewYearChange}
-              className="p-2 rounded border"
+              value={Number(newYear.year_start) + Number(courseYearsAmount)}
+              className="p-2 rounded border bg-gray-100 cursor-not-allowed"
               placeholder="Year End"
+              readOnly
             />
+
             <select
               name="course_coordinator"
               value={newYear.course_coordinator}

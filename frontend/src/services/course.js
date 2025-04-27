@@ -39,9 +39,23 @@ const updateCourseYear = async (token, courseId, courseYearId, courseCoordinator
   return response.data
 }
 
+const addCourseYear = async (token, courseId, startYear, courseYears, courseCoordinatorId) => {
+  const response = await axios.post(`${baseUrl}/add-course-year/course/${courseId}`, {
+    yearStart: startYear,
+    courseYears: courseYears,
+    courseCoordinatorId: courseCoordinatorId
+  }, {
+    headers: {
+      'Authorization' : `Bearer ${token}`
+    }
+  })
+  return response.data
+}
+
 export default {
   getAll,
   getOneCourse,
   getCoursesFromSchool,
-  updateCourseYear
+  updateCourseYear,
+  addCourseYear,
 }

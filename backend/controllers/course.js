@@ -105,6 +105,33 @@ coursesRouter.post('/add-course-year/course/:courseId',
   }
 )
 
+coursesRouter.put(
+  '/edit-course/:courseId',
+  validate,
+  tokenVerification,
+  roleAndIdAuthorization(['Super User'], true),
+  async (req, res) => {
+    const courseId = req.params.courseId
+    const { title, code, qualification, part_time } = req.body
+
+    if (!title || !code || !qualification) {
+      const error = new Error('Missing required fields: title, code or qualification')
+      error.status = 400
+      throw error
+    }
+
+    const updatedCourse = await courseService.updateCourse(courseId, { title, code, qualification, part_time })
+
+    if (!updatedCourse) {
+      const error = new Error('Course not found')
+      error.status = 404
+      throw error
+    }
+
+    res.json(updatedCourse)
+  }
+)
+
 
 
 

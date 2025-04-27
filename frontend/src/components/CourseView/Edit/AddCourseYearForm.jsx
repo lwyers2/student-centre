@@ -11,7 +11,6 @@ const AddCourseYearForm = ({
 }) => {
   return (
     <div className="mb-8">
-      {/* Toggle Add Year Button */}
       <button
         onClick={() => setShowAddYear(prev => !prev)}
         className="mb-4 px-4 py-2 bg-gray-700 text-white rounded"
@@ -19,7 +18,6 @@ const AddCourseYearForm = ({
         {showAddYear ? 'Hide Add Year' : 'Add New Course Year'}
       </button>
 
-      {/* Add New Course Year Form */}
       {showAddYear && (
         <form onSubmit={handleNewYearSubmit} className="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-md">
           <h3 className="text-2xl font-semibold mb-4">Add Course Year</h3>
@@ -40,16 +38,15 @@ const AddCourseYearForm = ({
               placeholder="Year End"
               readOnly
             />
-
             <select
-              name="course_coordinator"
-              value={newYear.course_coordinator}
+              name="course_coordinator_id"  // <-- use course_coordinator_id now
+              value={newYear.course_coordinator_id || ''}
               onChange={handleNewYearChange}
               className="p-2 rounded border"
             >
               <option value="">Select Coordinator</option>
               {users?.filter(u => u.role === 'Teacher').map(user => (
-                <option key={user.id} value={`${user.prefix}. ${user.forename} ${user.surname}`}>
+                <option key={user.id} value={user.id}>
                   {user.prefix}. {user.forename} {user.surname}
                 </option>
               ))}

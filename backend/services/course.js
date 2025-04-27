@@ -228,6 +228,44 @@ async function addCourseYear(courseId, yearStart, courseLength, courseCoordinato
   return courseYear
 }
 
+async function updateCourse(courseId, courseData) {
+  const course = await Course.findByPk(courseId)
+
+  if (!course) {
+    const error = new Error('Course not found')
+    error.status = 404
+    throw error
+  }
+
+  const qualificationLevel = await QualificationLevel.findOne({
+    where: {
+      qualification: courseData.qualification
+    }
+  })
+
+  if (!qualificationLevel) {
+    const error = new Error('Qualification level not found')
+    error.status = 404
+    throw error
+  }
+
+
+  await Course.update({
+    title: courseData.title,
+    code: courseData.code,
+    part_time: courseData.part_time,
+    qualification_level_id: qualificationLevel.id
+  }, {
+    where: { id: courseId }
+  })
+
+  // 🔥 Refetch the updated course after update
+  const updatedCourse = await Course.findByPk(courseId)
+
+  return updatedCourse
+}
+
+
 
 
 
@@ -237,4 +275,5 @@ module.exports = {
   getCoursesFromSchool,
   updateCourseYear,
   addCourseYear,
+  updateCourse
 }

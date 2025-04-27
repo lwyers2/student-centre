@@ -13,15 +13,12 @@ const EditCourse = () => {
   const navigate = useNavigate()
   const [course, setCourse] = useState(null)
   const [courseYears, setCourseYears] = useState([])
-  const [newYear, setNewYear] = useState({ year_start: 2020, year_end: '', course_coordinator: '' })
-  const [formState, setFormState] = useState({ title: '', code: '', qualification: '', part_time: false, })
+  const [newYear, setNewYear] = useState({ year_start: 2020, course_coordinator_id: '' })
+  const [formState, setFormState] = useState({ title: '', code: '', qualification: '', part_time: false })
   const [users, setUsers] = useState([])
-  const [adminUsersFromSchool, setAdminUsersFromSchool] = useState(null)
-  const [teacherFromSchool, setTeacherUsersFromSchool] = useState(null)
   const [editingYears, setEditingYears] = useState({})
   const [showAddYear, setShowAddYear] = useState(false)
   const [qualifications, setQualifications] = useState([])
-
 
   const params = useParams()
 
@@ -38,12 +35,10 @@ const EditCourse = () => {
           const fetchedCourseYears = response.course_years
           const allUsers = response.users
 
-          // ✨ Now map over course years to assign the correct coordinator ID
           const updatedCourseYears = fetchedCourseYears.map(year => {
             const matchingUser = allUsers.find(u =>
               `${u.prefix}. ${u.forename} ${u.surname}` === year.course_coordinator
             )
-
             return {
               ...year,
               course_coordinator_id: matchingUser?.id || null
@@ -51,7 +46,7 @@ const EditCourse = () => {
           })
 
           setCourse(response.course)
-          setCourseYears(updatedCourseYears) // ✅ Updated with IDs
+          setCourseYears(updatedCourseYears)
           setUsers(allUsers)
           setFormState({
             title: response.course.title,
@@ -68,17 +63,6 @@ const EditCourse = () => {
         })
     }
   }, [user.token, params.courseId])
-
-
-  useEffect(() => {
-    if(course?.id && course?.school_id) {
-      userService.getUsersFromSchool(course.school_id)
-        .then(response => {
-          setAdminUsersFromSchool(response.admin_staff)
-          setTeacherUsersFromSchool(response.teaching_staff)
-        })
-    }
-  }, [course?.school_id, user.token])
 
   useEffect(() => {
     if (course) {
@@ -120,6 +104,7 @@ const EditCourse = () => {
 
   const handleNewYearSubmit = async (e) => {
     e.preventDefault()
+
     const existingYearStarts = courseYears.map(y => Number(y.year_start))
     const minYear = Math.min(...existingYearStarts)
     const maxYear = Math.max(...existingYearStarts)
@@ -134,9 +119,26 @@ const EditCourse = () => {
     }
 
     try {
-      const created = await courseService.addCourseYear(user.token, params.courseId, newYear)
-      setCourseYears(prev => [...prev, created])
-      setNewYear({ year_start: '', year_end: '', course_coordinator: '' })
+      const created = await courseService.addCourseYear(
+        user.token,
+        params.courseId,
+        newYear.year_start,
+        course.years,
+        newYear.course_coordinator_id   // ✅ directly pass ID now
+      )
+
+      const coordinatorUser = users.find(u => u.id === Number(newYear.course_coordinator_id))
+
+      const createdWithCoordinatorName = {
+        ...created,
+        course_coordinator: coordinatorUser
+          ? `${coordinatorUser.prefix}. ${coordinatorUser.forename} ${coordinatorUser.surname}`
+          : 'Unknown Coordinator',
+        course_coordinator_id: newYear.course_coordinator_id
+      }
+
+      setCourseYears(prev => [...prev, createdWithCoordinatorName])
+      setNewYear({ year_start: 2020, course_coordinator_id: '' })
       alert('Course year added!')
     } catch (err) {
       console.error(err)
@@ -144,9 +146,9 @@ const EditCourse = () => {
     }
   }
 
+
   if (!user?.id) return <div>Loading user...</div>
   if (!course) return <div>Loading course...</div>
-
 
   return (
     <div className="w-full max-w-4xl mx-auto p-4 my-6">

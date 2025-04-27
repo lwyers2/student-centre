@@ -1,5 +1,6 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
+import LinkCard from '../../components/Utils/LinkCard'
 import { useNavigate } from 'react-router-dom'
 
 const UploadRecords = () => {
@@ -12,27 +13,11 @@ const UploadRecords = () => {
         Upload Records
       </h2>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* Upload Results for Course Year */}
-        <div
-          className="border border-solid border-slate-900 dark:border-slate-600 bg-white dark:bg-gray-900 p-6 rounded-3xl shadow-xl text-center cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800"
-          onClick={() => navigate('/upload-records/course-year')}
-        >
-          <h3 className="text-2xl font-semibold text-slate-900 dark:text-white">
-            Upload Results for Course Year
-          </h3>
-        </div>
-
-        {/* Upload Students */}
-        <div
-          className="border border-solid border-slate-900 dark:border-slate-600 bg-white dark:bg-gray-900 p-6 rounded-3xl shadow-xl text-center cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800"
-          onClick={() => navigate('/upload-students')}
-        >
-          <h3 className="text-2xl font-semibold text-slate-900 dark:text-white">
-            Upload Students
-          </h3>
-        </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-y-8 gap-x-6">
+        <LinkCard title="Upload Results for Course Year" onClick={() => navigate('/upload-records/course-year')} />
+        <LinkCard title="Upload Students" onClick={() => navigate('/upload-students')} />
       </div>
+
     </div>
   )
 }

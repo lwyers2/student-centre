@@ -126,10 +126,12 @@ usersRouter.post(
 
 usersRouter.get(
   '/course-year/:courseYear',
+  tokenVerification,
+  roleAndIdAuthorization(['Super User'], true),
   async (req, res) => {
     const courseYearId = req.params.courseYear
     const users = await userService.getUsersFromCourseYear(courseYearId)
-    if(!users) {
+    if(!users || users.length === 0) {
       const error = new Error('No users found')
       error.status = 404
       throw error

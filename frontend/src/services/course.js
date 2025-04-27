@@ -28,8 +28,20 @@ const getCoursesFromSchool = async (token, schoolId) => {
   return response.data
 }
 
+const updateCourseYear = async (token, courseId, courseYearId, courseCoordinatorId) => {
+  const response = await axios.put(`${baseUrl}/update-course-year/course/${courseId}/course-year/${courseYearId}`, {
+    course_coordinator: courseCoordinatorId
+  }, {
+    headers: {
+      'Authorization' : `Bearer ${token}`
+    }
+  })
+  return response.data
+}
+
 export default {
   getAll,
   getOneCourse,
-  getCoursesFromSchool
+  getCoursesFromSchool,
+  updateCourseYear
 }

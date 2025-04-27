@@ -52,10 +52,20 @@ const addCourseYear = async (token, courseId, startYear, courseYears, courseCoor
   return response.data
 }
 
+const updateCourse = async (token, courseId, updatedCourse) => {
+  const response = await axios.put(`${baseUrl}/edit-course/${courseId}`, updatedCourse, {
+    headers: {
+      'Authorization' : `Bearer ${token}`
+    }
+  })
+  return response.data
+}
+
 export default {
   getAll,
   getOneCourse,
   getCoursesFromSchool,
   updateCourseYear,
   addCourseYear,
+  updateCourse
 }

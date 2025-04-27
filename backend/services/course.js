@@ -115,8 +115,47 @@ async function getCoursesFromSchool(schoolId) {
   return formatAllCoursesFromSchool(courses)
 }
 
+async function updateCourseYear(courseId, courseYearId, courseCoordinatorId) {
+  const courseYear = await CourseYear.findByPk(courseYearId)
+  if (!courseYear) {
+    const error = new Error('Course Year not found')
+    error.status = 404
+    throw error
+  }
+
+  const course = await Course.findByPk(courseId)
+  if (!course) {
+    const error = new Error('Course not found')
+    error.status = 404
+    throw error
+  }
+
+  const courseCoordinator = await User.findByPk(courseCoordinatorId)
+  if (!courseCoordinator) {
+    const error = new Error('Course Coordinator not found')
+    error.status = 404
+    throw error
+  }
+
+  // Perform the update on CourseYear
+  await CourseYear.update({
+    course_coordinator: courseCoordinator.id
+  }, {
+    where: {
+      id: courseYear.id
+    }
+  })
+
+  // Fetch and return the updated CourseYear data after update
+  const updatedCourseYear = await CourseYear.findByPk(courseYearId)
+
+  return updatedCourseYear  // Return the updated CourseYear object
+}
+
+
 module.exports = {
   getAllCourses,
   getOneCourse,
   getCoursesFromSchool,
+  updateCourseYear
 }

@@ -56,5 +56,29 @@ coursesRouter.get(
   }
 )
 
+coursesRouter.put('/update-course-year/course/:courseId/course-year/:courseYearId',
+  validate,
+  tokenVerification,
+  roleAndIdAuthorization(['Super User'], true),
+  async (req, res) => {
+    const { courseId, courseYearId } = req.params  // Correct the destructuring
+    const { course_coordinator } = req.body  // Assuming you are sending the coordinator ID
+
+    // Call the service to update the course year
+    const updatedCourseYear = await courseService.updateCourseYear(courseId, courseYearId, course_coordinator)
+
+    // Check if the course year was found and updated
+    if (!updatedCourseYear) {
+      const error = new Error('Course Year not found')
+      error.status = 404
+      throw error
+    }
+
+    // Return the updated course year
+    res.json(updatedCourseYear)
+  }
+)
+
+
 
 module.exports = coursesRouter

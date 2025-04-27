@@ -3,7 +3,7 @@ const path = require('path')
 const fs = require('fs')
 const uploadRouter = require('express').Router()
 const { processStudentCSV } = require('../services/upload')
-const { Meeting } = require('../models')
+const { Meeting, CourseYear } = require('../models')
 const { validateCSVs } = require('../validators/validateCSVs')
 const { uploadResults } = require('../services/uploadResults')
 
@@ -44,6 +44,11 @@ const getFilePath = (req) => req.file?.path
 
 // 📝 Upload Meeting Minutes
 uploadRouter.post('/meeting-minutes', upload.single('file'), async (req, res) => {
+
+  if (req.file === undefined) {
+    return res.status(400).json({ success: false, message: 'No file uploaded' })
+  }
+
   const filePath = '/uploads/' + req.file.filename
   const meetingId = req.body.meetingId
 
@@ -71,7 +76,7 @@ uploadRouter.post('/meeting-minutes', upload.single('file'), async (req, res) =>
 // 🧾 Upload Student CSV
 uploadRouter.post('/students', upload.single('file'), async (req, res) => {
   const filePath = getFilePath(req)
-  if (!filePath) {
+  if (filePath === undefined) {
     return res.status(400).json({ success: false, message: 'No file uploaded' })
   }
 
@@ -102,22 +107,34 @@ uploadRouter.post('/students', upload.single('file'), async (req, res) => {
 })
 
 // 📊 Upload Course Year Results
+// 📊 Upload Course Year Results
 uploadRouter.post('/results/:courseYearId', upload.single('file'), async (req, res) => {
   const filePath = getFilePath(req)
   if (!filePath) {
     return res.status(400).json({ success: false, message: 'No file uploaded' })
   }
 
+  // Find the course year by the provided ID
+  const courseYear = await CourseYear.findByPk(req.params.courseYearId)
+  // If course year is not found or the course_id is invalid
+  if (!courseYear || !courseYear.course_id) {
+    return res.status(500).json({ success: false, message: 'Course year not found' })
+  }
+
+  // Validate the uploaded CSV file
   await validateCSVs(filePath, resultsRequiredFields)
 
+  // Upload the results
   const result = await uploadResults(req.params.courseYearId, filePath)
 
+  // Send back success response with stats
   res.status(200).json({
     success: true,
     message: 'Course year results processed successfully',
     stats: result
   })
 })
+
 
 
 

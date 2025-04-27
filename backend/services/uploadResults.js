@@ -27,6 +27,7 @@ async function parseResultsCSV(filePath) {
 async function processResultsChunk(chunk, courseYearId) {
   let updatedCount = 0
 
+
   for (const row of chunk) {
     const { student_code, module_code, module_year_start, result, result_descriptor } = row
     if (!student_code || !module_code || !module_year_start || result === null || !result_descriptor) continue
@@ -119,6 +120,7 @@ async function processResultsChunk(chunk, courseYearId) {
 
 // Main function to handle the uploading of results
 async function uploadResults(courseYearId, filePath) {
+
   const results = await parseResultsCSV(filePath)
 
   const chunks = []
@@ -136,9 +138,6 @@ async function uploadResults(courseYearId, filePath) {
   fs.unlink(filePath, (err) => {
     if (err) console.error('Failed to delete uploaded file:', err)
   })
-
-  // Debugging: Log total updates
-  console.log(`Total updated: ${totalUpdated}`)
 
   return {
     updated: totalUpdated

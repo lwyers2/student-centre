@@ -8,7 +8,7 @@ schoolsRouter.get(
     const schools = await School.findAll({
       attributes: ['id', 'school_name'],
     })
-    if (!schools) {
+    if (!schools || schools.length === 0) {
       const error = new Error('Schools not found')
       error.status = 404
       throw error

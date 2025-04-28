@@ -3,6 +3,10 @@ import { useSelector } from 'react-redux'
 import { useNavigate, useParams } from 'react-router-dom'
 import moduleService from '../../services/module'
 import userService from '../../services/user'
+import ModuleDetailsForm from '../../components/ModuleView/Edit/ModuleDetailsForm'
+import ModuleYearsList from '../../components/ModuleView/Edit/ModuleYearsList'
+
+
 
 const EditModule = () => {
   const user = useSelector(state => state.user)
@@ -128,6 +132,9 @@ const EditModule = () => {
       <h2 className="text-3xl font-semibold text-center mb-8 text-slate-800 dark:text-white">
         {module.title} ({module.code})
       </h2>
+      <h2 className="text-3xl font-semibold text-center mb-8 text-slate-800 dark:text-white">
+        Academic Year ({module.year})
+      </h2>
 
       <button
         onClick={() => setShowModuleDetails(prev => !prev)}
@@ -137,19 +144,13 @@ const EditModule = () => {
       </button>
 
       {showModuleDetails && (
-        <form onSubmit={handleSubmit} className="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-md mb-10">
-          <h3 className="text-2xl font-semibold mb-4">Module Details</h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 dark:text-black">
-            <input name="title" value={formState.title} onChange={handleChange} className="p-2 rounded border" placeholder="Title" />
-            <input name="code" value={formState.code} onChange={handleChange} className="p-2 rounded border" placeholder="Code" />
-            <input name="CATs" value={formState.CATs} onChange={handleChange} className="p-2 rounded border" placeholder="CATs" />
-            <input name="year" value={formState.year} onChange={handleChange} className="p-2 rounded border" placeholder="Year" />
-          </div>
-          <button type="submit" className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
-            Save Changes
-          </button>
-        </form>
+        <ModuleDetailsForm
+          formState={formState}
+          handleChange={handleChange}
+          handleSubmit={handleSubmit}
+        />
       )}
+
 
       <button
         onClick={() => setShowModuleYears(prev => !prev)}
@@ -159,144 +160,17 @@ const EditModule = () => {
       </button>
 
       {showModuleYears && (
-        <div className="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-md mb-10">
-          <h3 className="text-2xl font-semibold mb-4">Module Years</h3>
-          <ul className="space-y-2">
-            {moduleYears.map(year => {
-              const isEditing = editingYears[year.module_year_id]
-              return (
-                <li key={year.module_year_id} className="border rounded p-3">
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <strong>{year.year_start}</strong><br />
-                      {!isEditing ? (
-                        <>
-                          Module Co-ordinator: {year.coordinator}<br />
-                          Semester: {year.semester}
-                        </>
-                      ) : (
-                        <>
-                          <select
-                            className="mt-2 p-1 border rounded"
-                            value={year.coordinator}
-                            onChange={(e) => {
-                              const updated = moduleYears.map(y =>
-                                y.module_year_id === year.module_year_id ? { ...y, coordinator: e.target.value } : y
-                              )
-                              setModuleYears(updated)
-                            }}
-                          >
-                            <option value="">Select Co-ordinator</option>
-                            {users.map(u => (
-                              <option key={u.id} value={u.name}>{u.name}</option>
-                            ))}
-                          </select>
-                          <select
-                            className="mt-2 p-1 border rounded"
-                            value={year.semester}
-                            onChange={(e) => {
-                              const updated = moduleYears.map(y =>
-                                y.module_year_id === year.module_year_id ? { ...y, semester: e.target.value } : y
-                              )
-                              setModuleYears(updated)
-                            }}
-                          >
-                            <option value="">Select Semester</option>
-                            <option value="Autumn">Autumn</option>
-                            <option value="Spring">Spring</option>
-                            <option value="Full Year">Full Year</option>
-                            <option value="Summer">Summer</option>
-                          </select>
-                        </>
-                      )}
-                    </div>
-                    <div className="flex flex-col items-end gap-2">
-                      <button
-                        onClick={() => setEditingYears(prev => ({ ...prev, [year.module_year_id]: !isEditing }))}
-                        className="text-blue-600 hover:underline"
-                      >
-                        {isEditing ? 'Cancel' : 'Edit'}
-                      </button>
-                      {isEditing && (
-                        <button
-                          onClick={async () => {
-                            try {
-                              await moduleService.updateModuleYear(user.token, year.module_year_id, {
-                                coordinator: year.coordinator,
-                                semester: year.semester
-                              })
-                              alert('Updated!')
-                              setEditingYears(prev => ({ ...prev, [year.module_year_id]: false }))
-                            } catch (err) {
-                              alert('Failed to update')
-                              console.error(err)
-                            }
-                          }}
-                          className="text-sm bg-green-600 text-white px-2 py-1 rounded"
-                        >
-                          Save
-                        </button>
-                      )}
-                    </div>
-                  </div>
-                </li>
-              )
-            })}
-          </ul>
-        </div>
+        <ModuleYearsList
+          moduleYears={moduleYears}
+          setModuleYears={setModuleYears}
+          users={users}
+          user={user}
+          editingYears={editingYears}
+          setEditingYears={setEditingYears}
+        />
       )}
 
-      <button
-        onClick={() => setShowAddYear(prev => !prev)}
-        className="mb-4 px-4 py-2 bg-gray-700 text-white rounded"
-      >
-        {showAddYear ? 'Hide Add Year' : 'Add New Module Year'}
-      </button>
 
-      {showAddYear && (
-        <form onSubmit={handleNewYearSubmit} className="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-md">
-          <h3 className="text-2xl font-semibold mb-4">Add Module Year</h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 dark:text-black">
-            <input
-              name="year_start"
-              type="number"
-              value={newYear.year_start}
-              onChange={handleNewYearChange}
-              className="p-2 rounded border"
-              placeholder="Year Start"
-              required
-            />
-            <select
-              name="coordinator"
-              value={newYear.coordinator}
-              onChange={handleNewYearChange}
-              className="p-2 rounded border"
-              required
-            >
-              <option value="">Select Co-Ordinator</option>
-              {users.map(user => (
-                <option key={user.id} value={user.name}>{user.name}</option>
-              ))}
-            </select>
-            <select
-              name="semester"
-              value={newYear.semester}
-              onChange={handleNewYearChange}
-              className="p-2 rounded border"
-              required
-            >
-              <option value="">Select Semester</option>
-              <option value="Autumn">Autumn</option>
-              <option value="Spring">Spring</option>
-              <option value="Full Year">Full Year</option>
-              <option value="Summer">Summer</option>
-            </select>
-          </div>
-          <button type="submit" className="mt-4 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">
-            Add Year
-          </button>
-        </form>
-      )}
     </div>
   )
 }

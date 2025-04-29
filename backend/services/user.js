@@ -539,6 +539,46 @@ const getUsersFromModule = async (moduleId) => {
   return formatUsersFromModule(users)
 }
 
+async function updateUser(userId, { forename, surname, email, password, active, roleId, jobTitle, prefix, schools }) {
+  const user = await User.findOne({ where: { id: userId } })
+  if (!user) {
+    const error = new Error('User not found')
+    error.status = 404
+    throw error
+  }
+
+  if(schools) {
+    console.log(schools)
+    // Remove all existing schools for the user
+    await UserSchool.destroy({ where: { user_id: userId } })
+
+    // Add the new schools
+    for (const schoolId of schools) {
+      console.log(schoolId)
+      await UserSchool.create({ user_id: userId, school_id: schoolId })
+    }
+  }
+
+
+  // Update the user with the new values
+  user.forename = forename
+  user.surname = surname
+  user.email = email
+  user.active = active
+  user.role_id = roleId
+  user.job_title = jobTitle
+  user.prefix = prefix
+
+  if (password) {
+    // Hash the new password before saving it
+    const passwordHash = await bcrypt.hash(password, 10)
+    user.password = passwordHash
+  }
+
+  await user.save()
+  return user
+}
+
 module.exports = {
   getAllUsers,
   getUser,
@@ -551,5 +591,6 @@ module.exports = {
   getUsersFromCourseYear,
   getUsersFromSchool,
   getUsersFromModule,
-  getOneUserDetails
+  getOneUserDetails,
+  updateUser
 }

@@ -108,5 +108,31 @@ modulesRouter.put(
   }
 )
 
+modulesRouter.put(
+  '/update-module/:moduleId',
+  validateId('moduleId'),
+  validate,
+  tokenVerification,
+  roleAndIdAuthorization(['Super User'], true),
+  async (req, res) => {
+    const moduleId = req.params.moduleId
+    const { title, code, year, CATs } = req.body
+
+    if (!title || !code || !year || !CATs) {
+      return res.status(400).json({ error: 'Missing required fields' }) // Use `error` consistently
+    }
+
+    const updatedModule = await moduleService.updateModule(moduleId, { title, code, year, CATs })
+
+    if (!updatedModule) {
+      const error = new Error('Module not found')
+      error.status = 404
+      throw error
+    }
+
+    res.status(200).json(updatedModule)
+  }
+)
+
 
 module.exports = modulesRouter

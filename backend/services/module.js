@@ -247,6 +247,27 @@ async function updateModuleYear(moduleId, moduleYearId, { coordinator, semester 
   return updatedModuleYear
 }
 
+async function updateModule(moduleId, { title, code, year, CATs }) {
+  const module = await Module.findOne({
+    where: { id: moduleId }
+  })
+
+  if (!module) {
+    const error = new Error('Module not found')
+    error.status = 404
+    throw error
+  }
+
+  const updatedModule = await module.update({
+    title,
+    code,
+    year,
+    CATs
+  })
+
+  return updatedModule
+}
+
 
 module.exports = {
   getAllModules,
@@ -254,5 +275,6 @@ module.exports = {
   checkUserAccessToModule,
   getModule,
   getModulesFromCourseYear,
-  updateModuleYear
+  updateModuleYear,
+  updateModule
 }

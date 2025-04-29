@@ -204,4 +204,21 @@ usersRouter.get(
   }
 )
 
+usersRouter.put(
+  '/:user',
+  validate,
+  tokenVerification,
+  roleAndIdAuthorization(['Super User'], true),
+  async (req, res) => {
+    const userId = req.params.user
+    const updatedUser = await userService.updateUser(userId, req.body)
+    if(!updatedUser) {
+      const error = new Error('User not found')
+      error.status = 404
+      throw error
+    }
+    res.json(updatedUser)
+  }
+)
+
 module.exports = usersRouter

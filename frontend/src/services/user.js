@@ -110,6 +110,15 @@ const getUsersFromModuleYear = async (token, moduleYearId) => {
   return response.data
 }
 
+const updateUser = async (id, token, userData) => {
+  const response = await axios.put(`${baseUrl}/${id}`, userData, {
+    headers: {
+      'Authorization' : `Bearer ${token}`
+    }
+  })
+  return response.data
+}
+
 export default {
   getAll,
   getUser,
@@ -123,4 +132,5 @@ export default {
   getUsersFromModule,
   getUsersFromModuleYear,
   getUserDetails,
+  updateUser,
 }

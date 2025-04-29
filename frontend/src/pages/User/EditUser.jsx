@@ -92,19 +92,33 @@ const EditUser = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
+
     try {
       const payload = {
-        ...formData,
-        school_ids: selectedSchools,
+        prefix: formData.prefix,
+        forename: formData.forename,
+        surname: formData.surname,
+        email: formData.email,
+        password: formData.password,
+        jobTitle: formData.job_title,
+        roleId: formData.role_id,
+        active: formData.active,
+        schools: selectedSchools,
       }
-      await userService.updateUser(userId, payload)
+
+      if (!payload.password) {
+        delete payload.password
+      }
+
+      await userService.updateUser(userId, user.token, payload)
       alert('User updated!')
-      navigate('/manage-users')
+      navigate('/users-admin')
     } catch (err) {
-      console.error(err)
+      console.error('Error response:', err.response?.data || err)
       alert('Failed to update user')
     }
   }
+
 
   if (!formData) return <div>Loading...</div>
 

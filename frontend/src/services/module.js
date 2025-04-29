@@ -55,5 +55,17 @@ export const updateModuleYear = async (token, moduleId, moduleYearId, updatedDat
   return response.data
 }
 
+export const updateModule = async (token, moduleId, updatedData) => {
+  const response = await axios.put(
+    `${baseUrl}/update-module/${moduleId}`,
+    updatedData,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    }
+  )
+  return response.data
+}
 
-export default { getAll, getModule, getModuleFromModuleYear, getModulesFromCourseYear, updateModuleYear }
+export default { getAll, getModule, getModuleFromModuleYear, getModulesFromCourseYear, updateModuleYear, updateModule }

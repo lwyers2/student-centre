@@ -167,6 +167,7 @@ const EditModule = () => {
           user={user}
           editingYears={editingYears}
           setEditingYears={setEditingYears}
+          moduleId = {module.id}
         />
       )}
 

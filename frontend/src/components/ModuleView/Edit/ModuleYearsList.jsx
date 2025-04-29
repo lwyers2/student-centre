@@ -1,7 +1,7 @@
 import React from 'react'
 import moduleService from '../../../services/module'
 
-const ModuleYearsList = ({ moduleYears, setModuleYears, users, user, editingYears, setEditingYears }) => {
+const ModuleYearsList = ({ moduleYears, setModuleYears, users, user, editingYears, setEditingYears, moduleId }) => {
   return (
     <div className="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-md mb-10">
       <h3 className="text-2xl font-semibold mb-4">Module Years</h3>
@@ -25,16 +25,17 @@ const ModuleYearsList = ({ moduleYears, setModuleYears, users, user, editingYear
                         value={year.coordinator}
                         onChange={(e) => {
                           const updated = moduleYears.map(y =>
-                            y.module_year_id === year.module_year_id ? { ...y, coordinator: e.target.value } : y
+                            y.module_year_id === year.module_year_id ? { ...y, coordinator: Number(e.target.value) } : y
                           )
                           setModuleYears(updated)
                         }}
                       >
                         <option value="">Select Co-ordinator</option>
                         {users.map(u => (
-                          <option key={u.id} value={u.name}>{u.name}</option>
+                          <option key={u.id} value={u.id}>{u.name}</option>
                         ))}
                       </select>
+
 
                       <select
                         className="p-2 border rounded"
@@ -66,8 +67,9 @@ const ModuleYearsList = ({ moduleYears, setModuleYears, users, user, editingYear
                   {isEditing && (
                     <button
                       onClick={async () => {
+                        console.log(year)
                         try {
-                          await moduleService.updateModuleYear(user.token, year.module_year_id, {
+                          await moduleService.updateModuleYear(user.token, moduleId, year.module_year_id, {
                             coordinator: year.coordinator,
                             semester: year.semester
                           })

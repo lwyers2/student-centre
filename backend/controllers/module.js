@@ -82,4 +82,31 @@ modulesRouter.get(
   }
 )
 
+modulesRouter.put(
+  '/update-module-year/module/:moduleId/module-year/:moduleYearId',
+  validate,
+  tokenVerification,
+  roleAndIdAuthorization(['Super User'], true),
+  async (req, res) => {
+    const moduleId = req.params.moduleId
+    const moduleYearId = req.params.moduleYearId
+    const { coordinator, semester } = req.body
+
+    if (!coordinator || !semester) {
+      return res.status(400).json({ error: 'Missing required fields' }) // Use `error` consistently
+    }
+
+    const updatedModuleYear = await moduleService.updateModuleYear(moduleId, moduleYearId, { coordinator, semester })
+
+    if (!updatedModuleYear) {
+      const error = new Error('Module year not found')
+      error.status = 404
+      throw error
+    }
+
+    res.status(200).json(updatedModuleYear)
+  }
+)
+
+
 module.exports = modulesRouter

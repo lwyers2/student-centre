@@ -169,10 +169,90 @@ async function getModulesFromCourseYear(courseYearId) {
   return formatModulesFromCourseYear(modules)
 }
 
+async function updateModuleYear(moduleId, moduleYearId, { coordinator, semester }) {
+
+  // Check if the module year exists
+  const moduleYear = await ModuleYear.findOne({
+    where: {
+      id: moduleYearId,
+      module_id: moduleId
+    }
+  })
+
+  if (!moduleYear) {
+    const error = new Error('Module year not found')
+    error.status = 404
+    throw error
+  }
+  // Validate the input
+  if (!coordinator || !semester) {
+    const error = new Error('Missing required fields')
+    error.status = 400
+    throw error
+  }
+  // Check if the coordinator exists
+  const coordinatorExists = await User.findOne({
+    where: {
+      id: coordinator
+    }
+  })
+  if (!coordinatorExists) {
+    const error = new Error('Coordinator not found')
+    error.status = 404
+    throw error
+  }
+
+  // Check if semester is an ID (number) or a name (string)
+  const isId = Number.isInteger(Number(semester))
+
+  // Build the where condition based on type
+  const whereCondition = isId ? { id: semester } : { name: semester }
+
+  // Find the semester
+  const semesterExists = await Semester.findOne({ where: whereCondition })
+
+  if (!semesterExists) {
+    const error = new Error('Semester not found')
+    error.status = 404
+    throw error
+  }
+
+  const [affectedCount] = await ModuleYear.update(
+    {
+      module_coordinator_id: coordinator,
+      semester_id: semesterExists.id,
+    },
+    {
+      where: {
+        id: moduleYearId,
+        module_id: moduleId
+      }
+    }
+  )
+
+  if (affectedCount === 0) {
+    const error = new Error('Nothing to update')
+    error.status = 404
+    throw error
+  }
+
+  // 🔥 Re-fetch the updated module year
+  const updatedModuleYear = await ModuleYear.findOne({
+    where: {
+      id: moduleYearId,
+      module_id: moduleId
+    }
+  })
+
+  return updatedModuleYear
+}
+
+
 module.exports = {
   getAllModules,
   getModuleFromModuleYear,
   checkUserAccessToModule,
   getModule,
-  getModulesFromCourseYear
+  getModulesFromCourseYear,
+  updateModuleYear
 }

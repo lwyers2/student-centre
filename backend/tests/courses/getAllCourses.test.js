@@ -93,7 +93,6 @@ describe('Courses API Endpoints', () => {
       .get('/api/courses')
       .set('Authorization', `Bearer ${token}`)
 
-    console.log(response.body)
     expect(response.status).toBe(404)
     expect(response.body.error).toBe('Courses not found')
   })

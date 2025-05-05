@@ -20,7 +20,6 @@ const ModuleYearStudent = () => {
   useEffect(() => {
     moduleService.getModuleFromModuleYear(params.moduleYearId, user.token)
       .then(response => {
-        console.log('Module data fetched:', response)
         setModule(response.module[0])
         setStudents(response.module[0].students)
       })

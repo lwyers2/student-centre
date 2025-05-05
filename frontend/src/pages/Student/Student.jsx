@@ -59,7 +59,6 @@ const Student = () => {
   }
 
 
-  console.log(meetings)
 
 
   return (

@@ -24,7 +24,6 @@ letterRouter.get('/:studentId', async (req, res) => {
 
 letterRouter.get('/', async (req, res) => {
   const { studentId, moduleYearId } = req.query // Use req.query instead of req.body
-  console.log(req.query)
   if (!studentId || !moduleYearId) {
     return res.status(400).json({ error: 'Missing studentId or moduleYearId' })
   }

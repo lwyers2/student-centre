@@ -50,7 +50,6 @@ describe('formatUserModulesFromCourseYear', () => {
 
     const formattedUser = formatUserModulesFromCourseYear(mockUser)
 
-    console.log(formattedUser.modules[0])
     expect(formattedUser.user.id).toBe(1)
     expect(formattedUser.user.prefix).toBe('Prof')
     expect(formattedUser.user.forename).toBe('John')

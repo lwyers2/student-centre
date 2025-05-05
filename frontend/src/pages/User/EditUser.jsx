@@ -15,15 +15,13 @@ const EditUser = () => {
   const [userData, setUserData] = useState(null)
   const user = useSelector((state) => state.user)
 
-  console.log('userId:', userId)
-  console.log('user:', user)
+
 
   // Load user data
   useEffect(() => {
     userService.getUserDetails(userId, user.token)
       .then((response) => {
         const userData = response
-        console.log('Fetched user:', userData)
         setFormData({
           prefix: userData.prefix || '',
           forename: userData.forename || '',
@@ -44,7 +42,6 @@ const EditUser = () => {
 
   }, [userId])
 
-  console.log(selectedSchools)
 
   // Load roles
   useEffect(() => {

@@ -17,11 +17,10 @@ const Header = () => {
       localStorage.removeItem('loggedUser')
       navigate('/')
     } catch (err) {
-      console.log(err)
+      console.error(err)
     }
   }
 
-  console.log(user)
 
   return (
     <header className="qub-red text-white top-0 z-10 w-full sticky">

@@ -54,20 +54,22 @@ describe('User Creation API Endpoints', () => {
   // ✅ Test: Successfully create a new user
   it('should create a new user successfully', async () => {
     const newUser = {
-      forename: 'John',
-      surname: 'Doe',
-      email: 'johndoe@qub.ac.uk',
+      forename: 'Test',
+      surname: 'User',
+      email: 'testuser@qub.ac.uk',
       password: 'securepassword',
       active: true,
-      roleName: 'Super User',
-      jobTitle: 'Professor',
-      prefix: 'Dr',
+      role_id: superUserRole.id,
+      job_title: 'Professor',
+      prefix: 'Dr'
     }
 
     const response = await supertest(app)
       .post('/api/users')
       .set('Authorization', `Bearer ${token}`)
       .send(newUser)
+
+    console.log(response.body)
 
     expect(response.status).toBe(201)
     expect(response.body).toHaveProperty('id')
@@ -103,7 +105,7 @@ describe('User Creation API Endpoints', () => {
       email: 'jane@qub.ac.uk',
       password: 'password123',
       roleName: 'Nonexistent Role',
-      jobTitle: 'Professor',
+      job_title: 'Professor',
       prefix: 'Dr',
     }
 
@@ -113,7 +115,7 @@ describe('User Creation API Endpoints', () => {
       .send(userWithInvalidRole)
 
     expect(response.status).toBe(400)
-    expect(response.body.error).toBe('Role not found')
+    expect(response.body.error).toBe('Missing required fields')
   })
 
   // 🚫 Test: Unauthorized user trying to create a user

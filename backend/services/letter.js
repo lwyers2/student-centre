@@ -50,7 +50,6 @@ const sendLetter = async (studentId, moduleYearId, sentByUser, authorisedByStaff
     where: { student_module_id: studentModuleIds }
   })
 
-  console.log(`[DEBUG] Letter Count for student ${studentId}: ${letterCount}`)
 
   if (letterCount >= 2) {
     return { success: false, message: 'Maximum number of failure letters already sent.' }
@@ -95,7 +94,6 @@ const sendLetter = async (studentId, moduleYearId, sentByUser, authorisedByStaff
     authorised_by_staff: authorisedByStaff
   })
 
-  console.log(`[INFO] Letter sent for student ${studentId}, moduleYearId: ${moduleYearId}`)
 
   return { success: true, letterCount: letterCount + 1 }
 }

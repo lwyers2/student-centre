@@ -107,7 +107,6 @@ describe('GET /api/users/course-year/:courseYear', () => {
       .get(`/api/users/course-year/${courseYear.id}`)
       .set('Authorization', `Bearer ${token}`)
 
-    console.log('Response Body:', res.body) // Log the response body for debugging
 
     expect(res.status).toBe(200)
 

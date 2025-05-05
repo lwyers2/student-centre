@@ -66,7 +66,6 @@ describe('POST /upload/students', () => {
     expect(res.statusCode).toBe(200)
     expect(res.body.success).toBe(true)
     expect(res.body.message).toBe('CSV uploaded and processed successfully')
-    console.log(res.body)
   })
 
   it('should return 400 if no file is uploaded', async () => {

@@ -2,7 +2,6 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 
 const ModuleSummaryModuleYears = ({ moduleYear }) => {
-  console.log(moduleYear)
 
   // Check if students exist and is an array
   if (moduleYear.students && Array.isArray(moduleYear.students) && moduleYear.students.length > 0) {

@@ -65,7 +65,6 @@ const ViewCourses = () => {
 
     const isMatching = matchesLevel && matchesFullTime
 
-    console.log(`Filtering Course: ${course.title}, Matches: ${isMatching}`)
 
     return isMatching
   })

@@ -17,7 +17,6 @@ const createMeeting = async (studentId, moduleYearId, scheduledDate, academicId,
     const response = await axios.post(`${baseUrl}/create`, payload)
 
     if (response.data.success && response.data.meeting) {
-      console.log('Meeting scheduled successfully:', response.data.meeting)
       return {
         success: true,
         message: 'Meeting created successfully',
@@ -50,7 +49,6 @@ const updateMeeting = async (meetingId, updatedData) => {
     const response = await axios.put(`${baseUrl}/update/${meetingId}`, updatedData)
 
     if (response.data.success && response.data.meeting) {
-      console.log('Meeting updated successfully:', response.data.meeting)
       return {
         success: true,
         message: 'Meeting updated successfully',
@@ -72,7 +70,6 @@ const deleteMeeting = async (meetingId) => {
     const response = await axios.delete(`${baseUrl}/delete/${meetingId}`)
 
     if (response.data.success) {
-      console.log('Meeting deleted successfully')
       return {
         success: true,
         message: 'Meeting deleted successfully',

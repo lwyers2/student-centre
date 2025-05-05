@@ -20,14 +20,12 @@ const StudentModule = () => {
         setStudent(response.student)
         setModule(response.module)
         setLetter(response.letter)
-        console.log(response)
       })
       .catch(error => {
         console.error('Error fetching module: ', error)
       })
   }, [params.studentId, params.moduleYearId, user.token])
 
-  console.log(user)
 
 
 

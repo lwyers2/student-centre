@@ -61,7 +61,6 @@ const ScheduleMeeting = () => {
       courseYearId: course.course_year_id,
     }
 
-    console.log('Meeting Scheduled:', meetingData)
 
     // Call the meetingService to create the meeting
     const result = await meetingService.createMeeting(
@@ -74,7 +73,6 @@ const ScheduleMeeting = () => {
       meetingData.courseYearId
     )
 
-    console.log(`result: ${result}`)
 
     if (result.success) {
       alert('Meeting scheduled successfully!')

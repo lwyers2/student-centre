@@ -43,7 +43,6 @@ const getUserModulesCourseYear = async (id, courseYearID, token) => {
       'Authorization' : `Bearer ${token}`
     }
   })
-  console.log(response.data)
   return response.data
 }
 

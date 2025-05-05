@@ -48,7 +48,6 @@ const CourseModuleYears = () => {
   }, [params.courseYearId, user.id, user.token])
 
 
-  console.log(modules)
 
   if (!user.id || !course || !modules) {
     return <div>Loading...</div>

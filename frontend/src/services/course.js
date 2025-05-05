@@ -61,11 +61,46 @@ const updateCourse = async (token, courseId, updatedCourse) => {
   return response.data
 }
 
+export const addUserToCourse = async (token, userId, courseYearId, courseId) => {
+  const response = await axios.post(
+    `${baseUrl}/assign-course-year-to-user`,
+    {
+      userId,
+      courseYearId,
+      courseId
+    },
+    {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    }
+  )
+  return response.data
+}
+
+export const removeUserFromCourse = async (token, userId, courseYearId, courseId) => {
+  const response = await axios.delete(
+    `${baseUrl}/remove-user-from-course`,
+    {
+      data: {
+        userId,
+        courseYearId,
+        courseId,
+      },
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
+  return response.data
+}
+
 export default {
   getAll,
   getOneCourse,
   getCoursesFromSchool,
   updateCourseYear,
   addCourseYear,
-  updateCourse
+  updateCourse,
+  addUserToCourse,
+  removeUserFromCourse,
 }

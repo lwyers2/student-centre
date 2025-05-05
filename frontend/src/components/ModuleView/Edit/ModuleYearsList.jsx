@@ -67,7 +67,6 @@ const ModuleYearsList = ({ moduleYears, setModuleYears, users, user, editingYear
                   {isEditing && (
                     <button
                       onClick={async () => {
-                        console.log(year)
                         try {
                           await moduleService.updateModuleYear(user.token, moduleId, year.module_year_id, {
                             coordinator: year.coordinator,

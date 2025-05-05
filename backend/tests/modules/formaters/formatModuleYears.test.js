@@ -39,7 +39,6 @@ describe('formatModuleYear', () => {
       ]
     }
 
-    console.log('Mock Module:', JSON.stringify(mockModule, null, 2))
 
 
 

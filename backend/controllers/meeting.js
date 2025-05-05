@@ -42,8 +42,7 @@ meetingRouter.put('/update/:meetingId', async (req, res) => {
   const { meetingId } = req.params
   const { outcome, scheduled_date, meeting_reason, academic_id, admin_staff_id } = req.body
 
-  // Log the incoming data to debug
-  console.log('Request Body:', req.body)
+
 
   try {
     const updatedMeeting = await meetingService.updateMeeting(meetingId, {

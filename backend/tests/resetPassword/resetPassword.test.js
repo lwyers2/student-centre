@@ -9,7 +9,6 @@ jest.mock('nodemailer')
 const sendMailMock = jest.fn()
 nodemailer.createTransport.mockReturnValue({ sendMail: sendMailMock })
 
-console.log('sendMailMock called with:', sendMailMock.mock.calls)
 
 
 describe('POST /api/reset-password', () => {

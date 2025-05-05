@@ -146,7 +146,6 @@ const MeetingDetails = () => {
     return <p>Loading additional meeting details...</p>
   }
 
-  console.log(adminStaff)
 
   return (
     <div className="max-w-2xl mx-auto mt-6 p-6 bg-white dark:bg-gray-800 dark:text-white shadow-md rounded-lg">

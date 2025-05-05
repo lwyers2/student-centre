@@ -111,12 +111,10 @@ studentsRouter.get(
   tokenVerification,
   roleAuthorization(['Super User', 'Admin', 'Teacher']),
   async (req, res) => {
-    console.log(req.params)
     const studentId = req.params.student
     const moduleYearId = req.params.moduleYearId
     const userId = req.user.id
     const userRole = req.user.role_name
-    console.log(`router moduleYearID: ${req.params.moduleYearId}`)
     const hasAccess = await checkUserAccessToModule(userId, moduleYearId)
     if(!hasAccess && (userRole !== 'Super User')) {
       if (!hasAccess) throw new Error('Access denied')

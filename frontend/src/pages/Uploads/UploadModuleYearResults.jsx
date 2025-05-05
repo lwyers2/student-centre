@@ -36,8 +36,6 @@ const UploadModuleYearResults = () => {
       alert('Please select a CSV file to upload.')
       return
     }
-    console.log(`Uploading ${selectedFile.name} for Module Year ID: ${module.module_year_id}`)
-    // TODO: Implement actual file upload logic
   }
 
   return (

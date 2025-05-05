@@ -51,7 +51,6 @@ export const updateModuleYear = async (token, moduleId, moduleYearId, updatedDat
       }
     }
   )
-  console.log(response)
   return response.data
 }
 
@@ -85,7 +84,6 @@ export const addUserToModule = async (token, userId, moduleYearId, moduleId) => 
   return response.data
 }
 
-// services/module.js
 export const removeUserFromModule = async (token, userId, moduleYearId, moduleId) => {
   const response = await axios.delete(`${baseUrl}/remove-user-from-module`, {
     data: { userId, moduleYearId, moduleId },

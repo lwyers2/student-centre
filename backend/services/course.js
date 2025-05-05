@@ -266,6 +266,108 @@ async function updateCourse(courseId, courseData) {
 }
 
 
+async function addUserToCourse(userId, courseId, courseYearId) {
+  const user = await User.findOne({
+    where: {
+      id: userId
+    }
+  })
+  if(!user) {
+    const error = new Error('User not found')
+    error.status = 404
+    throw error
+  }
+  const courseYear = await CourseYear.findOne({
+    where: {
+      id: courseYearId,
+      course_id: courseId
+    }
+  })
+  if(!courseYear) {
+    const error = new Error('Course year not found')
+    error.status = 404
+    throw error
+  }
+  const userCourse = await UserCourse.findOne({
+    where: {
+      user_id: userId,
+      course_year_id: courseYearId,
+      course_id: courseId
+    }
+  })
+  if(userCourse) {
+    const error = new Error('User already in course year')
+    error.status = 400
+    throw error
+  }
+
+  const newUserCourse = await UserCourse.create({
+    user_id: userId,
+    course_id: courseId,
+    course_year_id: courseYearId
+  })
+
+  const refactoredUserCourse = await CourseYear.findOne({
+    where: {
+      id: newUserCourse.course_year_id
+    }
+  })
+
+  return refactoredUserCourse
+
+}
+
+async function removeUserFromCourse(userId, courseId, courseYearId) {
+
+  // Check if the user exists
+  const user = await User.findOne({
+    where: {
+      id: userId
+    }
+  })
+  if (!user) {
+    const error = new Error('User not found')
+    error.status = 404
+    throw error
+  }
+
+  const courseYear = await CourseYear.findOne({
+    where: {
+      id: courseYearId,
+      course_id: courseId
+    }
+  })
+  if(!courseYear) {
+    const error = new Error('Course year not found')
+    error.status = 404
+    throw error
+  }
+
+  const userCourse = await UserCourse.findOne({
+    where: {
+      user_id: userId,
+      course_id: courseId,
+      course_year_id: courseYearId,
+    }
+  })
+
+  if(!userCourse) {
+    const error = new Error('User not in courseYears')
+    error.status = 400
+    throw error
+  }
+
+  const deleteUserCourse = await UserCourse.destroy({
+    where: {
+      user_id: userId,
+      course_year_id: courseYearId,
+      course_id: courseId
+    }
+  })
+
+  return deleteUserCourse
+}
+
 
 
 
@@ -275,5 +377,7 @@ module.exports = {
   getCoursesFromSchool,
   updateCourseYear,
   addCourseYear,
-  updateCourse
+  updateCourse,
+  addUserToCourse,
+  removeUserFromCourse
 }

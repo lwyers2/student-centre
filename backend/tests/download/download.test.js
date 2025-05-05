@@ -104,7 +104,6 @@ describe('GET /api/download/meeting-minutes/:meetingId', () => {
       .get(`/api/download/meeting-minutes/${meeting.id}`)
       .set('Authorization', `Bearer ${token}`)
 
-    console.log(response.body)
     expect(response.status).toBe(200)
     expect(response.headers['content-disposition']).toMatch(/attachment/)
     expect(response.headers['content-type']).toBe(

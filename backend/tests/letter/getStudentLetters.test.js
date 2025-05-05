@@ -113,7 +113,6 @@ describe('GET /api/letters/:studentId', () => {
     expect(response.body.length).toBeGreaterThan(0)
 
     const letter = response.body[0]
-    console.log(letter)
     expect(letter).toHaveProperty('type')
     expect(letter).toHaveProperty('sent_by')
     expect(letter).toHaveProperty('authorised_by')

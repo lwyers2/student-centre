@@ -547,13 +547,11 @@ async function updateUser(userId, { forename, surname, email, password, active, 
   }
 
   if(schools) {
-    console.log(schools)
     // Remove all existing schools for the user
     await UserSchool.destroy({ where: { user_id: userId } })
 
     // Add the new schools
     for (const schoolId of schools) {
-      console.log(schoolId)
       await UserSchool.create({ user_id: userId, school_id: schoolId })
     }
   }

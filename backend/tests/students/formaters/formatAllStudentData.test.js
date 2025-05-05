@@ -83,7 +83,6 @@ describe('formatAllStudentData', () => {
 
     const formattedStudentData = formatAllStudentData(mockStudent)
 
-    console.log(formattedStudentData)
     expect(formattedStudentData.student.id).toBe(1)
     expect(formattedStudentData.student.email).toBe('john.doe@example.com')
     expect(formattedStudentData.student.student_code).toBe('S12345')

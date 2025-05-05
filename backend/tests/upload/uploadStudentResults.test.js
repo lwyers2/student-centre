@@ -112,7 +112,6 @@ describe('POST /upload/results/:courseYearId', () => {
     expect(res.body.success).toBe(true)
     expect(res.body.message).toBe('Course year results processed successfully')
     expect(res.body.stats.updated).toBeGreaterThan(0) // Ensure updates were made
-    console.log(res.body)
   })
 
   it('should return 400 if no file is uploaded', async () => {

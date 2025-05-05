@@ -51,15 +51,44 @@ const AddCoursesToUser = () => {
     )
   }
 
-  const handleRemoveCourseYear = (courseYearId) => {
-    console.log(`Remove course year ID: ${courseYearId}`)
-    // Logic for removing the course year goes here
+  const handleRemoveCourseYear = async (courseYearId) => {
+    const course = userData.courses.find(course =>
+      course.course_years.some(cy => cy.id === courseYearId)
+    )
+
+    if (!course) return alert('Course not found for this year.')
+
+
+    try {
+      await courseService.removeUserFromCourse(user.token, userId, courseYearId, course.course_id)
+
+      const updatedUser = await userService.getUser(userId, user.token)
+      setUserData(updatedUser)
+    } catch (error) {
+      console.error('Failed to remove course year:', error)
+      alert(error?.response?.data?.error || 'Failed to remove course year.')
+    }
   }
 
-  const handleAddCourseYear = (courseYearId) => {
-    console.log(`Add course year ID: ${courseYearId}`)
-    // Logic for adding the course year goes here
+
+  const handleAddCourseYear = async (courseYearId) => {
+    const course = availableCourses.find(course =>
+      course.course_years.some(cy => cy.id === courseYearId)
+    )
+
+    if (!course) return alert('Course not found for selected year.')
+
+    try {
+      await courseService.addUserToCourse(user.token, userId, courseYearId, course.id)
+
+      const updatedUser = await userService.getUser(userId, user.token)
+      setUserData(updatedUser)
+    } catch (error) {
+      console.error('Failed to add course year:', error)
+      alert(error?.response?.data?.error || 'Failed to assign course year.')
+    }
   }
+
 
   const filteredAvailableCourses = availableCourses.filter((course) =>
     course.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -67,6 +96,7 @@ const AddCoursesToUser = () => {
   )
 
   if (!userData) return <div className="text-center py-6">Loading...</div>
+
 
   return (
     <div className="container mx-auto mt-6 p-6 bg-white dark:bg-gray-800 dark:text-white shadow-md rounded-lg">

@@ -2,6 +2,7 @@ const coursesRouter = require('express').Router()
 const courseService = require('../services/course')
 const tokenVerification = require('../middleware/tokenVerification')
 const roleAndIdAuthorization = require('../middleware/roleAndIdAuthorization')
+const roleAuthorization = require('../middleware/roleAuthorization')
 const { validate } = require('../middleware/validate')
 
 
@@ -56,7 +57,8 @@ coursesRouter.get(
   }
 )
 
-coursesRouter.put('/update-course-year/course/:courseId/course-year/:courseYearId',
+coursesRouter.put(
+  '/update-course-year/course/:courseId/course-year/:courseYearId',
   validate,
   tokenVerification,
   roleAndIdAuthorization(['Super User'], true),
@@ -79,7 +81,8 @@ coursesRouter.put('/update-course-year/course/:courseId/course-year/:courseYearI
   }
 )
 
-coursesRouter.post('/add-course-year/course/:courseId',
+coursesRouter.post(
+  '/add-course-year/course/:courseId',
   validate,
   tokenVerification,
   roleAndIdAuthorization(['Super User'], true),
@@ -132,7 +135,51 @@ coursesRouter.put(
   }
 )
 
+coursesRouter.post(
+  '/assign-course-year-to-user',
+  tokenVerification,
+  roleAuthorization(['Super User']),
+  async (req, res) => {
+    const { userId, courseId, courseYearId } = req.body
 
+    if (!userId || !courseId || !courseYearId) {
+      return res.status(400).json({ error: 'Missing required fields' }) // Use `error` consistently
+    }
+
+    const addedUser = await courseService.addUserToCourse(userId, courseId, courseYearId)
+
+    if(!addedUser) {
+      const error = new Error('Failed to Add user to course')
+      error.status = 404
+      throw error
+    }
+
+    res.status(200).json(addedUser)
+  }
+)
+
+coursesRouter.delete(
+  '/remove-user-from-course',
+  tokenVerification,
+  roleAuthorization(['Super User']),
+  async (req, res) => {
+    const { userId, courseId, courseYearId } = req.body
+
+    if (!userId || !courseId || !courseYearId) {
+      return res.status(400).json({ error: 'Missing required fields' }) // Use `error` consistently
+    }
+
+    const removedUser = await courseService.removeUserFromCourse(userId, courseId, courseYearId)
+
+    if (!removedUser) {
+      const error = new Error('Failed to remove user from module')
+      error.status = 404
+      throw error
+    }
+
+    res.status(200).json(removedUser)
+  }
+)
 
 
 module.exports = coursesRouter

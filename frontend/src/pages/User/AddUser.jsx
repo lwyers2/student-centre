@@ -10,8 +10,6 @@ const AddUser = () => {
   const user = useSelector((state) => state.user)
 
   const [roles, setRoles] = useState([])
-  const [schools, setSchools] = useState([])
-  const [selectedSchools, setSelectedSchools] = useState([])
 
   const [formData, setFormData] = useState({
     prefix: '',
@@ -32,7 +30,6 @@ const AddUser = () => {
           schoolService.getAll(),
         ])
         setRoles(rolesRes)
-        setSchools(schoolsRes)
       } catch (err) {
         console.error('Failed to load roles or schools:', err)
       }
@@ -49,13 +46,6 @@ const AddUser = () => {
     }))
   }
 
-  const toggleSchool = (schoolId) => {
-    setSelectedSchools((prev) =>
-      prev.includes(schoolId)
-        ? prev.filter((id) => id !== schoolId)
-        : [...prev, schoolId]
-    )
-  }
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -63,12 +53,11 @@ const AddUser = () => {
     try {
       const payload = {
         ...formData,
-        school_ids: selectedSchools,
       }
 
       await userService.createUser(payload, user.token)
       alert('User added!')
-      navigate('/manage-users')
+      navigate('/users-admin')
     } catch (err) {
       console.error(err)
       alert('Failed to add user.')
@@ -101,23 +90,6 @@ const AddUser = () => {
           <input type="checkbox" name="active" checked={formData.active} onChange={handleChange} />
           Active
         </label>
-
-        {/* Schools checkboxes */}
-        <div className="border-t pt-4 dark:text-white">
-          <h4 className="font-semibold">Assign Schools</h4>
-          <div className="grid grid-cols-2 gap-2 max-h-60 overflow-y-auto">
-            {schools.map((school) => (
-              <label key={school.id} className="flex items-center gap-2">
-                <input
-                  type="checkbox"
-                  checked={selectedSchools.includes(school.id)}
-                  onChange={() => toggleSchool(school.id)}
-                />
-                {school.school_name}
-              </label>
-            ))}
-          </div>
-        </div>
 
         <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
           Create User

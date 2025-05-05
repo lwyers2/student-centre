@@ -68,4 +68,40 @@ export const updateModule = async (token, moduleId, updatedData) => {
   return response.data
 }
 
-export default { getAll, getModule, getModuleFromModuleYear, getModulesFromCourseYear, updateModuleYear, updateModule }
+export const addUserToModule = async (token, userId, moduleYearId, moduleId) => {
+  const response = await axios.post(
+    `${baseUrl}/add-user-to-module`,
+    {
+      userId,
+      moduleYearId,
+      moduleId
+    },
+    {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    }
+  )
+  return response.data
+}
+
+// services/module.js
+export const removeUserFromModule = async (token, userId, moduleYearId, moduleId) => {
+  const response = await axios.delete(`${baseUrl}/remove-user-from-module`, {
+    data: { userId, moduleYearId, moduleId },
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  })
+  return response.data
+}
+
+
+export default { getAll,
+  getModule,
+  getModuleFromModuleYear,
+  getModulesFromCourseYear,
+  updateModuleYear,
+  updateModule,
+  addUserToModule,
+  removeUserFromModule, }

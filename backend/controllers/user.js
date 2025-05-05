@@ -114,7 +114,6 @@ usersRouter.get(
 
 usersRouter.post(
   '/',
-  validate,
   tokenVerification,
   roleAndIdAuthorization(['Super User'], true),
   async (req, res) => {

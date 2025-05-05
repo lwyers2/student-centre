@@ -268,6 +268,140 @@ async function updateModule(moduleId, { title, code, year, CATs }) {
   return updatedModule
 }
 
+async function addUserToModule(userId, moduleYearId, moduleId) {
+
+  // Check if the user exists
+  const user = await User.findOne({
+    where: {
+      id: userId
+    }
+  })
+  if (!user) {
+    const error = new Error('User not found')
+    error.status = 404
+    throw error
+  }
+  // Check if the module year exists
+  const moduleYear = await ModuleYear.findOne({
+    where: {
+      id: moduleYearId,
+      module_id: moduleId
+    }
+  })
+  if (!moduleYear) {
+    const error = new Error('Module year not found')
+    error.status = 404
+    throw error
+  }
+  // Check if the user is already in the module year
+  const userModule = await UserModule.findOne({
+    where: {
+      user_id: userId,
+      module_year_id: moduleYearId,
+      module_id: moduleId
+    }
+  })
+  if (userModule) {
+    const error = new Error('User already in module year')
+    error.status = 400
+    throw error
+  }
+
+  const newUserModule = await UserModule.create({
+    user_id: userId,
+    module_year_id: moduleYearId,
+    module_id:moduleId
+  })
+
+  const refactoredUserModule = await ModuleYear.findOne({
+    where: {
+      id: newUserModule.module_year_id,
+    },
+    include: [
+      {
+        model: Module,
+        as: 'module_year_module',
+        attributes: ['id', 'title', 'code', 'year', 'CATs'],
+      },
+      {
+        model: User,
+        as: 'module_year_module_coordinator',
+        attributes: ['prefix', 'forename', 'surname']
+      },
+      {
+        model: Semester,
+        as: 'module_year_semester',
+        attributes: ['id', 'name']
+      },
+    ]
+  })
+
+  const formatedModule = {
+    CATs: refactoredUserModule.module_year_module.CATs,
+    code: refactoredUserModule.module_year_module.code,
+    module_coordinator: `${refactoredUserModule.module_year_module_coordinator.prefix}. ${refactoredUserModule.module_year_module_coordinator.forename} ${refactoredUserModule.module_year_module_coordinator.surname}`,
+    module_year_id: refactoredUserModule.id,
+    module_id: refactoredUserModule.module_year_module.id,
+    semester: refactoredUserModule.module_year_semester.name,
+    title: refactoredUserModule.module_year_module.title,
+    year_start: refactoredUserModule.year_start,
+    year: refactoredUserModule.module_year_module.year,
+  }
+
+  return formatedModule
+}
+
+async function removeUserFromModule(userId, moduleYearId, moduleId) {
+
+
+  // Check if the user exists
+  const user = await User.findOne({
+    where: {
+      id: userId
+    }
+  })
+  if (!user) {
+    const error = new Error('User not found')
+    error.status = 404
+    throw error
+  }
+  // Check if the module year exists
+  const moduleYear = await ModuleYear.findOne({
+    where: {
+      id: moduleYearId,
+      module_id: moduleId
+    }
+  })
+  if (!moduleYear) {
+    const error = new Error('Module year not found')
+    error.status = 404
+    throw error
+  }
+  // Check if the user is in the module year
+  const userModule = await UserModule.findOne({
+    where: {
+      user_id: userId,
+      module_year_id: moduleYearId,
+      module_id: moduleId
+    }
+  })
+  if (!userModule) {
+    const error = new Error('User not in module year')
+    error.status = 400
+    throw error
+  }
+
+  const deleteUserModule = await UserModule.destroy({
+    where: {
+      user_id: userId,
+      module_year_id: moduleYearId,
+      module_id: moduleId
+    }
+  })
+
+  return deleteUserModule
+}
+
 
 module.exports = {
   getAllModules,
@@ -276,5 +410,7 @@ module.exports = {
   getModule,
   getModulesFromCourseYear,
   updateModuleYear,
-  updateModule
+  updateModule,
+  addUserToModule,
+  removeUserFromModule,
 }

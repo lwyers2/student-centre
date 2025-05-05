@@ -40,7 +40,7 @@ const AddModulesToUser = () => {
     const courseYearId = Number(e.target.value)
     setSelectedCourseYearId(courseYearId)
     try {
-      const modules = await moduleService.getModulesByCourseYear(user.token, courseYearId)
+      const modules = await moduleService.getModulesFromCourseYear(courseYearId, user.token)
       const filteredModules = modules.filter(m =>
         !assignedModules.some(am => am.module_year_id === m.module_year_id)
       )
@@ -50,10 +50,39 @@ const AddModulesToUser = () => {
     }
   }
 
-  const handleRemoveModule = (moduleYearId) => {
-    const updatedModules = assignedModules.filter(m => m.module_year_id !== moduleYearId)
-    setAssignedModules(updatedModules)
+  const handleAddModule = async (module) => {
+    try {
+      const addedModule = await moduleService.addUserToModule(user.token, userId, module.module_year_id, module.module_id)
+      setAssignedModules(prev => [...prev, addedModule])
+      setAvailableModules(prev => prev.filter(m => m.module_year_id !== module.module_year_id))
+    } catch (error) {
+      console.error('Failed to add user to module:', error)
+      alert('Error: Could not add user to module.')
+    }
   }
+
+
+  const handleRemoveModule = async (moduleYearId) => {
+    const moduleToRemove = assignedModules.find(m => m.module_year_id === moduleYearId)
+
+    if (!moduleToRemove) return
+
+    try {
+      await moduleService.removeUserFromModule(
+        user.token,
+        userId,
+        moduleToRemove.module_year_id,
+        moduleToRemove.module_id
+      )
+
+      setAssignedModules(prev => prev.filter(m => m.module_year_id !== moduleYearId))
+      setAvailableModules(prev => [...prev, moduleToRemove])
+    } catch (error) {
+      console.error('Failed to remove user from module:', error)
+      alert(error?.response?.data?.error || 'Could not remove module')
+    }
+  }
+
 
   const selectedCourse = availableCourses.find(course => course.course_id === selectedCourseId)
   const selectedCourseYear = selectedCourse?.course_years.find(cy => cy.id === selectedCourseYearId)
@@ -75,7 +104,9 @@ const AddModulesToUser = () => {
         >
           <option value="" disabled>Select a course</option>
           {availableCourses.map(course => (
-            <option key={course.course_id} value={course.course_id}>{course.title}</option>
+            <option key={course.course_id} value={course.course_id}>
+              {course.title}
+            </option>
           ))}
         </select>
       </div>
@@ -110,7 +141,7 @@ const AddModulesToUser = () => {
                 {showAssigned ? 'Hide' : 'Show'}
               </button>
             </div>
-            {showAssigned ? (
+            {showAssigned && (
               <ul className="space-y-4">
                 {assignedModules.map(module => (
                   <li key={module.module_year_id} className="border p-4 rounded-lg bg-gray-100 dark:bg-gray-700">
@@ -127,7 +158,7 @@ const AddModulesToUser = () => {
                   </li>
                 ))}
               </ul>
-            ) : null}
+            )}
           </div>
 
           <div className="mb-10">
@@ -151,23 +182,25 @@ const AddModulesToUser = () => {
 
             {showAvailable && (
               <ul className="space-y-4">
-                {availableModules.filter(module =>
-                  module.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                  module.code.toLowerCase().includes(searchQuery.toLowerCase())
-                ).map(module => (
-                  <li key={module.module_year_id} className="border p-4 rounded-lg bg-gray-100 dark:bg-gray-700">
-                    <p className="font-bold text-lg">{module.title} ({module.code})</p>
-                    <p className="text-sm">{module.semester} {module.year_start} — {module.CATs} CATs</p>
-                    <div className="mt-2">
-                      <button
-                        className="px-3 py-1 text-sm rounded bg-green-500 text-white hover:bg-green-600"
-                        onClick={() => console.log(`Add module year ${module.module_year_id}`)}
-                      >
-                        Add
-                      </button>
-                    </div>
-                  </li>
-                ))}
+                {availableModules
+                  .filter(module =>
+                    module.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                    module.code.toLowerCase().includes(searchQuery.toLowerCase())
+                  )
+                  .map(module => (
+                    <li key={module.module_year_id} className="border p-4 rounded-lg bg-gray-100 dark:bg-gray-700">
+                      <p className="font-bold text-lg">{module.title} ({module.code})</p>
+                      <p className="text-sm">{module.semester} {module.year_start} — {module.CATs} CATs</p>
+                      <div className="mt-2">
+                        <button
+                          className="px-3 py-1 text-sm rounded bg-green-500 text-white hover:bg-green-600"
+                          onClick={() => handleAddModule(module)}
+                        >
+                          Add
+                        </button>
+                      </div>
+                    </li>
+                  ))}
               </ul>
             )}
           </div>

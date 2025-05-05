@@ -119,6 +119,15 @@ const updateUser = async (id, token, userData) => {
   return response.data
 }
 
+const createUser = async (userData, token) => {
+  const response = await axios.post(baseUrl, userData, {
+    headers: {
+      'Authorization' : `Bearer ${token}`
+    }
+  })
+  return response.data
+}
+
 export default {
   getAll,
   getUser,
@@ -133,4 +142,5 @@ export default {
   getUsersFromModuleYear,
   getUserDetails,
   updateUser,
+  createUser,
 }

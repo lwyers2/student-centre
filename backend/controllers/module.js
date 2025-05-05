@@ -134,5 +134,51 @@ modulesRouter.put(
   }
 )
 
+modulesRouter.post(
+  '/add-user-to-module',
+  tokenVerification,
+  roleAuthorization(['Super User', 'Admin']),
+  async (req, res) => {
+    const { userId, moduleYearId, moduleId } = req.body
+
+    if (!userId || !moduleYearId || !moduleId) {
+      return res.status(400).json({ error: 'Missing required fields' }) // Use `error` consistently
+    }
+
+    const addedUser = await moduleService.addUserToModule(userId, moduleYearId, moduleId)
+
+    if (!addedUser) {
+      const error = new Error('Failed to add user to module')
+      error.status = 404
+      throw error
+    }
+
+    res.status(200).json(addedUser)
+  }
+)
+
+modulesRouter.delete(
+  '/remove-user-from-module',
+  tokenVerification,
+  roleAuthorization(['Super User']),
+  async (req, res) => {
+    const { userId, moduleYearId, moduleId } = req.body
+
+    if (!userId || !moduleYearId || !moduleId) {
+      return res.status(400).json({ error: 'Missing required fields' }) // Use `error` consistently
+    }
+
+    const removedUser = await moduleService.removeUserFromModule(userId, moduleYearId, moduleId)
+
+    if (!removedUser) {
+      const error = new Error('Failed to remove user from module')
+      error.status = 404
+      throw error
+    }
+
+    res.status(200).json(removedUser)
+  }
+)
+
 
 module.exports = modulesRouter

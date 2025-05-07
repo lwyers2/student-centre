@@ -29,12 +29,6 @@ const Tools = ({ user }) => {
                   desLabel="View upcoming meetings"
                   img={meetings} alt="upload student results to be seen in app"
                 />
-                <Tool
-                  linkTo="/admin"
-                  titleLabel="User Admin"
-                  desLabel="Edit user profile"
-                  img={userAccount} alt="upload student results to be seen in app"
-                />
               </div>
               <div className="list-none mx-auto my-12 flex flex-col sm:flex-row items-center gap-8">
                 <Tool

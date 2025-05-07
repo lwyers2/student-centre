@@ -1,4 +1,3 @@
-//TODO: improve search
 import React, { useState } from 'react'
 import Table from '../Table'
 
@@ -14,15 +13,15 @@ const AllUserStudents = ({ students, search }) => {
   const tableData = {
     labels: { title: 'Showing students from your assigned modules' },
     content: {
-      headers: ['Forename', 'Surname', 'Student Code', 'Email' ], // Table headers
+      headers: ['Forename', 'Surname', 'Student Code', 'Email' ],
       data: filteredStudents.map((student) => ({
-        id: student.id, // Unique ID for each row
+        id: student.id,
         forename : student.forename,
         surname: student.surname,
         'student code': student.student_code,
         email: student.email,
       })),
-      view: '/student', // Base path for "View" links
+      view: '/student',
     },
   }
 

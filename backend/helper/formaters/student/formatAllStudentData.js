@@ -1,5 +1,5 @@
 function formatAllStudentData(student) {
-  // Extract student details
+  // Have student details here so that we can spit out under student: for frontend
   const studentDetails = {
     id: student.id,
     email: student.email,
@@ -8,15 +8,15 @@ function formatAllStudentData(student) {
     surname: student.surname,
   }
 
-  // Create a map to store courses by their course_year_id
+  // map to store courses by their course_year_id
   const courseMap = new Map()
 
-  // Process courses first
+  // Get courses first
   student.student_student_course.forEach((studentCourse) => {
-    const courseYear = studentCourse.student_course_course_year || {} // Handle missing course year
-    const course = courseYear.course_year_course || {} // Handle missing course data
+    const courseYear = studentCourse.student_course_course_year || {}
+    const course = courseYear.course_year_course || {}
 
-    // Store course in the map using course_year_id as the key
+    // use course year id as key to make sure there's no dupes
     courseMap.set(studentCourse.course_year_id, {
       course_year_id: studentCourse.course_year_id,
       course_id: studentCourse.course_id,
@@ -34,17 +34,17 @@ function formatAllStudentData(student) {
     })
   })
 
-  // Process modules and assign them to the correct course(s)
+  // Then get modules,bit more complicated as we also need to get the course year
   student.student_student_module.forEach((studentModule) => {
-    const moduleYear = studentModule.student_module_module_year || {} // Handle missing module year
-    const module = moduleYear.module_year_module || {} // Handle missing module data
-    const courseYears = moduleYear.module_year_module_course || [] // This is now an array
+    const moduleYear = studentModule.student_module_module_year || {}
+    const module = moduleYear.module_year_module || {}
+    const courseYears = moduleYear.module_year_module_course || []
 
     courseYears.forEach((courseYear) => {
       if (courseYear.course_year_id && courseMap.has(courseYear.course_year_id)) {
         const course = courseMap.get(courseYear.course_year_id)
 
-        // Add module to the corresponding course
+        // then handle adding module details to course
         course.modules.push({
           module_year_id: studentModule.module_year_id,
           module_id: module.id || undefined,
@@ -65,7 +65,7 @@ function formatAllStudentData(student) {
     })
   })
 
-  // Convert map values to an array
+  // Finally, convert the map to an array to be able to return
   const courses = Array.from(courseMap.values())
 
   return {

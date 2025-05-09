@@ -137,7 +137,6 @@ async function updateCourseYear(courseId, courseYearId, courseCoordinatorId) {
     throw error
   }
 
-  // Perform the update on CourseYear
   await CourseYear.update({
     course_coordinator: courseCoordinator.id
   }, {
@@ -146,10 +145,9 @@ async function updateCourseYear(courseId, courseYearId, courseCoordinatorId) {
     }
   })
 
-  // Fetch and return the updated CourseYear data after update
   const updatedCourseYear = await CourseYear.findByPk(courseYearId)
 
-  return updatedCourseYear  // Return the updated CourseYear object
+  return updatedCourseYear
 }
 
 async function addCourseYear(courseId, yearStart, courseLength, courseCoordinatorId) {
@@ -189,7 +187,6 @@ async function addCourseYear(courseId, yearStart, courseLength, courseCoordinato
     throw error
   }
 
-  // 🔥 Check start year first
   const hasSameStartYear = await CourseYear.findOne({
     where: {
       course_id: course.id,
@@ -203,7 +200,6 @@ async function addCourseYear(courseId, yearStart, courseLength, courseCoordinato
     throw error
   }
 
-  // 🔥 Check end year separately
   const hasSameEndYear = await CourseYear.findOne({
     where: {
       course_id: course.id,
@@ -259,7 +255,6 @@ async function updateCourse(courseId, courseData) {
     where: { id: courseId }
   })
 
-  // 🔥 Refetch the updated course after update
   const updatedCourse = await Course.findByPk(courseId)
 
   return updatedCourse

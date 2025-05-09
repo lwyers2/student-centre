@@ -17,7 +17,7 @@ const formatOneUser = (user) => {
     role: user.user_role || null,
     courses: (user.user_user_course || []).reduce((acc, courseEntry) => {
       const courseId = courseEntry.user_course_course?.id || 0
-      const courseTitle = courseEntry.user_course_course?.title || '' // Empty string for missing title
+      const courseTitle = courseEntry.user_course_course?.title || ''
       const courseYears = courseEntry.user_course_course?.years || ''
       const courseCode = courseEntry.user_course_course?.code || ''
       const coursePartTime = courseEntry.user_course_course?.part_time || false
@@ -28,7 +28,7 @@ const formatOneUser = (user) => {
       if (!existingCourse) {
         existingCourse = {
           course_id: courseId,
-          title: courseTitle, // Ensure empty string for missing title
+          title: courseTitle,
           years: courseYears,
           code: courseCode,
           part_time: coursePartTime,
@@ -50,10 +50,10 @@ const formatOneUser = (user) => {
       return acc
     }, []),
     modules: (user.user_module_user || []).map((moduleEntry) => {
-      if (!moduleEntry.user_module_module_year) return null // Skip if module_year is missing
+      if (!moduleEntry.user_module_module_year) return null
       return {
         module_id: moduleEntry.module_id || null,
-        module_year_id: moduleEntry.module_year_id || null, // Ensure null instead of undefined
+        module_year_id: moduleEntry.module_year_id || null,
         title: moduleEntry.user_module_module_year?.module_year_module?.title || null,
         code: moduleEntry.user_module_module_year?.module_year_module?.code || null,
         CATs: moduleEntry.user_module_module_year?.module_year_module?.CATs || null,
@@ -62,7 +62,8 @@ const formatOneUser = (user) => {
         module_coordinator: `${moduleEntry.user_module_module_year?.module_year_module_coordinator?.prefix || ''}. ${moduleEntry.user_module_module_year?.module_year_module_coordinator?.forename || ''} ${moduleEntry.user_module_module_year?.module_year_module_coordinator?.surname || ''}`.trim(),
         semester: moduleEntry.user_module_module_year?.module_year_semester?.name || null,
       }
-    }).filter(Boolean) // Filter out any null values (those with missing `user_module_module_year`)
+      //this will filter out any null values in the array
+    }).filter(Boolean)
   }
 }
 

@@ -1,4 +1,5 @@
 function formatOneStudentOneModuleYear(student, letterCount, course) {
+  //we'll get the same module year multiple times, so we just want the first one
   const studentStudentModule = student.student_student_module && student.student_student_module[0]
 
   if (!studentStudentModule) {
@@ -15,10 +16,10 @@ function formatOneStudentOneModuleYear(student, letterCount, course) {
     ? studentStudentModule.student_module_letter[0]
     : undefined
 
-  // Handle the case where course is undefined or missing
   const courseData = course || {}
 
   return {
+    // break up into student, course, module, letter
     student: {
       id: student.id,
       email: student.email,
@@ -56,6 +57,7 @@ function formatOneStudentOneModuleYear(student, letterCount, course) {
         authorised: letter.authorised,
         sent_by_user: `${letter.letter_sent_by_user.prefix}. ${letter.letter_sent_by_user.forename} ${letter.letter_sent_by_user.surname}`,
         date_sent: letter.date_sent
+        //format the date
           ? new Date(letter.date_sent).toLocaleString('en-GB', {
             day: '2-digit',
             month: 'long',

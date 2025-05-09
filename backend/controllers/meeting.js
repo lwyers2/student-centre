@@ -69,7 +69,7 @@ meetingRouter.put('/update/:meetingId', async (req, res) => {
 
 
 
-// DELETE route to delete a meeting
+
 meetingRouter.delete('/delete/:meetingId', async (req, res) => {
   const { meetingId } = req.params
   const result = await meetingService.deleteMeeting(meetingId)

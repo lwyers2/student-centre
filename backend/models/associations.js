@@ -141,10 +141,6 @@ User.hasMany(Meeting, {
   timestamps: false,
 })
 
-
-
-
-
 //user_course (user, course, course_year)
 
 //User -> User_course

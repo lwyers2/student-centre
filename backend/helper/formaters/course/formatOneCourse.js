@@ -1,11 +1,12 @@
 function formatOneCourse(course) {
-  // Deduplicate users by their ID
+  // bit more of a complicated function to format course. The is is that we'll get the same user multiple times
   const seenUserIds = new Set()
   const uniqueUsers = []
 
   for (const userCourse of course.course_user_course) {
     const user = userCourse.user_course_user
     if (user && !seenUserIds.has(user.id)) {
+      //add user if not already seen
       seenUserIds.add(user.id)
       uniqueUsers.push({
         id: user.id,

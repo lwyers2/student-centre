@@ -3,7 +3,6 @@ const { School } = require('../models')
 
 schoolsRouter.get(
   '/',
-  //roleAndIdAuthorization(['Super User'], true),
   async (req, res) => {
     const schools = await School.findAll({
       attributes: ['id', 'school_name'],

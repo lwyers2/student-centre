@@ -1,7 +1,7 @@
 function formatUserModulesFromCourseYear(user) {
-  if (!user) return undefined // Handle case when user is undefined
+  if (!user) return undefined
 
-  const firstCourse = (user.user_user_course && user.user_user_course[0]) || {} // Ensure safety
+  const firstCourse = (user.user_user_course && user.user_user_course[0]) || {}
 
   return {
     user: {

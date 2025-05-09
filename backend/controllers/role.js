@@ -2,6 +2,7 @@ const rolesRouter = require('express').Router()
 
 const { Role } = require('../models')
 
+//Don't need any services due to simplicity of router.
 rolesRouter.get(
   '/',
   async (req, res) => {

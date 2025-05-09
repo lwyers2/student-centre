@@ -1,7 +1,7 @@
 const roleAndIdAuthorization = (allowedRoles, resourceOwnerRequired = false) => {
   return (req, res, next) => {
     const { role_name: role, id: authenticatedUserId, } = req.user
-    const { user: requestedUserId } = req.params // The ID from the route params
+    const { user: requestedUserId } = req.params
 
     // If resourceOwnerRequired is true, ensure the requesting user is the same as the requested user
     const isResourceOwner = resourceOwnerRequired && authenticatedUserId === parseInt(requestedUserId)
@@ -13,7 +13,7 @@ const roleAndIdAuthorization = (allowedRoles, resourceOwnerRequired = false) => 
       return next(error)
     }
 
-    next() // Allow access if role or ID matches
+    next()
   }
 }
 

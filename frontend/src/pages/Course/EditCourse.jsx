@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { useNavigate, useParams } from 'react-router-dom'
+
 import courseService from '../../services/course'
 import userService from '../../services/user'
 import qualificationsService from '../../services/qualifications'
@@ -11,6 +12,8 @@ import AddCourseYearForm from '../../components/CourseView/Edit/AddCourseYearFor
 const EditCourse = () => {
   const user = useSelector(state => state.user)
   const navigate = useNavigate()
+  const params = useParams()
+
   const [course, setCourse] = useState(null)
   const [courseYears, setCourseYears] = useState([])
   const [newYear, setNewYear] = useState({ year_start: 2020, course_coordinator_id: '' })
@@ -20,63 +23,63 @@ const EditCourse = () => {
   const [showAddYear, setShowAddYear] = useState(false)
   const [qualifications, setQualifications] = useState([])
 
-  const params = useParams()
-
+  // 🔐 Redirect if user is not logged in
   useEffect(() => {
     if (!user) {
       navigate('/')
     }
   }, [user, navigate])
 
+  // 🧠 Fetch course + users
   useEffect(() => {
-    if (user?.id) {
-      courseService.getOneCourse(user.token, params.courseId)
-        .then(response => {
-          const fetchedCourseYears = response.course_years
-          const allUsers = response.users
+    if (!user?.token || !params.courseId) return
 
-          const updatedCourseYears = fetchedCourseYears.map(year => {
-            const matchingUser = allUsers.find(u =>
-              `${u.prefix}. ${u.forename} ${u.surname}` === year.course_coordinator
-            )
-            return {
-              ...year,
-              course_coordinator_id: matchingUser?.id || null
-            }
-          })
+    courseService.getOneCourse(user.token, params.courseId)
+      .then(response => {
+        const fetchedCourseYears = response.course_years
+        const allUsers = response.users
 
-          setCourse(response.course)
-          setCourseYears(updatedCourseYears)
-          setUsers(allUsers)
-          setFormState({
-            title: response.course.title,
-            code: response.course.code,
-            qualification: response.course.qualification,
-            part_time: !!response.course.part_time,
-            school: response.course.school
-          })
+        const updatedCourseYears = fetchedCourseYears.map(year => {
+          const matchingUser = allUsers.find(u =>
+            `${u.prefix}. ${u.forename} ${u.surname}` === year.course_coordinator
+          )
+          return {
+            ...year,
+            course_coordinator_id: matchingUser?.id || null
+          }
         })
-        .catch(() => {
-          setCourse(null)
-          setCourseYears([])
-          setUsers([])
-        })
-    }
-  }, [user.token, params.courseId])
 
+        setCourse(response.course)
+        setCourseYears(updatedCourseYears)
+        setUsers(allUsers)
+        setFormState({
+          title: response.course.title,
+          code: response.course.code,
+          qualification: response.course.qualification,
+          part_time: !!response.course.part_time,
+          school: response.course.school
+        })
+      })
+      .catch(() => {
+        setCourse(null)
+        setCourseYears([])
+        setUsers([])
+      })
+  }, [user?.token, params.courseId])
+
+  // 🎓 Fetch qualifications
   useEffect(() => {
-    if (course) {
-      qualificationsService.getAll(user.token)
-        .then(response => {
-          setQualifications(response)
-        })
-        .catch(err => {
-          console.error(err)
-          alert('Failed to fetch qualifications')
-        })
-    }
-  }, [course, user.token])
+    if (!course || !user?.token) return
 
+    qualificationsService.getAll(user.token)
+      .then(setQualifications)
+      .catch(err => {
+        console.error(err)
+        alert('Failed to fetch qualifications')
+      })
+  }, [course, user?.token])
+
+  // 📋 Handle course form state
   const handleCourseChange = (e) => {
     const { name, value, type, checked } = e.target
     setFormState(prev => ({
@@ -97,6 +100,7 @@ const EditCourse = () => {
     }
   }
 
+  // 📆 Add new year logic
   const handleNewYearChange = (e) => {
     const { name, value } = e.target
     setNewYear(prev => ({ ...prev, [name]: value }))
@@ -124,7 +128,7 @@ const EditCourse = () => {
         params.courseId,
         newYear.year_start,
         course.years,
-        newYear.course_coordinator_id   // ✅ directly pass ID now
+        newYear.course_coordinator_id
       )
 
       const coordinatorUser = users.find(u => u.id === Number(newYear.course_coordinator_id))
@@ -146,7 +150,8 @@ const EditCourse = () => {
     }
   }
 
-
+  // 🚧 Conditional Rendering
+  if (!user) return null
   if (!user?.id) return <div>Loading user...</div>
   if (!course) return <div>Loading course...</div>
 
@@ -159,7 +164,6 @@ const EditCourse = () => {
         {course.title} ({course.code})
       </h2>
 
-      {/* Course Details Form */}
       <CourseDetailsForm
         formState={formState}
         qualifications={qualifications}
@@ -167,7 +171,6 @@ const EditCourse = () => {
         handleCourseSubmit={handleCourseSubmit}
       />
 
-      {/* Existing Course Years */}
       <CourseYearsList
         courseYears={courseYears}
         setCourseYears={setCourseYears}
@@ -178,7 +181,6 @@ const EditCourse = () => {
         courseId={course.id}
       />
 
-      {/* Toggle Add Year */}
       <AddCourseYearForm
         showAddYear={showAddYear}
         setShowAddYear={setShowAddYear}

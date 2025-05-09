@@ -55,6 +55,7 @@ studentsRouter.get(
       error.status = 404
       throw error
     }
+    //Todo mention in writeup
     //could set next explicity, but no need to as using express-async errors
     // if (!student) {
     //   const error = new Error('Student not found')
@@ -70,7 +71,6 @@ studentsRouter.get(
   validateId('student'),
   validate,
   tokenVerification,
-  //roleAuthorization(['Super User']),
   async (req, res,) => {
     const studentId = req.params.student
     const student = await studentService.getStudentModulesData(studentId)
@@ -88,7 +88,6 @@ studentsRouter.get(
   validateId('student'),
   validate,
   tokenVerification,
-  //roleAuthorization(['Super User']),
   async (req, res,) => {
     const studentId = req.params.student
     const courseYearId = req.params.course
@@ -115,6 +114,7 @@ studentsRouter.get(
     const moduleYearId = req.params.moduleYearId
     const userId = req.user.id
     const userRole = req.user.role_name
+    //has access used to here. Checking that user has access to those modules. Really I could have handled this better throughout
     const hasAccess = await checkUserAccessToModule(userId, moduleYearId)
     if(!hasAccess && (userRole !== 'Super User')) {
       if (!hasAccess) throw new Error('Access denied')

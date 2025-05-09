@@ -10,6 +10,7 @@ const {
   Course
 } = require('../models')
 
+//break into chunks of 50 to help process large files
 const BATCH_SIZE = 50
 
 async function parseResultsCSV(filePath) {
@@ -23,7 +24,7 @@ async function parseResultsCSV(filePath) {
   })
 }
 
-// Process the CSV results in chunks
+
 async function processResultsChunk(chunk, courseYearId) {
   let updatedCount = 0
 

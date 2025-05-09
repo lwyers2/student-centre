@@ -1,8 +1,9 @@
 function formatUserStudents(user) {
-  // Initialize uniqueStudents as an empty array
   let uniqueStudents = []
 
-  // Iterate through the user's modules
+  // Because we are getting user_modules it will return the same module, but multiple multiple module_years
+  // So we need to loop through the user_module_user and get the module_year_student_module
+  // and then get the student from that
   user.user_module_user.forEach((module) => {
     if (Array.isArray(module.user_module_module_year.module_year_student_module)) {
       module.user_module_module_year.module_year_student_module.forEach((studentModule) => {

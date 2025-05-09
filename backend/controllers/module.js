@@ -93,7 +93,7 @@ modulesRouter.put(
     const { coordinator, semester } = req.body
 
     if (!coordinator || !semester) {
-      return res.status(400).json({ error: 'Missing required fields' }) // Use `error` consistently
+      return res.status(400).json({ error: 'Missing required fields' })
     }
 
     const updatedModuleYear = await moduleService.updateModuleYear(moduleId, moduleYearId, { coordinator, semester })
@@ -119,7 +119,7 @@ modulesRouter.put(
     const { title, code, year, CATs } = req.body
 
     if (!title || !code || !year || !CATs) {
-      return res.status(400).json({ error: 'Missing required fields' }) // Use `error` consistently
+      return res.status(400).json({ error: 'Missing required fields' })
     }
 
     const updatedModule = await moduleService.updateModule(moduleId, { title, code, year, CATs })
@@ -142,7 +142,7 @@ modulesRouter.post(
     const { userId, moduleYearId, moduleId } = req.body
 
     if (!userId || !moduleYearId || !moduleId) {
-      return res.status(400).json({ error: 'Missing required fields' }) // Use `error` consistently
+      return res.status(400).json({ error: 'Missing required fields' })
     }
 
     const addedUser = await moduleService.addUserToModule(userId, moduleYearId, moduleId)
@@ -165,7 +165,7 @@ modulesRouter.delete(
     const { userId, moduleYearId, moduleId } = req.body
 
     if (!userId || !moduleYearId || !moduleId) {
-      return res.status(400).json({ error: 'Missing required fields' }) // Use `error` consistently
+      return res.status(400).json({ error: 'Missing required fields' })
     }
 
     const removedUser = await moduleService.removeUserFromModule(userId, moduleYearId, moduleId)

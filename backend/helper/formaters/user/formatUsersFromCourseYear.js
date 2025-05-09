@@ -1,4 +1,5 @@
 const formatUsersFromCourseYears = (users) => {
+  // we want to seperate the users into admin staff and teachers
   const adminStaff = users
     .filter((user) => user.user_course_user.user_role.name === 'Admin')
     .map((user) => ({

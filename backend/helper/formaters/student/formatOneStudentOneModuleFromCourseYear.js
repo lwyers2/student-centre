@@ -1,13 +1,13 @@
 function formatOneStudentOneModuleFromCourseYear(student) {
   if (!student.student_student_course || student.student_student_course.length === 0) {
-    return {} // Return empty object if no course data exists
+    return {}
   }
 
-  const course = student.student_student_course[0] // Take the first course
+  const course = student.student_student_course[0] // bit bad but only want one course, but it should only be one
   const courseYear = course.student_course_course_year
   const courseDetails = courseYear.course_year_course
 
-  // Convert all modules into an array
+  // format the module
   const formattedModules = courseYear.course_year_module_course.map((module) => ({
     module_id: module.module_id,
     module_year_id: module.module_year_id,
@@ -38,7 +38,7 @@ function formatOneStudentOneModuleFromCourseYear(student) {
       part_time: courseDetails.part_time,
       qualification: courseDetails.course_qualification_level.qualification,
     },
-    modules: formattedModules, // Now an array!
+    modules: formattedModules,
   }
 }
 

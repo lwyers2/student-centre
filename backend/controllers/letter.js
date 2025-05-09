@@ -9,7 +9,7 @@ letterRouter.post('/send-letter', async (req, res) => {
   const result = await sendLetter(studentId, moduleYearId, sentByUser, authorisedByStaff, typeName)
 
   if (!result.success) {
-    return res.status(400).send(result.message) // 400 for client-side errors
+    return res.status(400).send(result.message)
   }
 
   res.status(200).send('Letter sent successfully, meeting scheduled if necessary')
@@ -23,7 +23,7 @@ letterRouter.get('/:studentId', async (req, res) => {
 })
 
 letterRouter.get('/', async (req, res) => {
-  const { studentId, moduleYearId } = req.query // Use req.query instead of req.body
+  const { studentId, moduleYearId } = req.query
   if (!studentId || !moduleYearId) {
     return res.status(400).json({ error: 'Missing studentId or moduleYearId' })
   }

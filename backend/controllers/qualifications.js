@@ -3,6 +3,7 @@ const { QualificationLevel } = require('../models')
 const tokenVerification = require('../middleware/tokenVerification')
 const roleAndIdAuthorization = require('../middleware/roleAndIdAuthorization')
 
+//No need to create a service for this router due to its simplicity
 qualificationsRouter.get(
   '/',
   tokenVerification,

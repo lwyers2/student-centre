@@ -4,7 +4,7 @@ const crypto = require('crypto')
 const bcrypt = require('bcryptjs')
 const User = require('../models/user')
 
-// Utility to generate a secure random password
+//Crypto used to create a random password that will be sent
 const generateRandomPassword = () => crypto.randomBytes(8).toString('hex')
 
 resetPasswordRouter.post('/', async (req, res) => {
@@ -15,13 +15,14 @@ resetPasswordRouter.post('/', async (req, res) => {
     return res.status(400).send('User not found')
   }
 
+  //create password then hash
   const newPassword = generateRandomPassword()
   const hashedPassword = await bcrypt.hash(newPassword, 10)
 
   user.password = hashedPassword
   await user.save()
 
-  // Move inside handler for mockability
+  // transpoter is 'handler' need to create this to send
   const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
@@ -30,6 +31,7 @@ resetPasswordRouter.post('/', async (req, res) => {
     },
   })
 
+  //really simple subject and text.
   const mailOptions = {
     to: email,
     from: process.env.EMAIL_USER,

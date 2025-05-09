@@ -33,7 +33,6 @@ import EditModules from './pages/Admin/EditModules.jsx'
 import EditModuleYears from './pages/Admin/EditModuleYears.jsx'
 import EditCourses from './pages/Admin/EditCourses.jsx'
 import UsersAdmin from './pages/Admin/UsersAdmin.jsx'
-import EditStudents from './pages/Admin/EditStudents.jsx'
 import EditCourse from './pages/Course/EditCourse.jsx'
 import EditModule from './pages/Module/EditModule.jsx'
 import EditUser from './pages/User/EditUser.jsx'
@@ -116,7 +115,6 @@ const App = () => {
             <Route path='/assign-course-years-to-users' element={<ProtectedRoute> <AssignCourseYearsToUser/> </ProtectedRoute>}/>
             <Route path='/edit-courses' element={<ProtectedRoute> <EditCourses/> </ProtectedRoute>}/>
             <Route path='/users-admin' element={<ProtectedRoute> <UsersAdmin/> </ProtectedRoute>}/>
-            <Route path='/edit-students' element={<ProtectedRoute> <EditStudents/> </ProtectedRoute>}/>
             <Route path='/edit-course/:courseId' element={<ProtectedRoute> <EditCourse/> </ProtectedRoute>}/>
             <Route path='/edit-module/:moduleId' element={<ProtectedRoute> <EditModule/> </ProtectedRoute>}/>
             <Route path='/users/:userId/edit' element={<ProtectedRoute> <EditUser/> </ProtectedRoute>}/>

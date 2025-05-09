@@ -12,7 +12,7 @@ const errorHandler = (error, request, response, _next) => {
   if (error.status) {
     return response.status(error.status).json({
       error: error.message || 'An error occurred',
-      details: error.details || undefined, // Include details if provided
+      details: error.details || undefined,
     })
   }
 

@@ -137,7 +137,7 @@ async function checkUserAccessToModule(userId, moduleYearId) {
       module_year_id: moduleYearId
     }
   })
-  return !!userModule // Convert to boolean (true if found, false if not)
+  return !!userModule
 }
 
 
@@ -171,7 +171,6 @@ async function getModulesFromCourseYear(courseYearId) {
 
 async function updateModuleYear(moduleId, moduleYearId, { coordinator, semester }) {
 
-  // Check if the module year exists
   const moduleYear = await ModuleYear.findOne({
     where: {
       id: moduleYearId,
@@ -184,13 +183,11 @@ async function updateModuleYear(moduleId, moduleYearId, { coordinator, semester 
     error.status = 404
     throw error
   }
-  // Validate the input
   if (!coordinator || !semester) {
     const error = new Error('Missing required fields')
     error.status = 400
     throw error
   }
-  // Check if the coordinator exists
   const coordinatorExists = await User.findOne({
     where: {
       id: coordinator
@@ -202,13 +199,11 @@ async function updateModuleYear(moduleId, moduleYearId, { coordinator, semester 
     throw error
   }
 
-  // Check if semester is an ID (number) or a name (string)
+  // I have to do the below because how I set up in the frontend...
   const isId = Number.isInteger(Number(semester))
 
-  // Build the where condition based on type
   const whereCondition = isId ? { id: semester } : { name: semester }
 
-  // Find the semester
   const semesterExists = await Semester.findOne({ where: whereCondition })
 
   if (!semesterExists) {
@@ -236,7 +231,6 @@ async function updateModuleYear(moduleId, moduleYearId, { coordinator, semester 
     throw error
   }
 
-  // 🔥 Re-fetch the updated module year
   const updatedModuleYear = await ModuleYear.findOne({
     where: {
       id: moduleYearId,
@@ -270,7 +264,6 @@ async function updateModule(moduleId, { title, code, year, CATs }) {
 
 async function addUserToModule(userId, moduleYearId, moduleId) {
 
-  // Check if the user exists
   const user = await User.findOne({
     where: {
       id: userId
@@ -281,7 +274,6 @@ async function addUserToModule(userId, moduleYearId, moduleId) {
     error.status = 404
     throw error
   }
-  // Check if the module year exists
   const moduleYear = await ModuleYear.findOne({
     where: {
       id: moduleYearId,
@@ -293,7 +285,6 @@ async function addUserToModule(userId, moduleYearId, moduleId) {
     error.status = 404
     throw error
   }
-  // Check if the user is already in the module year
   const userModule = await UserModule.findOne({
     where: {
       user_id: userId,
@@ -354,7 +345,6 @@ async function addUserToModule(userId, moduleYearId, moduleId) {
 async function removeUserFromModule(userId, moduleYearId, moduleId) {
 
 
-  // Check if the user exists
   const user = await User.findOne({
     where: {
       id: userId
@@ -365,7 +355,6 @@ async function removeUserFromModule(userId, moduleYearId, moduleId) {
     error.status = 404
     throw error
   }
-  // Check if the module year exists
   const moduleYear = await ModuleYear.findOne({
     where: {
       id: moduleYearId,
@@ -377,7 +366,6 @@ async function removeUserFromModule(userId, moduleYearId, moduleId) {
     error.status = 404
     throw error
   }
-  // Check if the user is in the module year
   const userModule = await UserModule.findOne({
     where: {
       user_id: userId,

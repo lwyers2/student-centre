@@ -10,8 +10,9 @@ const { uploadResults } = require('../services/uploadResults')
 const studentRequiredFields = ['forename', 'surname', 'email', 'student_code', 'course_title', 'course_year_start']
 const resultsRequiredFields = ['student_code', 'module_code', 'module_year_start', 'module_year', 'result', 'result_descriptor']
 
-// 🔧 Configure Multer Storage
+//Setting up the storage for mutler
 const storage = multer.diskStorage({
+  //creating the upload path
   destination: (req, file, cb) => {
     const uploadPath = 'uploads/'
     if (!fs.existsSync(uploadPath)) {
@@ -24,10 +25,12 @@ const storage = multer.diskStorage({
   }
 })
 
+// uploader for multer
 const upload = multer({
   storage,
   limits: { fileSize: 10 * 1024 * 1024 },
   fileFilter: (req, file, cb) => {
+    //only wanting  docs or csvs
     const allowedTypes = /docx|doc|csv/
     const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase())
     const mimeType = allowedTypes.test(file.mimetype)
@@ -39,10 +42,10 @@ const upload = multer({
   }
 })
 
-// 📎 Utility to get file path
+// check if file is there first
 const getFilePath = (req) => req.file?.path
 
-// 📝 Upload Meeting Minutes
+// upload Meeting Minutes
 uploadRouter.post('/meeting-minutes', upload.single('file'), async (req, res) => {
 
   if (req.file === undefined) {
@@ -73,7 +76,7 @@ uploadRouter.post('/meeting-minutes', upload.single('file'), async (req, res) =>
   })
 })
 
-// 🧾 Upload Student CSV
+// upload Student CSV
 uploadRouter.post('/students', upload.single('file'), async (req, res) => {
   const filePath = getFilePath(req)
   if (filePath === undefined) {
@@ -98,6 +101,7 @@ uploadRouter.post('/students', upload.single('file'), async (req, res) => {
     success: true,
     message: 'CSV uploaded and processed successfully',
     totalRecords: studentsAdded,
+    //stats come from processStudentCSV
     stats: {
       studentsAdded,
       studentCourseLinks,
@@ -106,28 +110,23 @@ uploadRouter.post('/students', upload.single('file'), async (req, res) => {
   })
 })
 
-// 📊 Upload Course Year Results
-// 📊 Upload Course Year Results
+
 uploadRouter.post('/results/:courseYearId', upload.single('file'), async (req, res) => {
   const filePath = getFilePath(req)
   if (!filePath) {
     return res.status(400).json({ success: false, message: 'No file uploaded' })
   }
 
-  // Find the course year by the provided ID
+
   const courseYear = await CourseYear.findByPk(req.params.courseYearId)
-  // If course year is not found or the course_id is invalid
   if (!courseYear || !courseYear.course_id) {
     return res.status(500).json({ success: false, message: 'Course year not found' })
   }
 
-  // Validate the uploaded CSV file
   await validateCSVs(filePath, resultsRequiredFields)
 
-  // Upload the results
   const result = await uploadResults(req.params.courseYearId, filePath)
 
-  // Send back success response with stats
   res.status(200).json({
     success: true,
     message: 'Course year results processed successfully',

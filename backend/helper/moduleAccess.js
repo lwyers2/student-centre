@@ -1,4 +1,4 @@
-const { UserModule } = require('../models/') // Adjust path as needed
+const { UserModule } = require('../models/')
 
 async function checkUserAccessToModule(userId, moduleYearId) {
   const userModule = await UserModule.findOne({
@@ -7,7 +7,7 @@ async function checkUserAccessToModule(userId, moduleYearId) {
       module_year_id: moduleYearId
     }
   })
-  return !!userModule // Convert to boolean
+  return !!userModule
 }
 
 module.exports = { checkUserAccessToModule }

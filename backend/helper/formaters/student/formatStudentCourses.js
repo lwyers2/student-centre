@@ -1,4 +1,5 @@
 function formatStudentCourses(student) {
+  //simple enough formater
   const studentCourseYears = student.student_student_course
 
   return {

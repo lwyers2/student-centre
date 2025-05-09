@@ -1,10 +1,9 @@
 const { User } = require('../models')
 
-//TODO
-// update lockout time or maybe have admin to reset
 
 const MAX_ATTEMPTS = 5
-const LOCKOUT_TIME = 30 * 60 * 1000 // 30 minutes in milliseconds
+//30 minutes
+const LOCKOUT_TIME = 30 * 60 * 1000
 
 const rateLimitLoginAttempts = async (req, res, next) => {
   const { email } = req.body

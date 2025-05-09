@@ -17,7 +17,7 @@ const createMeeting = async (studentId, moduleYearId, scheduledDate, academicId,
   }
 
 
-  // Run module year and student module queries in parallel for efficiency
+  // Running both at same time to reduce queries
   const [moduleYears, studentModules] = await Promise.all([
     ModuleYear.findAll({
       where: { year_start: moduleYear.year_start },
@@ -36,14 +36,14 @@ const createMeeting = async (studentId, moduleYearId, scheduledDate, academicId,
 
   const moduleYearIds = moduleYears.map(m => m.id)
   const studentModuleIds = studentModules
-    .filter(sm => moduleYearIds.includes(sm.module_year_id)) // Ensure it's for the same course year
+    .filter(sm => moduleYearIds.includes(sm.module_year_id))
     .map(sm => sm.id)
 
   if (!studentModuleIds.length) {
     throw new Error(`No student modules found for student ID ${studentId} in course year ID ${courseYearId}.`)
   }
 
-  // Count failure letters sent across all modules in this academic year
+  // Get the letters sent count for student for that academic year.
   const letterCount = await Letter.count({
     where: { student_module_id: studentModuleIds }
   })
@@ -52,14 +52,13 @@ const createMeeting = async (studentId, moduleYearId, scheduledDate, academicId,
     return { success: false, message: `Student has received only ${letterCount} letter(s). A meeting is not required yet.` }
   }
 
-  // Find the specific student module for this module year
   const studentModule = studentModules.find(sm => sm.module_year_id === moduleYearId)
 
   if (!studentModule) {
     throw new Error(`Student module not found for student ID ${studentId} and module year ID ${moduleYearId}.`)
   }
 
-  // Create the meeting
+  // create meeting
   const meeting = await Meeting.create({
     student_id: studentId,
     module_year_id: moduleYearId,
@@ -121,10 +120,10 @@ const updateMeeting = async (meetingId, updateData) => {
     throw new Error('Meeting not found')
   }
 
-  // Update the meeting with new data
+  //update meeting
   await meeting.update(updateData)
 
-  // Fetch the updated meeting again to ensure the changes are reflected
+  // get the meeting so that we can return to use in frontend
   const updatedMeeting = await Meeting.findByPk(meetingId, {
     include: [
       { model: Student, as: 'meeting_student' },
@@ -148,7 +147,6 @@ const updateMeeting = async (meetingId, updateData) => {
 
 
 
-// Function to delete a meeting
 const deleteMeeting = async (meetingId) => {
   const meeting = await Meeting.findByPk(meetingId)
 
@@ -156,7 +154,7 @@ const deleteMeeting = async (meetingId) => {
     throw new Error('Meeting not found')
   }
 
-  // Delete the meeting
+  // Delete  meeting
   await meeting.destroy()
   return { success: true, message: 'Meeting deleted successfully' }
 }

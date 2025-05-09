@@ -323,7 +323,6 @@ async function getStudentModuleYearData(studentId, moduleYearId) {
     throw new Error('ModuleYear or associated ModuleCourse not found')
   }
 
-  // Access the first ModuleCourse entry
   const firstModuleCourse = moduleYear.module_year_module_course[0]
 
   const studentCourses = await StudentCourse.findAll({
@@ -334,7 +333,6 @@ async function getStudentModuleYearData(studentId, moduleYearId) {
     throw new Error('No StudentCourse found for the given course_year_id')
   }
 
-  // Get the course_year_id from the first student course (or iterate if needed)
   const firstStudentCourse = studentCourses[0]
 
   const course = await CourseYear.findOne({
@@ -352,7 +350,6 @@ async function getStudentModuleYearData(studentId, moduleYearId) {
 
   const courseYearId = moduleYear.module_year_module_course[0].course_year_id
 
-  // Get all module years in the same course year
   const moduleYearIds = await ModuleYear.findAll({
     where: { year_start: moduleYear.year_start },
     include: {
@@ -360,14 +357,13 @@ async function getStudentModuleYearData(studentId, moduleYearId) {
       as: 'module_year_module_course',
       where: { course_year_id: courseYearId },
     },
-    attributes: ['id'] // Only select the ID field for efficiency
+    attributes: ['id']
   }).then(moduleYears => moduleYears.map(m => m.id))
 
   if (!moduleYearIds.length) {
     throw new Error(`No module years found for course year ID: ${courseYearId}`)
   }
 
-  // Get all student modules for the student in this academic year
   const studentModuleIds = await StudentModule.findAll({
     where: {
       student_id: studentId,
@@ -380,7 +376,6 @@ async function getStudentModuleYearData(studentId, moduleYearId) {
     throw new Error(`No student modules found for student ID: ${studentId} in course year ID: ${courseYearId}`)
   }
 
-  // Count failure letters sent across all modules in this academic year
   const letterCount = await Letter.count({
     where: { student_module_id: studentModuleIds }
   })

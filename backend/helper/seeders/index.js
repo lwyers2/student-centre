@@ -8,6 +8,7 @@ const { seedResultDescriptors } = require('./seedResultDescriptors')
 
 async function populateTestDatabase() {
   try {
+    //this was once larger, but I reduced down
     console.log('Seeding test database...')
     const levels = await seedLevels()
     await seedClassifications(levels)
@@ -24,7 +25,7 @@ async function populateTestDatabase() {
     console.log('Test database seeded successfully')
   } catch (error) {
     console.error('Error seeding test database:', error)
-    throw error // Ensure errors propagate
+    throw error
   }
 }
 

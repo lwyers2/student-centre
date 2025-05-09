@@ -21,7 +21,7 @@ const User = db.define('User', {
     type: DataTypes.STRING,
     allowNull: false,
     validate: {
-      // Custom email validation using a regular expression
+      //validation using a regular expression
       isCustomEmail(value) {
         const regex = /^[a-zA-Z0-9._%+-]+@(ads\.qub\.ac\.uk|qub\.ac\.uk)$/
         if (!regex.test(value)) {

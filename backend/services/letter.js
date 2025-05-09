@@ -2,7 +2,7 @@ const { StudentModule, Letter, LetterType, ModuleYear, ModuleCourse, User, Stude
 const { formatAllLettersOneStudent } = require('../helper/formaters/letter/formatAllLettersOneStudent')
 
 const sendLetter = async (studentId, moduleYearId, sentByUser, authorisedByStaff) => {
-  // Get the module year and associated course year
+
   const moduleYear = await ModuleYear.findByPk(moduleYearId, {
     include: {
       model: ModuleCourse,
@@ -17,7 +17,7 @@ const sendLetter = async (studentId, moduleYearId, sentByUser, authorisedByStaff
 
   const courseYearId = moduleYear.module_year_module_course[0].course_year_id
 
-  // Get all module years in the same course year
+
   const moduleYearIds = await ModuleYear.findAll({
     where: { year_start: moduleYear.year_start },
     include: {
@@ -25,14 +25,14 @@ const sendLetter = async (studentId, moduleYearId, sentByUser, authorisedByStaff
       as: 'module_year_module_course',
       where: { course_year_id: courseYearId },
     },
-    attributes: ['id'] // Only select the ID field for efficiency
+    attributes: ['id']
   }).then(moduleYears => moduleYears.map(m => m.id))
 
   if (!moduleYearIds.length) {
     throw new Error(`No module years found for course year ID: ${courseYearId}`)
   }
 
-  // Get all student modules for the student in this academic year
+
   const studentModuleIds = await StudentModule.findAll({
     where: {
       student_id: studentId,
@@ -45,7 +45,7 @@ const sendLetter = async (studentId, moduleYearId, sentByUser, authorisedByStaff
     throw new Error(`No student modules found for student ID: ${studentId} in course year ID: ${courseYearId}`)
   }
 
-  // Count failure letters sent across all modules in this academic year
+  // get how many letters have already been sent
   const letterCount = await Letter.count({
     where: { student_module_id: studentModuleIds }
   })
@@ -55,7 +55,7 @@ const sendLetter = async (studentId, moduleYearId, sentByUser, authorisedByStaff
     return { success: false, message: 'Maximum number of failure letters already sent.' }
   }
 
-  // Find the specific student module for this module year
+
   const studentModule = await StudentModule.findOne({
     where: { student_id: studentId, module_year_id: moduleYearId }
   })
@@ -77,14 +77,14 @@ const sendLetter = async (studentId, moduleYearId, sentByUser, authorisedByStaff
   let letterTypeName
   letterCount === 0 ? letterTypeName = '1st Warning' : letterTypeName = '2nd Warning'
 
-  // Find the letter type
+
   const letterType = await LetterType.findOne({ where: { name: letterTypeName } })
 
   if (!letterType) {
     throw new Error(`Letter type not found for type name: ${letterTypeName}`)
   }
 
-  // Send the letter
+  // create the letter.
   await Letter.create({
     student_module_id: studentModule.id,
     date_sent: new Date(),

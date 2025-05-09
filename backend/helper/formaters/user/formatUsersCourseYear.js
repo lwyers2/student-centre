@@ -11,9 +11,9 @@ function formatUsersCourseYear(user) {
         const courseYears = courseEntry.user_course_course.years
         const courseCode = courseEntry.user_course_course.code
         const coursePartTime = courseEntry.user_course_course.part_time
-        const courseQualification = courseEntry.user_course_course.course_qualification_level?.qualification // Safe navigation
+        const courseQualification = courseEntry.user_course_course.course_qualification_level?.qualification
 
-        // Find existing course in acc
+        // existing course in accumulator
         let existingCourse = acc.find(c => c.course_id === courseId)
 
         if (!existingCourse) {
@@ -29,16 +29,16 @@ function formatUsersCourseYear(user) {
           acc.push(existingCourse)
         }
 
-        // Push course year details
+        // add the course year details
         const courseYear = courseEntry.user_course_course_year
 
         existingCourse.course_years.push({
-          id: courseYear?.id, // Safe navigation
-          year_start: courseYear?.year_start, // Safe navigation
-          year_end: courseYear?.year_end, // Safe navigation
+          id: courseYear?.id,
+          year_start: courseYear?.year_start,
+          year_end: courseYear?.year_end,
           course_coordinator: courseYear?.course_year_course_coordinator
             ? `${courseYear.course_year_course_coordinator.prefix}. ${courseYear.course_year_course_coordinator.forename} ${courseYear.course_year_course_coordinator.surname}`
-            : undefined, // Default value if missing
+            : undefined,
         })
 
         return acc

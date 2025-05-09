@@ -1,5 +1,3 @@
-//TODO: Update length of expiry of jwt token
-
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
 const { User, AuthenticationUser, UserModule, UserCourse } = require('../models')
@@ -18,6 +16,7 @@ const authenticateUser = async (email, password) => {
 
 
 
+  //decrypt password then check failed attempts
   const passwordCorrect = await bcrypt.compare(password, user.password)
   if (!passwordCorrect){
     user.failed_attempts += 1
@@ -31,14 +30,14 @@ const authenticateUser = async (email, password) => {
     throw new AuthError('Account is inactive', 401)
   }
 
-  //successful user login reset failed attempts
+  // reset failed attempts
   user.failed_attempts = 0
   user.last_failed_attempt = null
   await user.save()
 
   const token = generateToken(user)
-  //Token expires in 24 hours
-  const expiresAt = new Date(Date.now() + 60 * 60 * 1000 * 24)
+  //expire in 3 hours
+  const expiresAt = new Date(Date.now() + 60 * 60 * 1000 * 3)
 
   await AuthenticationUser.create({
     token,
@@ -49,6 +48,7 @@ const authenticateUser = async (email, password) => {
   })
 
 
+  //storing these so that the frontend can determine what a user should be able to access.
   let accessibleModuleYears = []
   let accessableCourseYears = []
   let accessibleModules = []
@@ -73,14 +73,15 @@ const authenticateUser = async (email, password) => {
       attributes: ['module_id'],
     })
     accessibleModules = moduleRecords.map(m => m.module_id)
-      .filter((value, index, self) => self.indexOf(value) === index) // Remove duplicates using filter
+      .filter((value, index, self) => self.indexOf(value) === index)
 
+    // Get unique course IDs
     const courseRecords = await UserCourse.findAll({
       where: { user_id: user.id },
       attributes: ['course_id'],
     })
     accessibleCourses = courseRecords.map(c => c.course_id)
-      .filter((value, index, self) => self.indexOf(value) === index) // Remove duplicates using filter
+      .filter((value, index, self) => self.indexOf(value) === index)
   }
 
   return { token, user, accessibleModuleYears, accessableCourseYears, accessibleCourses, accessibleModules }

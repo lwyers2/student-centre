@@ -1,7 +1,6 @@
-//TODO make sure only active users can access things at all points
 const supertest = require('supertest')
 const bcrypt = require('bcrypt')
-const app = require('../../app') // Adjust the path based on your structure
+const app = require('../../app')
 const { User, AuthenticationUser } = require('../../models')
 const { authenticateUser } = require('../../services/authenticateUser')
 
@@ -11,7 +10,6 @@ describe('UserCourses API Endpoints', () => {
   let authenticationUser
 
   beforeAll(async () => {
-    // Hash password and create test user
     const hashedPassword = await bcrypt.hash('password123', 10)
     testUser = await User.create({
       email: 'test@qub.ac.uk',
@@ -45,7 +43,6 @@ describe('UserCourses API Endpoints', () => {
     )
   })
 
-  // Test GET /api/users/:user/courses
   it('should fetch user courses if authorized', async () => {
     const response = await supertest(app)
       .get(`/api/users/${testUser.id}/courses`)
@@ -55,10 +52,9 @@ describe('UserCourses API Endpoints', () => {
     expect(response.body.user).toHaveProperty('courses')
   })
 
-  // User Not Found
   it('should return 404 if user does not exist', async () => {
     const response = await supertest(app)
-      .get('/api/users/99999/courses') // Invalid user ID
+      .get('/api/users/99999/courses')
       .set('Authorization', `Bearer ${token}`)
 
     expect(response.status).toBe(404)
@@ -84,7 +80,7 @@ describe('UserCourses API Endpoints', () => {
 
   it('should return 400 if the user ID format is invalid', async () => {
     const response = await supertest(app)
-      .get('/api/users/abc/courses') // Invalid user ID format
+      .get('/api/users/abc/courses')
       .set('Authorization', `Bearer ${token}`)
 
     expect(response.status).toBe(400)
@@ -92,7 +88,6 @@ describe('UserCourses API Endpoints', () => {
   })
 
   it('should return an empty array if the user has no courses', async () => {
-    // Create a user with no courses
     const noCoursesUser = await User.create({
       email: 'no_courses@qub.ac.uk',
       password: await bcrypt.hash('password123', 10),
@@ -112,33 +107,19 @@ describe('UserCourses API Endpoints', () => {
       .set('Authorization', `Bearer ${noCoursesToken}`)
 
     expect(response.status).toBe(200)
-    expect(response.body.user.courses).toEqual([]) // Empty array
+    expect(response.body.user.courses).toEqual([])
   })
 
-
-  // it('should return 403 if the user is inactive', async () => {
-  //   // Update user to inactive
-  //   await testUser.update({ active: 0 })
-
-  //   const response = await supertest(app)
-  //     .get(`/api/users/${testUser.id}/courses`)
-  //     .set('Authorization', `Bearer ${token}`)
-
-  //   expect(response.status).toBe(403)
-  //   expect(response.body.error).toBe('User is inactive')
-  // })
-
   it('should return 403 if the user does own the user and is not a super user', async () => {
-    // Assuming roles 1, 2, 3 are valid, you can set up a user with a different role (e.g., 4)
     const unauthorizedUser = await User.create({
-      email: 'unauthorized@qub.ac.uk',
+      email: 'noaccess@qub.ac.uk',
       password: await bcrypt.hash('password123', 10),
       forename: 'Tom',
       surname: 'Smith',
       active: 1,
       prefix: 'Mr',
-      job_title: 'Visitor',
-      role_id: 1, // Unauthorized role
+      job_title: 'NoAccess',
+      role_id: 1,
     })
 
     const result = await authenticateUser(unauthorizedUser.email, 'password123')

@@ -76,7 +76,7 @@ describe('<CourseAccess />', () => {
 
     expect(screen.getByText(/You don’t have permission/i)).toBeInTheDocument()
 
-    // Fast-forward timers
+
     act(() => {
       jest.advanceTimersByTime(10000)
     })

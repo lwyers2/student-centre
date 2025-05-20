@@ -34,14 +34,12 @@ const StudentModule = () => {
 
     setLoading(true)
     try {
-      // Send the letter
       const response = await letterService.sendLetter(student.id, module.module_year_id, user.id, user.id)
 
 
       const letterType = student.letter_count_for_academic_year === 0 ? '1st Warning' : '2nd Warning'
 
       if (response === 'Letter sent successfully, meeting scheduled if necessary') {
-        // Define new letter details after sending
         const newLetter = {
           date_sent: new Date().toLocaleString('en-GB', {
             day: '2-digit',
@@ -53,16 +51,14 @@ const StudentModule = () => {
             hour12: false
           }),
           sent_by_user: `${user.prefix}. ${user.forename} ${user.surname}`,
-          sent: true, // Mark the letter as sent
-          authorised: false,  // Assuming initially not authorised
+          sent: true,
+          authorised: false,
           authorised_by_user: null,
           title: letterType,
         }
 
-        // Update the letter state
         setLetter(newLetter)
 
-        // Update the module state to reflect the new letter sent
         setModule(prevModule => ({
           ...prevModule,
         }))
@@ -124,7 +120,6 @@ const StudentModule = () => {
             </div>
           </div>
           <h2 className="text-2xl font-bold text-center sm:text-3xl mb-6 text-slate-900 dark:text-white"></h2>
-          {/* Module Details Box */}
           <div className="flex flex-wrap justify-between items-center mb-4">
             <div className="flex-1 p-2 mb-2 sm:mb-0">
               <div className="border border-slate-900 dark:border-slate-600 bg-white dark:bg-gray-900 rounded-3xl shadow-xl p-4  text-center">
@@ -138,7 +133,6 @@ const StudentModule = () => {
             </div>
           </div>
 
-          {/* Letter Details Box */}
           {letter && Object.keys(letter).length > 0 ?  (
             <div className="flex flex-wrap justify-between items-center mb-4">
               <div className="flex-1 p-2 mb-2 sm:mb-0">
@@ -153,7 +147,6 @@ const StudentModule = () => {
           ) : null}
 
 
-          {/* Send Letter Button */}
           {(!letter || Object.keys(letter).length === 0) && module.flagged && student.letter_count_for_academic_year <=1 ? (
             <>
               <div className="flex flex-wrap justify-center items-center mb-4">
@@ -175,10 +168,9 @@ const StudentModule = () => {
             </>
           ) : null}
 
-          {/* Schedule meeting */}
           {student.letter_count_for_academic_year >= 2 ? (
             <div className="flex flex-wrap justify-center items-center mb-4">
-              <div className="w-1/2 p-2"> {/* This makes it half-width */}
+              <div className="w-1/2 p-2">
                 <div className="border p-4 rounded-md bg-slate-100 dark:bg-slate-700 text-slate-900 dark:text-white text-center">
                   <p>
                     <strong>
@@ -187,7 +179,7 @@ const StudentModule = () => {
                   </p>
                   <p>
                     <Link
-                      to={`/schedule-meeting/${student.id}/module-year/${module.module_year_id}`} // Use href="/schedule-meeting" if using Next.js
+                      to={`/schedule-meeting/${student.id}/module-year/${module.module_year_id}`}
                       className="text-blue-600 dark:text-blue-400 hover:underline font-semibold"
                     >
             Click here to schedule a meeting for this student

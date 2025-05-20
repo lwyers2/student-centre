@@ -10,7 +10,6 @@ const UploadModuleYearResults = () => {
   const [selectedFile, setSelectedFile] = useState(null)
   const params = useParams()
 
-  // Fetch module data on mount
   useEffect(() => {
     if (user.id && user.token) {
       moduleService
@@ -25,12 +24,10 @@ const UploadModuleYearResults = () => {
     }
   }, [params.moduleYearId, user.id, user.token])
 
-  // Handle file selection
   const handleFileChange = (e) => {
     setSelectedFile(e.target.files[0])
   }
 
-  // Handle form submission (Placeholder for future upload logic)
   const handleUpload = () => {
     if (!selectedFile) {
       alert('Please select a CSV file to upload.')
@@ -47,7 +44,6 @@ const UploadModuleYearResults = () => {
         {module.title} ({module.code}) {module.year_start} {module.semester}
       </h2>
 
-      {/* Conditional rendering based on students */}
       {moduleYearId && (
         <div className="border border-solid border-slate-900 dark:border-slate-600 bg-white dark:bg-gray-900 p-6 rounded-3xl shadow-xl mt-5">
           <h3 className="text-2xl font-semibold text-center text-slate-900 dark:text-white mb-4">
@@ -61,7 +57,6 @@ const UploadModuleYearResults = () => {
           )}
 
           <div className="flex flex-col items-center">
-            {/* Styled File Input */}
             <div className="border border-slate-400 dark:border-slate-600 rounded-lg p-3 bg-gray-100 dark:bg-gray-800 w-64 text-center">
               <input
                 type="file"
@@ -71,7 +66,6 @@ const UploadModuleYearResults = () => {
               />
             </div>
 
-            {/* Upload Button */}
             <button
               onClick={handleUpload}
               className="mt-4 bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition"

@@ -48,7 +48,7 @@ describe('formatOneCourse', () => {
               name: 'Instructor',
             },
           },
-        }, // Duplicate user
+        },
       ],
       course_course_year: [
         {
@@ -122,7 +122,7 @@ describe('formatOneCourse', () => {
     expect(result).toEqual(expectedOutput)
   })
 
-  it('should handle missing course years gracefully', () => {
+  it('should handle missing course years', () => {
     const mockCourse = {
       id: 1,
       title: 'Biology',
@@ -144,7 +144,7 @@ describe('formatOneCourse', () => {
             surname: 'Taylor',
             prefix: 'Dr',
             user_role: {
-              name: 'Instructor',
+              name: 'Teacher',
             },
           },
         },
@@ -170,7 +170,7 @@ describe('formatOneCourse', () => {
           forename: 'Alice',
           surname: 'Taylor',
           prefix: 'Dr',
-          role: 'Instructor',
+          role: 'Teacher',
         },
       ],
     }
@@ -180,7 +180,7 @@ describe('formatOneCourse', () => {
     expect(result).toEqual(expectedOutput)
   })
 
-  it('should handle missing user roles gracefully', () => {
+  it('should handle missing roles', () => {
     const mockCourse = {
       id: 1,
       title: 'Mathematics',
@@ -201,7 +201,7 @@ describe('formatOneCourse', () => {
             forename: 'Tom',
             surname: 'White',
             prefix: 'Dr',
-            user_role: null, // No role assigned
+            user_role: null,
           },
         },
       ],
@@ -244,7 +244,7 @@ describe('formatOneCourse', () => {
           forename: 'Tom',
           surname: 'White',
           prefix: 'Dr',
-          role: null, // Role is null
+          role: null,
         },
       ],
     }
@@ -254,7 +254,7 @@ describe('formatOneCourse', () => {
     expect(result).toEqual(expectedOutput)
   })
 
-  it('should handle empty user lists gracefully', () => {
+  it('should handle empty users', () => {
     const mockCourse = {
       id: 1,
       title: 'Chemistry',
@@ -268,7 +268,7 @@ describe('formatOneCourse', () => {
       },
       part_time: false,
       years: 4,
-      course_user_course: [], // No users
+      course_user_course: [],
       course_course_year: [
         {
           id: 1,
@@ -302,7 +302,7 @@ describe('formatOneCourse', () => {
           course_coordinator: 'Dr. Emily Gray',
         },
       ],
-      users: [], // No users
+      users: [],
     }
 
     const result = formatOneCourse(mockCourse)

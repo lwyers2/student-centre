@@ -19,7 +19,7 @@ describe('PUT /api/modules/update-module/:moduleId', () => {
       surname: 'User',
       prefix: 'Dr',
       job_title: 'Professor',
-      role_id: 3, // Super User
+      role_id: 3,
       active: 1
     })
 
@@ -66,7 +66,6 @@ describe('PUT /api/modules/update-module/:moduleId', () => {
       .set('Authorization', `Bearer ${token}`)
       .send({
         title: 'Missing Fields'
-        // missing code, year, CATs
       })
 
     expect(response.status).toBe(400)

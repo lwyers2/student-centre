@@ -2,13 +2,12 @@ import React from 'react'
 import Table from '../../Table'
 
 const Course = ({ courses, search = '',  }) => {
-  // Filter courses by title or code based on search
+  // filter courses
   const filteredCourses = courses.filter(course =>
     course.title?.toLowerCase().includes(search.toLowerCase()) ||
     course.code?.toLowerCase().includes(search.toLowerCase())
   )
 
-  // Prepare table content
   const tableLabels = {
     title: 'All Courses'
   }
@@ -16,7 +15,7 @@ const Course = ({ courses, search = '',  }) => {
   const tableContent = {
     headers: ['Code', 'Title', 'Qualification', 'School', 'Schedule', 'Years'],
     data: filteredCourses.map(course => ({
-      id: course.id, // unique ID
+      id: course.id,
       code: course.code,
       title: course.title,
       qualification: course.qualification,

@@ -8,7 +8,6 @@ describe('POST /login', () => {
   let testUser
 
   beforeAll(async () => {
-    // Create the user once before all tests run
     const hashedPassword = await bcrypt.hash('password123', 10)
     testUser = await User.create({
       email: 'test@qub.ac.uk',
@@ -118,7 +117,7 @@ describe('POST /login', () => {
   })
 
   it('should return 401 if the account is inactive', async () => {
-    // Update the test user to be inactive
+    // update the test user to be inactive
     await User.update({ active: 0 }, { where: { id: testUser.id } })
 
     const response = await supertest(app)
@@ -133,7 +132,7 @@ describe('POST /login', () => {
     await User.update({ active: 1 }, { where: { id: testUser.id } })
   })
 
-  it('should block login after 5 failed attempts', async () => {
+  it('should block login attempt after 5 tries', async () => {
     for (let i = 0; i < 5; i++) {
       await supertest(app).post('/api/login').send({
         email: 'test@qub.ac.uk',
@@ -146,35 +145,34 @@ describe('POST /login', () => {
       password: 'wrongpassword',
     })
 
-    expect(response.status).toBe(429) // 429 Too Many Requests
+    expect(response.status).toBe(429)
     expect(response.body.error).toBe('Too many failed login attempts. Please try again later.')
 
     //reset uesr
     await User.update({ failed_attempts: 0 }, { where: { id: testUser.id } })
   })
 
-  it('should not log the password in console', async () => {
+  it('should not log the password in the console', async () => {
     // Mock console.log to spy on calls to it
     const logSpy = jest.spyOn(console, 'log').mockImplementation(() => {})
 
-    // Temporarily log the password for testing purposes (simulate a flaw in logging)
-    const appWithLoggingBug = require('../../app') // Assuming you can change the app import
+    const appWithLoggingBug = require('../../app')
 
-    // Now send the login request
+    // simulate a login request
     await supertest(appWithLoggingBug)
       .post('/api/login')
       .send({ email: 'test@qub.ac.uk', password: 'password123' })
 
-    // Force test failure by expecting console.log to have been called with the password
+    // force the test to faile by expecting console.log to have been called with the password
     expect(logSpy).not.toHaveBeenCalledWith(expect.stringContaining('password123'))
 
     logSpy.mockRestore() // Restore the original console.log
   })
 
-  it('should allow login with new password after reset', async () => {
+  it('should allow login with new password after the password is reset', async () => {
     const newPassword = 'newPassword123'
 
-    // Reset password in your database
+    // reset password in db
     await User.update({ password: await bcrypt.hash(newPassword, 10) }, { where: { id: testUser.id } })
 
     const response = await supertest(app)
@@ -191,7 +189,7 @@ describe('POST /login', () => {
     await User.update({ password: await bcrypt.hash('password123', 10) }, { where: { id: testUser.id } })
   })
 
-  it('should return a token with correct structure', async () => {
+  it('should return a token with the correct structure', async () => {
     const response = await supertest(app)
       .post('/api/login')
       .send({ email: 'test@qub.ac.uk', password: 'password123' })
@@ -199,16 +197,17 @@ describe('POST /login', () => {
     expect(response.status).toBe(200)
     const token = response.body.token
     const tokenParts = token.split('.')
-    expect(tokenParts.length).toBe(3) // JWT token should have 3 parts
+    expect(tokenParts.length).toBe(3)
   })
 
+  // This was a test for rate limiting, I didn't keep this up for other tests, but should have
   it('should respond within acceptable time limit', async () => {
     const start = Date.now()
     await supertest(app)
       .post('/api/login')
       .send({ email: 'test@qub.ac.uk', password: 'password123' })
     const duration = Date.now() - start
-    expect(duration).toBeLessThan(500) // 500ms limit
+    expect(duration).toBeLessThan(500)
   })
 
   it('should not store the password in plain text', async () => {
@@ -218,7 +217,7 @@ describe('POST /login', () => {
 
     const storedUser = await User.findOne({ where: { email: 'test@qub.ac.uk' } })
     const isPasswordCorrect = await bcrypt.compare('password123', storedUser.password)
-    expect(isPasswordCorrect).toBe(true) // Ensure password is correctly hashed
+    expect(isPasswordCorrect).toBe(true)
   })
 
 })

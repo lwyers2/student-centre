@@ -35,7 +35,7 @@ const Table = ({ labels, content }) => {
               <tr key={row.id} className="hover:opacity-55 dark:hover:bg-slate-700 hover:bg-gray-100">
                 {content.headers.map((headerKey, index) => (
                   <td key={index} className="px-2 py-1 border border-gray-300 dark:border-slate-700 text-center">
-                    {row[headerKey.toLowerCase()]} {/* Ensure headers map to data keys */}
+                    {row[headerKey.toLowerCase()]}
                   </td>
                 ))}
                 <td className="px-2 py-1 border border-gray-300 dark:border-slate-700 text-center">

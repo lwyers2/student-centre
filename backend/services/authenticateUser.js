@@ -75,7 +75,7 @@ const authenticateUser = async (email, password) => {
     accessibleModules = moduleRecords.map(m => m.module_id)
       .filter((value, index, self) => self.indexOf(value) === index)
 
-    // Get unique course IDs
+    // unique course ids
     const courseRecords = await UserCourse.findAll({
       where: { user_id: user.id },
       attributes: ['course_id'],

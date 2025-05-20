@@ -37,8 +37,8 @@ const Letter = db.define('Letter', {
     allowNull: true,
   },
 }, {
-  tableName: 'letter', // specify the table name
-  timestamps: false,   // disable timestamps if not present in your table
+  tableName: 'letter',
+  timestamps: false,
 })
 
 module.exports = Letter

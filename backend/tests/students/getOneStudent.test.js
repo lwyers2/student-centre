@@ -11,7 +11,6 @@ describe('Student API Endpoints', () => {
   let testStudent
 
   beforeAll(async () => {
-    // Hash password and create test user
     const hashedPassword = await bcrypt.hash('password123', 10)
     testUser = await User.create({
       email: 'test@qub.ac.uk',
@@ -24,7 +23,6 @@ describe('Student API Endpoints', () => {
       role_id: 3,
     })
 
-    // Create a test student
     testStudent = await Student.create({
       email: 'student@qub.ac.uk',
       student_code: 'S12345',
@@ -32,7 +30,6 @@ describe('Student API Endpoints', () => {
       surname: 'Smith',
     })
 
-    // Authenticate user and get token
     const result = await authenticateUser(testUser.email, 'password123')
     token = result.token
     authenticationUser = await AuthenticationUser.findOne({ where: { token } })

@@ -6,15 +6,15 @@ const StudentCourseModulesResults = ({ student, modules, year }) => {
   const tableData = {
     labels: { title: `Academic Year: ${year}` },
     content: {
-      headers: ['Title', 'Result', 'Flagged', 'Resit' ], // Table headers
+      headers: ['Title', 'Result', 'Flagged', 'Resit' ],
       data: modules.map((module) => ({
-        id: module.module_year_id, // Unique ID for each row
+        id: module.module_year_id,
         title : module.title,
         result: module.result,
         flagged: module.flagged,
         resit: module.resit,
       })),
-      view: `/student/${student.id}/module-year`, // Base path for "View" links
+      view: `/student/${student.id}/module-year`,
     },
   }
 

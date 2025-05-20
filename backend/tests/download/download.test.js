@@ -12,7 +12,7 @@ describe('GET /api/download/meeting-minutes/:meetingId', () => {
   beforeAll(async () => {
     const hashedPassword = await bcrypt.hash('password123', 10)
 
-    // Create user with necessary permissions (adjust role_id if needed)
+
     testUser = await User.create({
       email: 'filetest@qub.ac.uk',
       password: hashedPassword,
@@ -64,16 +64,16 @@ describe('GET /api/download/meeting-minutes/:meetingId', () => {
     token = result.token
     await AuthenticationUser.findOne({ where: { token } })
 
-    // Simulate a file upload
+    // file upload
     const uploadsDir = path.join(__dirname, '../../uploads')
     await fs.mkdir(uploadsDir, { recursive: true })
 
     const fakeDocPath = path.join(uploadsDir, 'test_minutes.docx')
     await fs.writeFile(fakeDocPath, 'This is a test DOCX file.')
 
-    filePath = '/uploads/test_minutes.docx' // Match what’s stored in DB
+    //test minutes file
+    filePath = '/uploads/test_minutes.docx'
 
-    // Create meeting with a valid path to minutes
     meeting = await Meeting.create({
       title: 'Test Meeting',
       scheduled_date: new Date(),
@@ -90,7 +90,6 @@ describe('GET /api/download/meeting-minutes/:meetingId', () => {
   })
 
   afterAll(async () => {
-    // Clean up: delete test file, meeting, user, token
     const absolutePath = path.join(__dirname, '../../', filePath)
     await fs.unlink(absolutePath)
 

@@ -1,6 +1,6 @@
 const supertest = require('supertest')
 const bcrypt = require('bcrypt')
-const app = require('../../app') // Adjust the path to your Express app
+const app = require('../../app')
 const {
   User,
   Course,
@@ -22,7 +22,6 @@ describe('PUT /api/courses/update-course-year/course/:courseId/course-year/:cour
   beforeAll(async () => {
     const hashedPassword = await bcrypt.hash('password123', 10)
 
-    // Create test user (for authentication)
     testUser = await User.create({
       email: 'test@qub.ac.uk',
       password: hashedPassword,
@@ -34,7 +33,6 @@ describe('PUT /api/courses/update-course-year/course/:courseId/course-year/:cour
       active: 1
     })
 
-    // Authenticate user and get token
     const result = await authenticateUser(testUser.email, 'password123')
     token = result.token
     await AuthenticationUser.findOne({ where: { token } })
@@ -46,7 +44,6 @@ describe('PUT /api/courses/update-course-year/course/:courseId/course-year/:cour
       { where: { token } }
     )
 
-    // Create a course
     courseInstance = await Course.create({
       title: 'Engineering Fundamentals',
       code: 'ENG101',
@@ -56,7 +53,6 @@ describe('PUT /api/courses/update-course-year/course/:courseId/course-year/:cour
       qualification_id: 1,
     })
 
-    // Create a role and coordinator user
     role = await Role.create({ name: 'Lecturer' })
     coordinator = await User.create({
       email: 'coordinator@qub.ac.uk',
@@ -69,7 +65,6 @@ describe('PUT /api/courses/update-course-year/course/:courseId/course-year/:cour
       active: 1
     })
 
-    // Create a course year
     courseYearInstance = await CourseYear.create({
       course_id: courseInstance.id,
       year_start: 2023,
@@ -77,7 +72,6 @@ describe('PUT /api/courses/update-course-year/course/:courseId/course-year/:cour
       course_coordinator: coordinator.id
     })
 
-    // Create a new coordinator (for the update)
     newCoordinator = await User.create({
       email: 'newcoordinator@qub.ac.uk',
       password: await bcrypt.hash('password123', 10),
@@ -94,7 +88,7 @@ describe('PUT /api/courses/update-course-year/course/:courseId/course-year/:cour
     const response = await supertest(app)
       .put(`/api/courses/update-course-year/course/${courseInstance.id}/course-year/${courseYearInstance.id}`)
       .set('Authorization', `Bearer ${token}`)
-      .send({ course_coordinator: newCoordinator.id }) // Update with new coordinator ID
+      .send({ course_coordinator: newCoordinator.id })
 
     expect(response.status).toBe(200)
     expect(response.body.course_coordinator).toBe(newCoordinator.id)

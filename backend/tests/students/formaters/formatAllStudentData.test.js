@@ -132,10 +132,10 @@ describe('formatAllStudentData', () => {
     expect(formattedStudentData.student.forename).toBe('Jane')
     expect(formattedStudentData.student.surname).toBe('Doe')
 
-    expect(formattedStudentData.courses).toHaveLength(0) // No courses
+    expect(formattedStudentData.courses).toHaveLength(0)
   })
 
-  it('should handle missing student_course_course_year and student_module gracefully', () => {
+  it('should handle missing student_course_course_year and student_module', () => {
     const mockStudent = {
       id: 3,
       email: 'sam.smith@example.com',
@@ -146,7 +146,7 @@ describe('formatAllStudentData', () => {
         {
           course_year_id: 102,
           course_id: 1002,
-          student_course_course_year: null // Missing course year data
+          student_course_course_year: null
         }
       ],
       student_student_module: [
@@ -160,7 +160,7 @@ describe('formatAllStudentData', () => {
             descriptor: 'P',
           },
           student_module_module_year: {
-            module_year_module: null // Missing module data
+            module_year_module: null
           }
         }
       ]
@@ -176,12 +176,12 @@ describe('formatAllStudentData', () => {
 
     expect(formattedStudentData.courses).toHaveLength(1)
     expect(formattedStudentData.courses[0].course_year_id).toBe(102)
-    expect(formattedStudentData.courses[0].course_coordinator).toBeUndefined() // No course coordinator due to missing course year
+    expect(formattedStudentData.courses[0].course_coordinator).toBeUndefined()
 
     expect(formattedStudentData.courses[0].modules).toHaveLength(0)
   })
 
-  it('should handle courses with missing course_year_course gracefully', () => {
+  it('should handle courses with missing course_year_course', () => {
     const mockStudent = {
       id: 4,
       email: 'david.brown@example.com',
@@ -193,7 +193,7 @@ describe('formatAllStudentData', () => {
           course_year_id: 103,
           course_id: 1003,
           student_course_course_year: {
-            course_year_course: null // Missing course data
+            course_year_course: null
           }
         }
       ],
@@ -210,11 +210,11 @@ describe('formatAllStudentData', () => {
 
     expect(formattedStudentData.courses).toHaveLength(1)
     expect(formattedStudentData.courses[0].course_year_id).toBe(103)
-    expect(formattedStudentData.courses[0].title).toBe('Unknown Course') // No title due to missing course data
-    expect(formattedStudentData.courses[0].course_coordinator).toBeUndefined() // No coordinator due to missing course data
+    expect(formattedStudentData.courses[0].title).toBe('Unknown Course')
+    expect(formattedStudentData.courses[0].course_coordinator).toBeUndefined()
   })
 
-  it('should handle missing module_year_semester gracefully', () => {
+  it('should handle missing module_year_semester', () => {
     const mockStudent = {
       id: 5,
       email: 'lily.white@example.com',
@@ -262,7 +262,7 @@ describe('formatAllStudentData', () => {
               code: 'MATH200',
               year: 1,
               CATs: 10,
-              module_year_semester: null, // Missing semester data
+              module_year_semester: null,
               module_year_module_coordinator: {
                 prefix: 'Dr.',
                 forename: 'Eve',
@@ -300,6 +300,6 @@ describe('formatAllStudentData', () => {
     expect(formattedStudentData.courses[0].modules[0].module_year_id).toBe(303)
     expect(formattedStudentData.courses[0].modules[0].module_id).toBe(5001)
     expect(formattedStudentData.courses[0].modules[0].title).toBe('Calculus I')
-    expect(formattedStudentData.courses[0].modules[0].semester).toBeNull() // Should return null for semester when missing
+    expect(formattedStudentData.courses[0].modules[0].semester).toBeNull()
   })
 })

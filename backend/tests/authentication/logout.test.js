@@ -12,7 +12,7 @@ describe('POST /logout', () => {
   let token
   let authenticationUser
 
-  // Set up a user and authenticate them
+  // set up a user and authenticate them
   beforeAll(async () => {
     const hashedPassword = await bcrypt.hash('password123', 10)
     testUser = await User.create({
@@ -55,11 +55,11 @@ describe('POST /logout', () => {
       .post('/api/logout')
       .set('Authorization', `Bearer ${token}`)
 
-    // Check if the status code is 200 and the response is as expected
+
     expect(response.status).toBe(200)
     expect(response.body.message).toBe('Logged out successfully')
 
-    // Ensure that the token was deactivated in the database
+    // make sure token is deactivated
     const deactivatedUser = await AuthenticationUser.findOne({
       where: { token },
     })
@@ -75,7 +75,7 @@ describe('POST /logout', () => {
   })
 
   it('should return 401 if the token is expired', async () => {
-    // Manually expire the token
+    // manually expire the token
     authenticationUser.expires_at = new Date(Date.now() - 3600 * 1000)
     await authenticationUser.save()
 
@@ -101,7 +101,7 @@ describe('POST /logout', () => {
   //   })
 
   //   const janeResult = await authenticateUser(jane.email, 'password456')
-  //   const janeToken = janeResult.token // Jane's token
+  //   const janeToken = janeResult.token
 
   //   // Create another user and authenticate them
   //   const anotherUser = await User.create({
@@ -116,22 +116,19 @@ describe('POST /logout', () => {
   //   })
 
   //   const anotherUserResult = await authenticateUser(anotherUser.email, 'password789')
-  //   const anotherUserToken = anotherUserResult.token // Another user's token
+  //   const anotherUserToken = anotherUserResult.token
 
-  //   // Attempt to log out with Jane's token (should pass)
   //   const validResponse = await supertest(app)
   //     .post('/api/logout')
-  //     .set('Authorization', `Bearer ${janeToken}`) // Using Jane's token
+  //     .set('Authorization', `Bearer ${janeToken}`)
 
   //   expect(validResponse.status).toBe(200)
   //   expect(validResponse.body.message).toBe('Logged out successfully')
 
-  //   // Attempt to log out with another user's token (should fail)
   //   const response = await supertest(app)
   //     .post('/api/logout')
-  //     .set('Authorization', `Bearer ${anotherUserToken}`) // Using another user's token, not Jane's
+  //     .set('Authorization', `Bearer ${anotherUserToken}`)
 
-  //   // Expect 404 since the token belongs to a different user (not Jane)
   //   expect(response.status).toBe(404)
   //   expect(response.body.error).toBe('Token not found or does not belong to the user')
   // })

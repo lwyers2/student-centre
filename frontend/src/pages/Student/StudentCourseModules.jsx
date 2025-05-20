@@ -9,11 +9,11 @@ const StudentCourseModules = () => {
   const [student, setStudent] = useState(null)
   const [course, setCourse] = useState(null)
   const [modules, setModules] = useState(null)
-  const [groupedModules, setGroupedModules] = useState(null) // Store grouped modules
-  const [search, setSearch] = useState('') // Search query
-  const [filterYear, setFilterYear] = useState('All') // Filter by year
-  const [filterResult, setFilterResult] = useState('All') // Filter by result
-  const [showFilters, setShowFilters] = useState(true) // Show filters or not
+  const [groupedModules, setGroupedModules] = useState(null)
+  const [search, setSearch] = useState('')
+  const [filterYear, setFilterYear] = useState('All')
+  const [filterResult, setFilterResult] = useState('All')
+  const [showFilters, setShowFilters] = useState(true)
   const user = useSelector(state => state.user)
 
   useEffect(() => {
@@ -24,11 +24,9 @@ const StudentCourseModules = () => {
           setCourse(response.course)
           setModules(response.modules)
 
-          // Group modules by year, ensuring unique module_year_ids
           const grouped = response.modules.reduce((acc, module) => {
             const year = module.year || 'Unknown Year'
 
-            // Ensure unique module_year_id is added to the group
             if (!acc[year]) {
               acc[year] = []
             }
@@ -48,25 +46,20 @@ const StudentCourseModules = () => {
     }
   }, [params.studentId, params.courseYearId, user.token])
 
-  // Extract unique values for filtering
   const uniqueYears = [...new Set(modules?.map(module => module.year))].sort()
   const uniqueResults = [...new Set(modules?.map(module => module.result))]
 
-  // Search & Filter Logic
   const getFilteredModules = () => {
     let filtered = modules
 
-    // Filter by year
     if (filterYear !== 'All') {
       filtered = filtered.filter(module => module.year === parseInt(filterYear))
     }
 
-    // Filter by result
     if (filterResult !== 'All') {
       filtered = filtered.filter(module => module.result === filterResult)
     }
 
-    // Filter by search query
     if (search) {
       filtered = filtered.filter(module =>
         module.title.toLowerCase().includes(search.toLowerCase()) ||
@@ -92,7 +85,6 @@ const StudentCourseModules = () => {
             {course.title} ({course.code} {course.part_time ? 'PT' : 'FY'}) {course.year_start}/{course.year_end}
           </h2>
 
-          {/* Search and Filter */}
           <div className="border border-solid border-slate-900 dark:border-slate-600 bg-white dark:bg-gray-900 p-6 rounded-3xl shadow-xl mb-5">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-2xl font-bold text-slate-900 dark:text-white">Search & Filters</h3>
@@ -106,7 +98,6 @@ const StudentCourseModules = () => {
 
             {showFilters && (
               <>
-                {/* Search Bar */}
                 <div className="mb-4">
                   <input
                     type="text"
@@ -117,9 +108,7 @@ const StudentCourseModules = () => {
                   />
                 </div>
 
-                {/* Filter Options */}
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                  {/* Year Filter */}
                   <div>
                     <label className="block text-slate-900 dark:text-white mb-2">Year</label>
                     <select
@@ -134,7 +123,6 @@ const StudentCourseModules = () => {
                     </select>
                   </div>
 
-                  {/* Result Filter */}
                   <div>
                     <label className="block text-slate-900 dark:text-white mb-2">Result</label>
                     <select
@@ -153,7 +141,6 @@ const StudentCourseModules = () => {
             )}
           </div>
 
-          {/* Display filtered modules */}
           {filteredModules.length > 0 ? (
             Object.keys(groupedModules).map((year) => (
               <StudentCourseModulesResults

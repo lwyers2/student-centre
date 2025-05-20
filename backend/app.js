@@ -1,6 +1,6 @@
 const express = require('express')
 const app = express()
-require('express-async-errors') // Make async route handlers work
+require('express-async-errors')
 const cors = require('cors')
 const requestLogger  = require('./middleware/requestLogger')
 const errorHandler  = require('./middleware/errorHandler')
@@ -23,7 +23,7 @@ const uploadRouter = require('./controllers/upload')
 
 
 // Initialize Sequelize and connect to DB
-require('./utils/db') // This will call the connection function in db.js
+require('./utils/db')
 
 
 

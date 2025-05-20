@@ -1,9 +1,3 @@
-//TODO:
-//1. Update Title of Module (might want to resturucture api response)
-//2. Filter working
-//3. Search working
-//4. Info on course (course details, amount of students, failing students, class average)
-
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
@@ -30,11 +24,11 @@ const ModuleYearStudent = () => {
 
 
   if (!module) {
-    return <p>No module data available</p> // Handle no module found
+    return <p>No module data available</p>
   }
 
   if(!students) {
-    return <p>No student data available</p> // Handle no module found
+    return <p>No student data available</p>
   }
 
   const filteredStudents = students.filter((student) =>
@@ -47,9 +41,9 @@ const ModuleYearStudent = () => {
   const tableData = {
     labels: { title: 'Students' },
     content: {
-      headers: [ 'Student Code', 'Forename', 'Surname', 'Email', 'Result'], // Table headers
+      headers: [ 'Student Code', 'Forename', 'Surname', 'Email', 'Result'],
       data: filteredStudents.map((student) => ({
-        id: student.id, // Unique ID for each row
+        id: student.id,
         email: student.email,
         'student code': student.student_code,
         forename: student.forename,

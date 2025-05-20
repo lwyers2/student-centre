@@ -22,7 +22,6 @@ describe('POST & DELETE /api/modules (add/remove user from module)', () => {
   beforeAll(async () => {
     const hashedPassword = await bcrypt.hash('password123', 10)
 
-    // Create a Super User
     superUser = await User.create({
       email: 'super@qub.ac.uk',
       password: hashedPassword,
@@ -34,7 +33,6 @@ describe('POST & DELETE /api/modules (add/remove user from module)', () => {
       job_title: 'Professor',
     })
 
-    // Create a target user to assign to module
     moduleUser = await User.create({
       email: 'adminstaff@qub.ac.uk',
       password: hashedPassword,
@@ -46,18 +44,15 @@ describe('POST & DELETE /api/modules (add/remove user from module)', () => {
       job_title: 'Administrator',
     })
 
-    // Authenticate
     const result = await authenticateUser(superUser.email, 'password123')
     token = result.token
     await AuthenticationUser.findOne({ where: { token } })
 
-    // Create semester if not already seeded
-    semester = await Semester.create({ name: 'Semester 1' })
+    semester = await Semester.create({ name: 'Winter' })
 
-    // Create module & module year
     module = await Module.create({
-      title: 'Distributed Systems',
-      code: 'CS3050',
+      title: 'Databases',
+      code: 'DB1000',
       CATs: 20,
       year: 3
     })
@@ -99,7 +94,7 @@ describe('POST & DELETE /api/modules (add/remove user from module)', () => {
 
     expect(response.status).toBe(200)
     expect(response.body).toHaveProperty('module_id', module.id)
-    expect(response.body).toHaveProperty('title', 'Distributed Systems')
+    expect(response.body).toHaveProperty('title', 'Databases')
 
     const check = await UserModule.findOne({
       where: {
@@ -111,7 +106,6 @@ describe('POST & DELETE /api/modules (add/remove user from module)', () => {
     expect(check).not.toBeNull()
   })
 
-  // 🚫 Adding user again should fail
   it('should return 400 if user is already in module year', async () => {
     const response = await supertest(app)
       .post('/api/modules/add-user-to-module')
@@ -126,7 +120,6 @@ describe('POST & DELETE /api/modules (add/remove user from module)', () => {
     expect(response.body.error).toBe('User already in module year')
   })
 
-  // 🚫 Missing fields
   it('should return 400 if required fields are missing on add', async () => {
     const response = await supertest(app)
       .post('/api/modules/add-user-to-module')
@@ -137,7 +130,6 @@ describe('POST & DELETE /api/modules (add/remove user from module)', () => {
     expect(response.body.error).toBe('Missing required fields')
   })
 
-  // ✅ Remove user from module
   it('should remove the user from the module year', async () => {
     const response = await supertest(app)
       .delete('/api/modules/remove-user-from-module')
@@ -160,7 +152,6 @@ describe('POST & DELETE /api/modules (add/remove user from module)', () => {
     expect(check).toBeNull()
   })
 
-  // 🚫 Try to remove again
   it('should return 400 if the user is not in the module year', async () => {
     const response = await supertest(app)
       .delete('/api/modules/remove-user-from-module')
@@ -175,7 +166,6 @@ describe('POST & DELETE /api/modules (add/remove user from module)', () => {
     expect(response.body.error).toBe('User not in module year')
   })
 
-  // 🚫 User not found
   it('should return 404 if user does not exist', async () => {
     const response = await supertest(app)
       .delete('/api/modules/remove-user-from-module')
@@ -190,7 +180,6 @@ describe('POST & DELETE /api/modules (add/remove user from module)', () => {
     expect(response.body.error).toBe('User not found')
   })
 
-  // 🚫 Module year not found
   it('should return 404 if module year does not exist', async () => {
     const response = await supertest(app)
       .delete('/api/modules/remove-user-from-module')
@@ -205,7 +194,6 @@ describe('POST & DELETE /api/modules (add/remove user from module)', () => {
     expect(response.body.error).toBe('Module year not found')
   })
 
-  // 🚫 Missing fields
   it('should return 400 if required fields are missing on delete', async () => {
     const response = await supertest(app)
       .delete('/api/modules/remove-user-from-module')
@@ -218,7 +206,6 @@ describe('POST & DELETE /api/modules (add/remove user from module)', () => {
     expect(response.body.error).toBe('Missing required fields')
   })
 
-  // 🚫 Missing token
   it('should return 401 if no token is provided', async () => {
     const response = await supertest(app)
       .delete('/api/modules/remove-user-from-module')

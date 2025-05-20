@@ -15,16 +15,16 @@ const UploadRecordsModules = ({ modules, year_start, year_end, year, search, }) 
   const tableData = {
     labels: { title: `Academic Year: ${year} (${year_start}/${year_end})` },
     content: {
-      headers: ['Title', 'Code', 'Module Co-ordinator', 'CATs', 'Semester'], // Table headers
+      headers: ['Title', 'Code', 'Module Co-ordinator', 'CATs', 'Semester'],
       data: filteredModules.map((module) => ({
-        id: module.module_year_id, // Unique ID for each row
+        id: module.module_year_id,
         title: module.title,
         code: module.code,
         'cats': module.CATs,
         'module co-ordinator': module.module_coordinator,
         semester: module.semester
       })),
-      view: '/upload-module-year-results', // Base path for "View" links
+      view: '/upload-module-year-results',
     },
   }
 

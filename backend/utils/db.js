@@ -1,7 +1,7 @@
 require('dotenv').config()
 const { Sequelize } = require('sequelize')
 
-// Determine environment and configure database
+// determine environment and configure database
 const env = process.env.NODE_ENV || 'development'
 
 const databaseConfig = {
@@ -26,7 +26,7 @@ const databaseConfig = {
 const config = databaseConfig[env]
 const sequelize = new Sequelize(config.database, config.username, config.password, config)
 
-// Test the connection
+// test the connection
 const connectDB = async () => {
   try {
     await sequelize.authenticate()

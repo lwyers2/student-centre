@@ -1,5 +1,5 @@
 import axios from 'axios'
-const baseUrl = '/api/upload' // Adjust this based on your backend route prefix
+const baseUrl = '/api/upload'
 
 const uploadMinutes = async (meetingId, file, token) => {
   const formData = new FormData()
@@ -10,7 +10,7 @@ const uploadMinutes = async (meetingId, file, token) => {
     const response = await axios.post(`${baseUrl}/meeting-minutes`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
-        Authorization: `Bearer ${token}`, // If authentication is required
+        Authorization: `Bearer ${token}`,
       },
     })
     return response.data
@@ -28,7 +28,7 @@ const uploadResults = async(courseYearId, file, token, onUploadProgress,) => {
     const response = await axios.post(`${baseUrl}/results/${courseYearId}`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
-        Authorization: `Bearer ${token}`, // If authentication is required
+        Authorization: `Bearer ${token}`,
       },
       onUploadProgress,
     })
@@ -46,7 +46,7 @@ const uploadStudents = async(file, token, onUploadProgress) => {
     const response = await axios.post(`${baseUrl}/students`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
-        Authorization: `Bearer ${token}`, // If authentication is required
+        Authorization: `Bearer ${token}`,
       },
       onUploadProgress,
     })

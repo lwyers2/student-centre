@@ -26,7 +26,6 @@ describe('GET /api/users/:user/module/:module', () => {
   beforeAll(async () => {
     const hashedPassword = await bcrypt.hash('password123', 10)
 
-    // Create user
     superUser = await User.create({
       email: 'superuser@qub.ac.uk',
       password: hashedPassword,
@@ -35,13 +34,12 @@ describe('GET /api/users/:user/module/:module', () => {
       active: 1,
       prefix: 'Dr',
       job_title: 'Lecturer',
-      role_id: 3, // Super User
+      role_id: 3,
     })
 
     const result = await authenticateUser(superUser.email, 'password123')
     token = result.token
 
-    // Related entities
     semester = await Semester.create({ name: 'Semester 1' })
 
     qualificationLevel = await QualificationLevel.create({ qualification: 'BSc', level_id: 1 })
@@ -89,7 +87,6 @@ describe('GET /api/users/:user/module/:module', () => {
       module_year_id: moduleYear.id,
     })
 
-    // Optional: Add a student module and result descriptor to trigger the deeper nested include
     const resultDescriptor = await ResultDescriptor.create({ descriptor: 'ABS', description: 'Absent' })
 
 

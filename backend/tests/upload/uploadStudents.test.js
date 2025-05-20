@@ -1,14 +1,13 @@
 const supertest = require('supertest')
 const path = require('path')
 const fs = require('fs')
-const app = require('../../app') // Adjust path if needed
+const app = require('../../app')
 const { Student, Course, CourseYear, StudentCourse, StudentModule, User } = require('../../models')
 
 describe('POST /upload/students', () => {
   let testCourse, testCourseCoordinator
   let uploadedFilePath = ''
 
-  // Ensure that your test course is created before the tests run
   beforeAll(async () => {
 
     testCourseCoordinator = await User.create({
@@ -38,7 +37,7 @@ describe('POST /upload/students', () => {
       course_coordinator: testCourseCoordinator.id,
     })
 
-    // Ensure the upload directory exists
+    // upload directory exists
     const uploadDir = path.join(__dirname, '../../uploads')
     if (!fs.existsSync(uploadDir)) {
       fs.mkdirSync(uploadDir, { recursive: true })
@@ -46,7 +45,6 @@ describe('POST /upload/students', () => {
   })
 
   afterAll(async () => {
-    // Cleanup any test data
     if (uploadedFilePath && fs.existsSync(uploadedFilePath)) {
       fs.unlinkSync(uploadedFilePath)
     }

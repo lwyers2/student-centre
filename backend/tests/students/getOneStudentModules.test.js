@@ -1,6 +1,6 @@
 const supertest = require('supertest')
 const bcrypt = require('bcrypt')
-const app = require('../../app') // Adjust based on your project structure
+const app = require('../../app')
 const { User, Student, StudentModule, ModuleYear, Module, Semester, AuthenticationUser } = require('../../models')
 const { authenticateUser } = require('../../services/authenticateUser')
 
@@ -8,7 +8,6 @@ describe('GET /api/students/:student/modules', () => {
   let testUser, token, testStudent, testModule, testModuleYear, testStudentModule, authenticationUser, semester
 
   beforeAll(async () => {
-    // Create test user
     const hashedPassword = await bcrypt.hash('password123', 10)
     testUser = await User.create({
       email: 'test@qub.ac.uk',
@@ -21,7 +20,6 @@ describe('GET /api/students/:student/modules', () => {
       role_id: 3,
     })
 
-    // Authenticate user and get token
     const result = await authenticateUser(testUser.email, 'password123')
     token = result.token
     authenticationUser = await AuthenticationUser.findOne({ where: { token } })
@@ -30,7 +28,6 @@ describe('GET /api/students/:student/modules', () => {
       name: 'Winter'
     })
 
-    // Create test student
     testStudent = await Student.create({
       forename: 'John',
       surname: 'Doe',
@@ -38,7 +35,6 @@ describe('GET /api/students/:student/modules', () => {
       email: 'john.doe@qub.ac.uk',
     })
 
-    // Create test module
     testModule = await Module.create({
       title: 'Mathematics',
       year: 1,
@@ -47,7 +43,6 @@ describe('GET /api/students/:student/modules', () => {
       semester_id: semester.id
     })
 
-    // Create test module year
     testModuleYear = await ModuleYear.create({
       year_start: 2024,
       semester_id: 1,
@@ -55,7 +50,6 @@ describe('GET /api/students/:student/modules', () => {
       module_id: testModule.id,
     })
 
-    // Create student-module association
     testStudentModule = await StudentModule.create({
       student_id: testStudent.id,
       module_year_id: testModuleYear.id,
@@ -68,7 +62,6 @@ describe('GET /api/students/:student/modules', () => {
   })
 
   beforeEach(async () => {
-    // Update token expiration time
     await AuthenticationUser.update(
       { expires_at: new Date(Date.now() + 3600 * 1000), is_active: true },
       { where: { user_id: authenticationUser.user_id } }

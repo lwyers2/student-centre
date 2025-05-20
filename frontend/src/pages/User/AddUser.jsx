@@ -75,7 +75,6 @@ const AddUser = () => {
         <input type="password" name="password" value={formData.password} onChange={handleChange} placeholder="Password" className="w-full p-2 border rounded" required />
         <input name="job_title" value={formData.job_title} onChange={handleChange} placeholder="Job Title" className="w-full p-2 border rounded" />
 
-        {/* Role dropdown */}
         <select name="role_id" value={formData.role_id} onChange={handleChange} className="w-full p-2 border rounded">
           <option value="">Select Role</option>
           {roles.map((role) => (
@@ -85,7 +84,6 @@ const AddUser = () => {
           ))}
         </select>
 
-        {/* Active toggle */}
         <label className="flex items-center gap-2 dark:text-white">
           <input type="checkbox" name="active" checked={formData.active} onChange={handleChange} />
           Active

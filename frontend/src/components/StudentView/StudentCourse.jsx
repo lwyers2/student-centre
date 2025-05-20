@@ -20,13 +20,13 @@ const StudentCourse = ({ courses, student }) => {
   const tableData = {
     labels: { title: 'View module results for Active Courses' },
     content: {
-      headers: ['title', 'flags' ], // Table headers
+      headers: ['title', 'flags' ],
       data: courses.map((course) => ({
-        id: course.course_year_id, // Unique ID for each row
+        id: course.course_year_id,
         title : course.title,
         flags: getFlagCount(course)
       })),
-      view: `/student/${student.id}/course`, // Base path for "View" links
+      view: `/student/${student.id}/course`,
     },
   }
 

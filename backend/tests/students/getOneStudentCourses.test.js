@@ -1,6 +1,6 @@
 const supertest = require('supertest')
 const bcrypt = require('bcrypt')
-const app = require('../../app') // Adjust based on your project structure
+const app = require('../../app')
 const { User, Student, StudentCourse, CourseYear, Course,  AuthenticationUser, School, QualificationLevel } = require('../../models')
 const { authenticateUser } = require('../../services/authenticateUser')
 
@@ -8,7 +8,6 @@ describe('GET /students/:student/courses', () => {
   let testUser, token, testStudent, testCourse, testCourseYear, testStudentCourse, courseCoordinator, testSchool, testQualification
 
   beforeAll(async () => {
-    // Create test user (course coordinator)
     const hashedPassword = await bcrypt.hash('password123', 10)
     testUser = await User.create({
       email: 'test@qub.ac.uk',
@@ -18,10 +17,9 @@ describe('GET /students/:student/courses', () => {
       active: 1,
       prefix: 'Dr',
       job_title: 'Professor',
-      role_id: 3, // Assuming 'Super User' role or a role with sufficient privileges
+      role_id: 3,
     })
 
-    // Authenticate user and get token
     const result = await authenticateUser(testUser.email, 'password123')
     token = result.token
 
@@ -35,7 +33,6 @@ describe('GET /students/:student/courses', () => {
       qualification: 'BASC'
     })
 
-    // Create test student
     testStudent = await Student.create({
       forename: 'John',
       surname: 'Doe',
@@ -43,7 +40,6 @@ describe('GET /students/:student/courses', () => {
       email: 'john.doe@qub.ac.uk',
     })
 
-    // Create course and associated data
     courseCoordinator = await User.create({
       forename: 'Course',
       surname: 'Coordinator',
@@ -71,7 +67,6 @@ describe('GET /students/:student/courses', () => {
       course_coordinator: courseCoordinator.id,
     })
 
-    // Create student-course association
     testStudentCourse = await StudentCourse.create({
       student_id: testStudent.id,
       course_year_id: testCourseYear.id,
@@ -80,7 +75,6 @@ describe('GET /students/:student/courses', () => {
   })
 
   beforeEach(async () => {
-    // Update token expiration time before each test
     await AuthenticationUser.update(
       { expires_at: new Date(Date.now() + 3600 * 1000), is_active: true },
       { where: { token } }
@@ -113,7 +107,6 @@ describe('GET /students/:student/courses', () => {
   })
 
   it('should return 403 if user does not have access to the student data (role issue)', async () => {
-    // Create an unauthorized user (e.g., no access to student courses)
     const unauthorizedUser = await User.create({
       email: 'unauthorized@qub.ac.uk',
       password: await bcrypt.hash('password123', 10),
@@ -122,7 +115,7 @@ describe('GET /students/:student/courses', () => {
       active: 1,
       prefix: 'Mr',
       job_title: 'Visitor',
-      role_id: 1, // Assuming no access to student data
+      role_id: 1,
     })
 
     const result = await authenticateUser(unauthorizedUser.email, 'password123')

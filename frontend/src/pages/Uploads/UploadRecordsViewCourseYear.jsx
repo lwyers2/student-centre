@@ -10,16 +10,14 @@ const UploadRecordsViewCourseYears = () => {
   const [selectedYear, setSelectedYear] = useState(null)
   const [selectedCourseYearId, setSelectedCourseYearId] = useState(null)
   const [selectedFile, setSelectedFile] = useState(null)
-  const [uploading, setUploading] = useState(false) // For showing the upload loading state
+  const [uploading, setUploading] = useState(false)
   const [uploadProgress, setUploadProgress] = useState(0)
   const [processing, setProcessing] = useState(false)
 
 
 
-  // Fetch courses on mount
   useEffect(() => {
     if (user.id && user.token) {
-      // Assuming you already have a function that fetches courses for the user
       userService
         .getAllUserCourses(user.id, user.token)
         .then((response) => {
@@ -31,15 +29,13 @@ const UploadRecordsViewCourseYears = () => {
     }
   }, [user.id, user.token])
 
-  // Handle course selection change
   const handleCourseChange = (e) => {
     const selected = courses.find(course => course.course_id === Number(e.target.value))
     setSelectedCourse(selected)
-    setSelectedYear(null) // Reset year when course changes
-    setSelectedCourseYearId(null) // Reset courseYearId when course changes
+    setSelectedYear(null)
+    setSelectedCourseYearId(null)
   }
 
-  // Handle year selection change
   const handleYearChange = (e) => {
     const selectedYearData = selectedCourse.course_years.find(year => year.id === Number(e.target.value))
     if (selectedYearData) {
@@ -48,12 +44,10 @@ const UploadRecordsViewCourseYears = () => {
     }
   }
 
-  // Handle file selection
   const handleFileChange = (e) => {
     setSelectedFile(e.target.files[0])
   }
 
-  // Handle form submission (actual file upload logic)
   const handleUpload = async () => {
     if (!selectedFile || !selectedCourseYearId) {
       alert('Please make all selections and choose a file.')
@@ -73,7 +67,6 @@ const UploadRecordsViewCourseYears = () => {
       setUploading(false)
       setProcessing(true)
 
-      // Simulate a short processing delay (or wait for real backend response)
       setTimeout(() => {
         setProcessing(false)
         alert('File uploaded and processed successfully!')
@@ -98,10 +91,8 @@ const UploadRecordsViewCourseYears = () => {
         Select Course and Course Year Below
       </h2>
 
-      {/* Course & Year Selection Box */}
       <div className="border border-solid border-slate-900 dark:border-slate-600 bg-white dark:bg-gray-900 p-6 rounded-3xl shadow-xl mb-5">
         <div className="flex flex-col sm:flex-row gap-4">
-          {/* Course Selection */}
           <div className="flex-1">
             <label className="block text-slate-900 dark:text-white mb-2">Select Course:</label>
             <select
@@ -117,7 +108,6 @@ const UploadRecordsViewCourseYears = () => {
             </select>
           </div>
 
-          {/* Year Selection */}
           {selectedCourse && (
             <div className="flex-1">
               <label className="block text-slate-900 dark:text-white mb-2">Select Course Year:</label>
@@ -137,14 +127,12 @@ const UploadRecordsViewCourseYears = () => {
         </div>
       </div>
 
-      {/* CSV Upload Section */}
       {selectedCourseYearId && (
         <div className="border border-solid border-slate-900 dark:border-slate-600 bg-white dark:bg-gray-900 p-6 rounded-3xl shadow-xl mt-5">
           <h3 className="text-2xl font-semibold text-center text-slate-900 dark:text-white mb-4">
             Upload CSV File
           </h3>
           <div className="flex flex-col items-center">
-            {/* Styled File Input */}
             <div className="border border-slate-400 dark:border-slate-600 rounded-lg p-3 bg-gray-100 dark:bg-gray-800 w-64 text-center">
               <input
                 type="file"
@@ -154,7 +142,6 @@ const UploadRecordsViewCourseYears = () => {
               />
             </div>
 
-            {/* Upload Button */}
             <button
               onClick={handleUpload}
               className={`mt-4 px-6 py-2 rounded-lg transition ${uploading ? 'bg-gray-500 cursor-not-allowed' : 'bg-blue-600 text-white hover:bg-blue-700'}`}

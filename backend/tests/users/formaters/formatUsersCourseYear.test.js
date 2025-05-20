@@ -16,7 +16,7 @@ describe('formatUsersCourseYear', () => {
             years: [2021, 2022, 2023],
             part_time: false,
             course_qualification_level: {
-              qualification: 'Bachelors'
+              qualification: 'BCS'
             }
           },
           user_course_course_year: {
@@ -38,7 +38,7 @@ describe('formatUsersCourseYear', () => {
             years: [2022, 2023],
             part_time: true,
             course_qualification_level: {
-              qualification: 'Masters'
+              qualification: 'MCS'
             }
           },
           user_course_course_year: {
@@ -57,13 +57,11 @@ describe('formatUsersCourseYear', () => {
 
     const formattedUser = formatUsersCourseYear(mockUser)
 
-    // Check user info
     expect(formattedUser.user.id).toBe(1)
     expect(formattedUser.user.prefix).toBe('Dr')
     expect(formattedUser.user.forename).toBe('John')
     expect(formattedUser.user.surname).toBe('Doe')
 
-    // Check courses
     expect(formattedUser.user.courses).toHaveLength(2)
 
     const firstCourse = formattedUser.user.courses[0]
@@ -72,7 +70,7 @@ describe('formatUsersCourseYear', () => {
     expect(firstCourse.code).toBe('CS101')
     expect(firstCourse.years).toEqual([2021, 2022, 2023])
     expect(firstCourse.part_time).toBe(false)
-    expect(firstCourse.qualification).toBe('Bachelors')
+    expect(firstCourse.qualification).toBe('BCS')
     expect(firstCourse.course_years).toHaveLength(1)
 
     const firstCourseYear = firstCourse.course_years[0]
@@ -87,7 +85,7 @@ describe('formatUsersCourseYear', () => {
     expect(secondCourse.code).toBe('MATH101')
     expect(secondCourse.years).toEqual([2022, 2023])
     expect(secondCourse.part_time).toBe(true)
-    expect(secondCourse.qualification).toBe('Masters')
+    expect(secondCourse.qualification).toBe('MCS')
     expect(secondCourse.course_years).toHaveLength(1)
 
     const secondCourseYear = secondCourse.course_years[0]
@@ -97,7 +95,7 @@ describe('formatUsersCourseYear', () => {
     expect(secondCourseYear.course_coordinator).toBe('Dr. Bob Jones')
   })
 
-  it('should handle missing course information gracefully', () => {
+  it('should handle missing course information', () => {
     const mockUser = {
       id: 2,
       prefix: 'Ms',
@@ -112,23 +110,21 @@ describe('formatUsersCourseYear', () => {
             years: [2021],
             part_time: false,
             course_qualification_level: {
-              qualification: 'Bachelors'
+              qualification: 'BCS'
             }
           },
-          user_course_course_year: {} // Missing course_year_course_coordinator
+          user_course_course_year: {}
         }
       ]
     }
 
     const formattedUser = formatUsersCourseYear(mockUser)
 
-    // Check user info
     expect(formattedUser.user.id).toBe(2)
     expect(formattedUser.user.prefix).toBe('Ms')
     expect(formattedUser.user.forename).toBe('Jane')
     expect(formattedUser.user.surname).toBe('Smith')
 
-    // Check courses
     expect(formattedUser.user.courses).toHaveLength(1)
 
     const course = formattedUser.user.courses[0]
@@ -137,23 +133,23 @@ describe('formatUsersCourseYear', () => {
     expect(course.code).toBe('PHYS101')
     expect(course.years).toEqual([2021])
     expect(course.part_time).toBe(false)
-    expect(course.qualification).toBe('Bachelors')
+    expect(course.qualification).toBe('BCS')
     expect(course.course_years).toHaveLength(1)
 
     const courseYear = course.course_years[0]
-    expect(courseYear.id).toBeUndefined() // Missing year info
+    expect(courseYear.id).toBeUndefined()
     expect(courseYear.year_start).toBeUndefined()
     expect(courseYear.year_end).toBeUndefined()
-    expect(courseYear.course_coordinator).toBeUndefined() // Missing coordinator info
+    expect(courseYear.course_coordinator).toBeUndefined()
   })
 
-  it('should handle missing user_user_course gracefully', () => {
+  it('should handle missing user_user_course ', () => {
     const mockUser = {
       id: 3,
       prefix: 'Dr',
       forename: 'George',
       surname: 'Williams',
-      user_user_course: [] // No courses
+      user_user_course: []
     }
 
     const formattedUser = formatUsersCourseYear(mockUser)

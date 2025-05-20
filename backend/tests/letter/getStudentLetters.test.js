@@ -21,20 +21,20 @@ describe('GET /api/letters/:studentId', () => {
   let token, staffUser, student, studentModule, moduleYear
 
   beforeAll(async () => {
-    const hashedPassword = await bcrypt.hash('securepass', 10)
+    const hashedPassword = await bcrypt.hash('password', 10)
 
     staffUser = await User.create({
-      email: 'staff2@qub.ac.uk',
+      email: 'u.staff@qub.ac.uk',
       password: hashedPassword,
-      forename: 'Lettie',
-      surname: 'Letterman',
+      forename: 'Staff',
+      surname: 'User',
       prefix: 'Prof.',
       active: 1,
       role_id: 3,
       job_title: 'Lecturer'
     })
 
-    const auth = await authenticateUser(staffUser.email, 'securepass')
+    const auth = await authenticateUser(staffUser.email, 'password')
     token = auth.token
 
     // Setup required types and academic structure
@@ -54,9 +54,9 @@ describe('GET /api/letters/:studentId', () => {
     })
 
     student = await Student.create({
-      forename: 'Linda',
-      surname: 'Lawson',
-      email: 'linda.lawson@student.com',
+      forename: 'Larry',
+      surname: 'David',
+      email: 'l.david@qub.ac.uk',
       student_code: 'S7654321'
     })
 

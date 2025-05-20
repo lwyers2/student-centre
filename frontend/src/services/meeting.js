@@ -20,7 +20,7 @@ const createMeeting = async (studentId, moduleYearId, scheduledDate, academicId,
       return {
         success: true,
         message: 'Meeting created successfully',
-        meeting: response.data.meeting, // Ensure meeting data is returned
+        meeting: response.data.meeting,
       }
     } else {
       console.error('Meeting creation failed:', response.data.message)
@@ -52,7 +52,7 @@ const updateMeeting = async (meetingId, updatedData) => {
       return {
         success: true,
         message: 'Meeting updated successfully',
-        meeting: response.data.meeting, // Updated meeting data
+        meeting: response.data.meeting,
       }
     } else {
       console.error('Meeting update failed:', response.data.message)

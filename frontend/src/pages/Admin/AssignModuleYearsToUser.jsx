@@ -13,7 +13,7 @@ const AssignModuleYearsToUser = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await userService.getAll(user.token) // adjust if your method is different
+        const response = await userService.getAll(user.token)
         setUsers(response)
       } catch (err) {
         console.error('Failed to load users:', err)

@@ -127,7 +127,7 @@ describe('formatStudentModules', () => {
     expect(result).toEqual(expectedOutput)
   })
 
-  it('should gracefully handle missing coordinator information', () => {
+  it('should handle missing coordinator information', () => {
     const student = {
       id: 1,
       email: 'student@example.com',

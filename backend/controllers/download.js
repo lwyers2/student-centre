@@ -2,11 +2,9 @@ const fileDownloadRouter = require('express').Router()
 const path = require('path')
 const fs = require('fs')
 const { Meeting } = require('../models')
-const tokenVerification = require('../middleware/tokenVerification')
 
 fileDownloadRouter.get(
   '/meeting-minutes/:meetingId',
-  tokenVerification,
   async (req, res) => {
     try {
       const meetingId = req.params.meetingId

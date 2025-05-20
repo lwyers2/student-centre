@@ -18,10 +18,8 @@ describe('GET /api/users/user-details/:userId', () => {
   beforeAll(async () => {
     const hashedPassword = await bcrypt.hash('password123', 10)
 
-    // Create Role and School if not already present
     school = await School.create({ school_name: 'Engineering' })
 
-    // Create Super User
     superUser = await User.create({
       email: 'superuser@qub.ac.uk',
       password: hashedPassword,

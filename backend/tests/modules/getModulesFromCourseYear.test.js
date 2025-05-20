@@ -19,25 +19,25 @@ describe('GET /api/modules/course-year/:courseYearId', () => {
   let superUser, token, courseYear, module, moduleYear, semester
 
   beforeAll(async () => {
-    const hashedPassword = await bcrypt.hash('superpass', 10)
+    const hashedPassword = await bcrypt.hash('password', 10)
 
     superUser = await User.create({
       email: 'super@qub.ac.uk',
       password: hashedPassword,
-      forename: 'Sam',
-      surname: 'Super',
+      forename: 'Site',
+      surname: 'Admin',
       prefix: 'Mx',
       active: 1,
-      role_id: 3, // Super User
-      job_title: 'Sys Admin'
+      role_id: 3,
+      job_title: 'Site Admin'
     })
 
-    const auth = await authenticateUser(superUser.email, 'superpass')
+    const auth = await authenticateUser(superUser.email, 'password')
     token = auth.token
 
     const course = await Course.create({
-      title: 'Theoretical Sciences',
-      code: 'TS101',
+      title: 'Science',
+      code: 'SCI101',
       years: 3,
       qualification_id: 1,
       school_id: 1,
@@ -58,7 +58,7 @@ describe('GET /api/modules/course-year/:courseYearId', () => {
       CATs: '30'
     })
 
-    semester = await Semester.create({ name: 'Semester 1' })
+    semester = await Semester.create({ name: 'Spring' })
 
     moduleYear = await ModuleYear.create({
       year_start: 2024,
@@ -104,7 +104,7 @@ describe('GET /api/modules/course-year/:courseYearId', () => {
     expect(res.body[0]).toHaveProperty('title', 'Astrophysics')
     expect(res.body[0]).toHaveProperty('code', 'AST301')
     expect(res.body[0]).toHaveProperty('year_start', 2024)
-    expect(res.body[0]).toHaveProperty('semester','Semester 1')
+    expect(res.body[0]).toHaveProperty('semester','Spring')
   })
 
   it('should return 404 if no modules found for course year', async () => {
@@ -118,17 +118,17 @@ describe('GET /api/modules/course-year/:courseYearId', () => {
 
   it('should block access for non-super users', async () => {
     const normalUser = await User.create({
-      email: 'notsuper@qub.ac.uk',
-      password: await bcrypt.hash('nopepass', 10),
-      forename: 'Nina',
-      surname: 'Normal',
+      email: 'user@qub.ac.uk',
+      password: await bcrypt.hash('password', 10),
+      forename: 'School',
+      surname: 'User',
       prefix: 'Dr.',
       active: 1,
-      role_id: 1, // Not Super User
+      role_id: 1,
       job_title: 'Lecturer'
     })
 
-    const auth = await authenticateUser(normalUser.email, 'nopepass')
+    const auth = await authenticateUser(normalUser.email, 'password')
     const badToken = auth.token
 
     const res = await supertest(app)

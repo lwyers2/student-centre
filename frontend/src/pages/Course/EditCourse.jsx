@@ -23,14 +23,12 @@ const EditCourse = () => {
   const [showAddYear, setShowAddYear] = useState(false)
   const [qualifications, setQualifications] = useState([])
 
-  // 🔐 Redirect if user is not logged in
   useEffect(() => {
     if (!user) {
       navigate('/')
     }
   }, [user, navigate])
 
-  // 🧠 Fetch course + users
   useEffect(() => {
     if (!user?.token || !params.courseId) return
 
@@ -67,7 +65,6 @@ const EditCourse = () => {
       })
   }, [user?.token, params.courseId])
 
-  // 🎓 Fetch qualifications
   useEffect(() => {
     if (!course || !user?.token) return
 
@@ -79,7 +76,6 @@ const EditCourse = () => {
       })
   }, [course, user?.token])
 
-  // 📋 Handle course form state
   const handleCourseChange = (e) => {
     const { name, value, type, checked } = e.target
     setFormState(prev => ({
@@ -100,7 +96,6 @@ const EditCourse = () => {
     }
   }
 
-  // 📆 Add new year logic
   const handleNewYearChange = (e) => {
     const { name, value } = e.target
     setNewYear(prev => ({ ...prev, [name]: value }))
@@ -150,7 +145,6 @@ const EditCourse = () => {
     }
   }
 
-  // 🚧 Conditional Rendering
   if (!user) return null
   if (!user?.id) return <div>Loading user...</div>
   if (!course) return <div>Loading course...</div>

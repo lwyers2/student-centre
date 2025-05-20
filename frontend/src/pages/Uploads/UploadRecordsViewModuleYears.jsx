@@ -11,10 +11,9 @@ const UploadRecordsViewModuleYears = () => {
   const [selectedCourseYearId, setSelectedCourseYearId] = useState(null)
   const [modules, setModules] = useState([])
   const [groupedModules, setGroupedModules] = useState({})
-  const [searchModule, setSearchModule] = useState('') // Search state for module search term
+  const [searchModule, setSearchModule] = useState('')
 
 
-  // Fetch courses on mount
   useEffect(() => {
     if (user.id && user.token) {
       userService
@@ -28,7 +27,6 @@ const UploadRecordsViewModuleYears = () => {
     }
   }, [user.id, user.token])
 
-  // Fetch modules when course year is selected
   useEffect(() => {
     if (user.id && selectedCourseYearId) {
       userService
@@ -50,15 +48,13 @@ const UploadRecordsViewModuleYears = () => {
     }
   }, [user.id, selectedCourseYearId])
 
-  // Handle course selection change
   const handleCourseChange = (e) => {
     const selected = courses.find(course => course.course_id === Number(e.target.value))
     setSelectedCourse(selected)
-    setSelectedYear(null)  // Reset year when course changes
-    setSelectedCourseYearId(null)  // Reset courseYearId when course changes
+    setSelectedYear(null)
+    setSelectedCourseYearId(null)
   }
 
-  // Handle year selection change
   const handleYearChange = (e) => {
     const selectedYearData = selectedCourse.course_years.find(year => year.id === Number(e.target.value))
     if (selectedYearData) {
@@ -77,10 +73,8 @@ const UploadRecordsViewModuleYears = () => {
         Select Course then Module Below
       </h2>
 
-      {/* Course & Year Selection Box */}
       <div className="border border-solid border-slate-900 dark:border-slate-600 bg-white dark:bg-gray-900 p-6 rounded-3xl shadow-xl mb-5">
         <div className="flex flex-col sm:flex-row gap-4">
-          {/* Course Selection */}
           <div className="flex-1">
             <label className="block text-slate-900 dark:text-white mb-2">Select Course:</label>
             <select
@@ -96,7 +90,6 @@ const UploadRecordsViewModuleYears = () => {
             </select>
           </div>
 
-          {/* Year Selection */}
           {selectedCourse && (
             <div className="flex-1">
               <label className="block text-slate-900 dark:text-white mb-2">Select Course Year:</label>
@@ -116,7 +109,6 @@ const UploadRecordsViewModuleYears = () => {
         </div>
       </div>
 
-      {/* Search Bar for Modules */}
       {selectedCourse && selectedYear && (
         <div className="border border-solid border-slate-900 dark:border-slate-600 bg-white dark:bg-gray-900 p-6 rounded-3xl shadow-xl mb-5">
           <label className="block text-slate-900 dark:text-white mb-2">Search for a Module:</label>
@@ -130,7 +122,6 @@ const UploadRecordsViewModuleYears = () => {
         </div>
       )}
 
-      {/* Display Modules */}
       {Object.keys(groupedModules).length > 0 ? (
         <>
           {Object.keys(groupedModules).map((year) => (

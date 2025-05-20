@@ -7,14 +7,14 @@ import ModuleSummaryModuleYears from '../../components/ModuleView/ModuleSummaryM
 
 const ModuleSummary = () => {
   const user = useSelector(state => state.user)
-  const [moduleYears, setModuleYears] = useState([])  // Initialize as an empty array
+  const [moduleYears, setModuleYears] = useState([])
   const [module, setModule] = useState(null)
   const params = useParams()
 
   useEffect(() => {
     userService.getUserOneModule(user.id, params.moduleId, user.token)
       .then(response => {
-        setModuleYears(response.module_years || [])  // Fallback to empty array if no data
+        setModuleYears(response.module_years || [])
         setModule(response.module)
       })
       .catch(error => {

@@ -5,7 +5,7 @@ const Course = ({ course, search, yearStart, yearEnd }) => {
 
   const courseSchedule = course.part_time === 0 ? 'FY' : 'PT'
 
-  // First, filter course years based on the search term
+  // filter course years based on the search term
   const filteredCourseYears = course.course_years?.filter((courseYear) =>
     courseYear.year_start.toString().includes(search) ||
     courseYear.year_end.toString().includes(search) ||
@@ -14,30 +14,28 @@ const Course = ({ course, search, yearStart, yearEnd }) => {
     course.code?.toLowerCase().includes(search.toLowerCase())
   )
 
-  // Now apply the year filters (start and end) on the already filtered course years
+  // year filters
   const filteredByYear = filteredCourseYears.filter((courseYear) => {
     const matchesYearStart = yearStart ? courseYear.year_start.toString() === yearStart : true
     const matchesYearEnd = yearEnd ? courseYear.year_end.toString() === yearEnd : true
     return matchesYearStart && matchesYearEnd
   })
 
-  // If no course years match the selected filters, return null
   if (filteredByYear.length === 0) {
     return null
   }
 
-  // Table data for rendering
   const tableData = {
     labels: { title: `${course.title} (${course.qualification}) ${course.code}/${courseSchedule}` },
     content: {
-      headers: ['Year Start', 'Year End', 'Course Co-ordinator'], // Table headers
+      headers: ['Year Start', 'Year End', 'Course Co-ordinator'],
       data: filteredByYear.map((course_year) => ({
-        id: course_year.id, // Unique ID for each row
+        id: course_year.id,
         'year start': course_year.year_start,
         'year end': course_year.year_end,
         'course co-ordinator': course_year.course_coordinator,
       })),
-      view: '/course-year-modules', // Base path for "View" links
+      view: '/course-year-modules',
     },
   }
 

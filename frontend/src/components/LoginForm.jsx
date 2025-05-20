@@ -15,10 +15,10 @@ const LoginForm = ( ) => {
   const handleSubmit = async (event) => {
     event.preventDefault()
     try {
-      const user = await loginService.login({ email, password }) // Call API
-      dispatch(setUser(user)) // Update login state in App
+      const user = await loginService.login({ email, password })
+      dispatch(setUser(user))
       localStorage.setItem('loggedUser', JSON.stringify(user))
-      navigate('/') // Redirect to home page
+      navigate('/')
     } catch (err) {
       setError('Invalid email or password')
     }

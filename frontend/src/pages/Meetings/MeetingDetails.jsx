@@ -17,9 +17,9 @@ const MeetingDetails = () => {
   const [showUploadForm, setShowUploadForm] = useState(false)
   const [file, setFile] = useState(null)
   const [outcome, setOutcome] = useState('')
-  const [scheduledDate, setScheduledDate] = useState('')  // New state for scheduled date
-  const [meetingReason, setMeetingReason] = useState('')  // New state for meeting reason
-  const [isEditing, setIsEditing] = useState(false) // New state for editing mode
+  const [scheduledDate, setScheduledDate] = useState('')
+  const [meetingReason, setMeetingReason] = useState('')
+  const [isEditing, setIsEditing] = useState(false)
   const user = useSelector((state) => state.user)
   const [adminStaff, setAdminStaff] = useState([])
   const [teachingStaff, setTeachingStaff] = useState([])
@@ -31,11 +31,11 @@ const MeetingDetails = () => {
       .then((response) => {
         setMeeting(response)
         setCourseId(response.course_year_id)
-        setOutcome(response.outcome || '') // Default outcome to empty
-        setScheduledDate(response.scheduled_date || '') // Set default scheduled date
-        setMeetingReason(response.meeting_reason || '') // Set default meeting reason
-        setSelectedAdminStaff(response.meeting_admin_staff.id) // Set default selected admin staff
-        setSelectedTeachingStaff(response.meeting_academic_staff.id) // Set default selected teaching staff
+        setOutcome(response.outcome || '')
+        setScheduledDate(response.scheduled_date || '')
+        setMeetingReason(response.meeting_reason || '')
+        setSelectedAdminStaff(response.meeting_admin_staff.id)
+        setSelectedTeachingStaff(response.meeting_academic_staff.id)
       })
       .catch((error) => {
         console.error('Error fetching meeting:', error)
@@ -82,19 +82,17 @@ const MeetingDetails = () => {
     }
 
     const formData = new FormData()
-    formData.append('meetingId', meeting.id) // Ensure meetingId is correctly set
-    formData.append('file', file) // Attach file
+    formData.append('meetingId', meeting.id)
+    formData.append('file', file)
 
     try {
       await uploadService.uploadMinutes(meeting.id, file, user.token)
 
-      // After upload success, update the outcome
       const updatedMeeting = await meetingService.updateMeeting(meeting.id, { outcome })
 
       toast.success('Minutes uploaded and outcome updated successfully!')
       setShowUploadForm(false)
 
-      // Refresh meeting data
       setMeeting(updatedMeeting.meeting)
     } catch (error) {
       toast.error(error.message || 'Failed to upload minutes or update outcome.')
@@ -102,7 +100,6 @@ const MeetingDetails = () => {
     }
   }
 
-  // Function to handle downloading the meeting minutes
   const handleDownload = () => {
     if (meeting && meeting.path_to_minutes) {
       downloadService.downloadMinutes(meeting.id)
@@ -119,15 +116,15 @@ const MeetingDetails = () => {
     try {
       const updatedMeeting = await meetingService.updateMeeting(meeting.id, {
         outcome,
-        scheduled_date: scheduledDate,  // Ensure the backend receives scheduledDate
-        meeting_reason: meetingReason,   // Ensure the backend receives meetingReason
-        academic_id:  parseInt(selectedTeachingStaff, 10),  // Correctly name academic staff ID
-        admin_staff_id: parseInt(selectedAdminStaff, 10)  // Correctly name admin staff ID
+        scheduled_date: scheduledDate,
+        meeting_reason: meetingReason,
+        academic_id:  parseInt(selectedTeachingStaff, 10),
+        admin_staff_id: parseInt(selectedAdminStaff, 10)
       })
 
       if (updatedMeeting.success) {
-        setMeeting(updatedMeeting.meeting)  // Update the meeting state
-        setIsEditing(false)  // Disable edit mode
+        setMeeting(updatedMeeting.meeting)
+        setIsEditing(false)
         toast.success('Meeting updated successfully!')
       } else {
         toast.error('Failed to update meeting: ' + updatedMeeting.message)
@@ -141,7 +138,6 @@ const MeetingDetails = () => {
 
   if (!meeting) return <p>Loading meeting details...</p>
 
-  // Ensure meeting.meeting_student and other properties exist before rendering
   if (!meeting.meeting_student || !meeting.meeting_academic_staff || !meeting.meeting_admin_staff) {
     return <p>Loading additional meeting details...</p>
   }
@@ -153,7 +149,6 @@ const MeetingDetails = () => {
 
       <p><strong>Student:</strong> {meeting.meeting_student.forename} {meeting.meeting_student.surname} ({meeting.meeting_student.email})</p>
 
-      {/* Editable Scheduled Date */}
       <div>
         <strong>Scheduled Date:</strong>
         {isEditing ? (
@@ -168,7 +163,6 @@ const MeetingDetails = () => {
         )}
       </div>
 
-      {/* Editable Meeting Reason */}
       <div>
         <strong>Meeting Reason:</strong>
         {isEditing ? (
@@ -184,7 +178,6 @@ const MeetingDetails = () => {
         )}
       </div>
 
-      {/* Editable Outcome */}
       <div>
         <strong>Outcome:</strong>
         {isEditing ? (
@@ -200,7 +193,6 @@ const MeetingDetails = () => {
         )}
       </div>
 
-      {/* Staff dropdowns */}
       <div>
         <strong>Academic Staff:</strong>
         {isEditing ? (
@@ -246,7 +238,6 @@ const MeetingDetails = () => {
       )}
 
       <div className="flex space-x-4 mt-4">
-        {/* Edit and Save button */}
         <button onClick={handleEditToggle} className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
           {isEditing ? 'Cancel Edit' : 'Edit Meeting'}
         </button>
@@ -263,7 +254,6 @@ const MeetingDetails = () => {
           Delete Meeting
         </button>
 
-        {/* Add download button */}
         {meeting.path_to_minutes && (
           <button onClick={handleDownload} className="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600">
             Download Minutes

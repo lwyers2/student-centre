@@ -3,21 +3,18 @@ import { Link } from 'react-router-dom'
 
 const ModuleSummaryModuleYears = ({ moduleYear }) => {
 
-  // Check if students exist and is an array
+  // Check if students exist
   if (moduleYear.students && Array.isArray(moduleYear.students) && moduleYear.students.length > 0) {
-    // Calculate the average result
+    // average result
     const totalResult = moduleYear.students.reduce((acc, student) => acc + student.result, 0)
     const averageResult = Math.ceil(totalResult / moduleYear.students.length)
 
-    // Count the number of flagged students
     const flaggedCount = moduleYear.students.filter(student => student.flagged === 1).length
 
-    // Count the total number of students
     const totalStudents = moduleYear.students.length
 
     return (
       <div className="border border-solid border-slate-900 dark:border-slate-600 bg-white dark:bg-gray-900 p-8 rounded-3xl shadow-xl mb-5">
-        {/* Centering the h3 and module coordinator */}
         <div className="text-center mb-4">
           <h3 className="text-2xl font-bold text-slate-900 dark:text-white ">
             Academic Year Start: {moduleYear.year_start}
@@ -30,7 +27,6 @@ const ModuleSummaryModuleYears = ({ moduleYear }) => {
           </p>
         </div>
 
-        {/* Displaying the data in one line */}
         <div className="flex flex-wrap justify-between items-center mb-4">
           <div className="flex-1 p-2 mb-2 sm:mb-0">
             <div className="border p-4 rounded-md bg-slate-100 dark:bg-slate-700 text-slate-900 dark:text-white">
@@ -49,7 +45,6 @@ const ModuleSummaryModuleYears = ({ moduleYear }) => {
           </div>
         </div>
 
-        {/* Clickable boxes as links */}
         <div className="flex justify-between mt-6">
           <Link
             to={`/module-students-edit/${moduleYear.module_year_id}`}

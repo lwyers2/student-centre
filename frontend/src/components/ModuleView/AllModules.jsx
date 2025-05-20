@@ -12,14 +12,14 @@ const AllModules = ({ modules, year , search }) => {
   const tableData = {
     labels: { title: `Academic Year: ${year}` },
     content: {
-      headers: ['Title', 'Code', 'CATs', ], // Table headers
+      headers: ['Title', 'Code', 'CATs', ],
       data: filteredModules.map((module) => ({
-        id: module.module_id, // Unique ID for each row
+        id: module.module_id,
         title: module.title,
         code: module.code,
         cats: module.CATs,
       })),
-      view: '/module-summary', // Base path for "View" links
+      view: '/module-summary',
     },
   }
 

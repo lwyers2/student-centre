@@ -18,16 +18,17 @@ beforeAll(async () => {
     await sequelize.sync({ force: true })
 
     // Populate the database with necessary test data
-    await populateTestDatabase() // Ensure that seeding is asynchronous and completes properly
+    // Ensure that seeding is asynchronous and completes properly
+    await populateTestDatabase()
 
   } catch (error) {
     console.error('Error syncing database:', error)
-    throw error // Stop execution if there's an issue
+    throw error
   }
 })
 
 afterAll(async () => {
   console.log('Waiting before closing DB...')
-  await sequelize.close() // Ensure DB connection is properly closed
+  await sequelize.close()
   console.log('DB connection closed.')
 })

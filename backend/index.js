@@ -1,7 +1,7 @@
 require('./models/associations')
 require('dotenv').config()
-const app = require('./app') // Import app.js
-const config = require('./utils/config') // Get port from config
+const app = require('./app')
+const config = require('./utils/config')
 const { info } = require('./utils/logger')
 const sequelize = require('./utils/db')
 
@@ -16,10 +16,10 @@ const sequelize = require('./utils/db')
 const startServer = async () => {
   try {
     // Sync the database and ensure all models are in place
-    await sequelize.sync()  // You can optionally add { force: true } for re-syncing
+    await sequelize.sync()
     console.log('Database synced successfully')
 
-    // Now that the DB is synced, start the server
+    // Start the server
     app.listen(config.PORT, () => {
       info(`Server running on port ${config.PORT}`)
     })

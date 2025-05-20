@@ -20,7 +20,7 @@ describe('PUT /api/users/:user', () => {
       surname: 'User',
       prefix: 'Dr',
       job_title: 'Super Admin',
-      role_id: 3, // Super User
+      role_id: 3,
       active: 1
     })
 
@@ -110,7 +110,7 @@ describe('PUT /api/users/:user', () => {
       forename: 'Basic',
       surname: 'User',
       prefix: 'Mr.',
-      role_id: 1, // Not Super User
+      role_id: 1,
       active: 1,
       job_title: 'Basic User'
     })

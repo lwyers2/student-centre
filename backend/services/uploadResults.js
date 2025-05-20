@@ -40,27 +40,28 @@ async function processResultsChunk(chunk, courseYearId) {
       continue
     }
 
-    // Get the course year based on courseYearId
+    // get the course year
     const courseYear = await CourseYear.findByPk(courseYearId)
     if (!courseYear) {
       console.warn(`CourseYear with courseYearId=${courseYearId} not found`)
       continue
     }
 
-    // Find the module by module_code
+    // find course exists
     const course = await Course.findByPk(courseYear.course_id)
     if (!course) {
       console.warn(`Course for courseYearId=${courseYearId} not found`)
       continue
     }
 
+    /// find module exists from module code
     const module = await Module.findOne({ where: { code: module_code } })
     if (!module) {
       console.warn(`Module with module_code=${module_code} not found`)
       continue
     }
 
-    // Find the ModuleYear for the course
+    // Now find the module year using the module found above
     const moduleYear = await ModuleYear.findOne({
       where: {
         module_id: module.id,
@@ -91,11 +92,11 @@ async function processResultsChunk(chunk, courseYearId) {
       continue
     }
 
-    // Determine if the result should be flagged
+    // flagg the result if less than 40
     const numericResult = parseFloat(result)
     const isFlagged = !isNaN(numericResult) && numericResult < 40 ? 1 : 0
 
-    // Update the student module record
+    //finally update the student module
     try {
       await StudentModule.update(
         {
@@ -119,11 +120,12 @@ async function processResultsChunk(chunk, courseYearId) {
   return { updatedCount }
 }
 
-// Main function to handle the uploading of results
+// Uploader for results
 async function uploadResults(courseYearId, filePath) {
 
   const results = await parseResultsCSV(filePath)
 
+  //loop through chunks
   const chunks = []
   for (let i = 0; i < results.length; i += BATCH_SIZE) {
     chunks.push(results.slice(i, i + BATCH_SIZE))
@@ -135,7 +137,7 @@ async function uploadResults(courseYearId, filePath) {
     totalUpdated += updatedCount
   }
 
-  // Delete the uploaded file after processing
+  // Delete after uploading
   fs.unlink(filePath, (err) => {
     if (err) console.error('Failed to delete uploaded file:', err)
   })

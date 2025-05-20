@@ -26,7 +26,7 @@ describe('PUT /api/modules/update-module-year/module/:moduleId/module-year/:modu
       surname: 'User',
       prefix: 'Dr',
       job_title: 'Professor',
-      role_id: 3, // assuming role_id 3 is Super User
+      role_id: 3,
       active: 1
     })
 
@@ -62,7 +62,7 @@ describe('PUT /api/modules/update-module-year/module/:moduleId/module-year/:modu
       surname: 'Ordinator',
       prefix: 'Dr',
       job_title: 'Module Coordinator',
-      role_id: 2, // assume 2 is Teacher
+      role_id: 2,
       active: 1
     })
 
@@ -90,7 +90,6 @@ describe('PUT /api/modules/update-module-year/module/:moduleId/module-year/:modu
       .set('Authorization', `Bearer ${token}`)
       .send({
         coordinator: 2
-        // missing semester
       })
 
     expect(response.status).toBe(400)

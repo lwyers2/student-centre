@@ -26,7 +26,7 @@ describe('formatAllLettersOneStudent', () => {
           flagged: false,
           module_year_id: 501,
           student_module_module: {
-            title: 'Advanced Testing',
+            title: 'Computing Foundations',
             year: 2023,
             code: 'TEST301'
           },
@@ -38,9 +38,9 @@ describe('formatAllLettersOneStudent', () => {
           },
           student_module_student: {
             id: 7,
-            forename: 'Charlie',
-            surname: 'Brown',
-            email: 'charlie.brown@qub.ac.uk',
+            forename: 'Student',
+            surname: 'Name',
+            email: 'student.name@qub.ac.uk',
             student_code: 'B007'
           }
         }
@@ -62,7 +62,7 @@ describe('formatAllLettersOneStudent', () => {
           result: 58,
           flagged: false,
           module_year_id: 501,
-          title: 'Advanced Testing',
+          title: 'Computing Foundations',
           year: 2023,
           code: 'TEST301',
           year_start: '2023-09-01',
@@ -70,8 +70,8 @@ describe('formatAllLettersOneStudent', () => {
         },
         student: {
           id: 7,
-          name: 'Charlie Brown',
-          email: 'charlie.brown@qub.ac.uk',
+          name: 'Student Name',
+          email: 'student.name@qub.ac.uk',
           student_code: 'B007'
         }
       }

@@ -3,11 +3,11 @@ import { useParams, useNavigate } from 'react-router-dom'
 import studentService from '../../services/student'
 import { useSelector } from 'react-redux'
 import userService from '../../services/user'
-import meetingService from '../../services/meeting' // Import meeting service
+import meetingService from '../../services/meeting'
 
 const ScheduleMeeting = () => {
   const params = useParams()
-  const navigate = useNavigate() // Initialize useNavigate
+  const navigate = useNavigate()
   const [module, setModule] = useState(null)
   const [student, setStudent] = useState(null)
   const user = useSelector((state) => state.user)
@@ -15,7 +15,6 @@ const ScheduleMeeting = () => {
   const [adminStaff, setAdminStaff] = useState([])
   const [teachingStaff, setTeachingStaff] = useState([])
 
-  // Form state
   const [selectedAdmin, setSelectedAdmin] = useState('')
   const [selectedTeacher, setSelectedTeacher] = useState('')
   const [meetingDate, setMeetingDate] = useState('')
@@ -62,7 +61,6 @@ const ScheduleMeeting = () => {
     }
 
 
-    // Call the meetingService to create the meeting
     const result = await meetingService.createMeeting(
       meetingData.studentId,
       meetingData.moduleYearId,
@@ -77,8 +75,7 @@ const ScheduleMeeting = () => {
     if (result.success) {
       alert('Meeting scheduled successfully!')
 
-      // Redirect to the MeetingDetails page
-      navigate(`/meeting-details/${result.meeting.id}`) // Use the meeting ID from the response to redirect
+      navigate(`/meeting-details/${result.meeting.id}`)
     } else {
       alert('Failed to schedule the meeting: ' + result.message)
     }
@@ -112,12 +109,10 @@ const ScheduleMeeting = () => {
             <strong>Course:</strong> {course.title}
           </h2>
 
-          {/* Meeting Scheduling Form */}
           <form
             onSubmit={handleSubmit}
             className="max-w-xl mx-auto bg-white dark:bg-gray-900 p-6 rounded-lg shadow-lg"
           >
-            {/* Teaching Staff */}
             <div className="mb-4">
               <label className="block text-gray-700 dark:text-white font-bold mb-2">Select Teaching Staff</label>
               <select
@@ -135,7 +130,6 @@ const ScheduleMeeting = () => {
               </select>
             </div>
 
-            {/* Admin Staff */}
             <div className="mb-4">
               <label className="block text-gray-700 dark:text-white font-bold mb-2">Select Admin Staff</label>
               <select
@@ -153,7 +147,6 @@ const ScheduleMeeting = () => {
               </select>
             </div>
 
-            {/* Meeting Date & Time */}
             <div className="mb-4">
               <label className="block text-gray-700 dark:text-white font-bold mb-2">Meeting Date & Time</label>
               <input
@@ -165,7 +158,6 @@ const ScheduleMeeting = () => {
               />
             </div>
 
-            {/* Reason for Meeting */}
             <div className="mb-4">
               <label className="block text-gray-700 dark:text-white font-bold mb-2">Reason for Meeting</label>
               <textarea
@@ -178,7 +170,6 @@ const ScheduleMeeting = () => {
               ></textarea>
             </div>
 
-            {/* Submit Button */}
             <button
               type="submit"
               className="w-full bg-blue-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-blue-600"

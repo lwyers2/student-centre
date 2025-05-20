@@ -39,7 +39,7 @@ const AddCourseYearForm = ({
               readOnly
             />
             <select
-              name="course_coordinator_id"  // <-- use course_coordinator_id now
+              name="course_coordinator_id"
               value={newYear.course_coordinator_id || ''}
               onChange={handleNewYearChange}
               className="p-2 rounded border"

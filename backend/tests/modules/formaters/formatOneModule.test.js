@@ -1,7 +1,7 @@
-const { formatOneModule } = require('../../../helper/formaters/module/formatOneModule') // adjust path as needed
+const { formatOneModule } = require('../../../helper/formaters/module/formatOneModule')
 
 describe('formatOneModule', () => {
-  it('should format a full module object correctly', () => {
+  it('should format a full module correctly', () => {
     const mockModule = {
       id: 1,
       title: 'Quantum Logic',
@@ -18,7 +18,7 @@ describe('formatOneModule', () => {
           module_year_module_coordinator: {
             prefix: 'Dr',
             forename: 'Alice',
-            surname: 'Wonderland'
+            surname: 'Glass'
           }
         },
         {
@@ -29,8 +29,8 @@ describe('formatOneModule', () => {
           },
           module_year_module_coordinator: {
             prefix: 'Prof',
-            forename: 'Bob',
-            surname: 'Builder'
+            forename: 'Nick',
+            surname: 'Cave'
           }
         }
       ]
@@ -51,19 +51,19 @@ describe('formatOneModule', () => {
           module_year_id: 10,
           year_start: 2024,
           semester: 'Semester 2',
-          coordinator: 'Dr. Alice Wonderland'
+          coordinator: 'Dr. Alice Glass'
         },
         {
           module_year_id: 11,
           year_start: 2023,
           semester: 'Semester 1',
-          coordinator: 'Prof. Bob Builder'
+          coordinator: 'Prof. Nick Cave'
         }
       ]
     })
   })
 
-  it('should handle missing semester and coordinator gracefully', () => {
+  it('should handle missing semester and coordinator', () => {
     const mockModule = {
       id: 2,
       title: 'Abstract Algebra',

@@ -67,7 +67,7 @@ describe('formatUserModulesFromCourseYear', () => {
     expect(formattedUser.modules[0].semester).toBe('Autumn')
   })
 
-  it('should handle missing module_year_module gracefully', () => {
+  it('should handle missing module_year_module', () => {
     const mockUser = {
       id: 2,
       prefix: 'Mr',
@@ -77,7 +77,7 @@ describe('formatUserModulesFromCourseYear', () => {
         {
           module_id: 102,
           module_year_id: 2024,
-          user_module_module_year: {} // Missing module_year_module
+          user_module_module_year: {}
         }
       ]
     }
@@ -95,7 +95,7 @@ describe('formatUserModulesFromCourseYear', () => {
     expect(formattedUser.modules[0].semester).toBeUndefined()
   })
 
-  it('should handle missing module_year_semester gracefully', () => {
+  it('should handle missing module_year_semester ', () => {
     const mockUser = {
       id: 3,
       prefix: 'Ms',
@@ -142,13 +142,13 @@ describe('formatUserModulesFromCourseYear', () => {
     expect(formattedUser.modules[0].semester).toBeUndefined()
   })
 
-  it('should handle missing user_module_user gracefully', () => {
+  it('should handle missing user_module_user ', () => {
     const mockUser = {
       id: 4,
       prefix: 'Dr',
       forename: 'George',
       surname: 'Williams',
-      user_module_user: [] // No modules assigned
+      user_module_user: []
     }
 
     const formattedUser = formatUserModulesFromCourseYear(mockUser)
@@ -156,7 +156,7 @@ describe('formatUserModulesFromCourseYear', () => {
     expect(formattedUser.modules).toHaveLength(0)
   })
 
-  it('should handle undefined user gracefully', () => {
+  it('should handle undefined user ', () => {
     const mockUser = undefined
 
     const formattedUser = formatUserModulesFromCourseYear(mockUser)

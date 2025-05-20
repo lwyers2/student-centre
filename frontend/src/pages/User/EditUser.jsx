@@ -17,7 +17,6 @@ const EditUser = () => {
 
 
 
-  // Load user data
   useEffect(() => {
     userService.getUserDetails(userId, user.token)
       .then((response) => {
@@ -33,7 +32,6 @@ const EditUser = () => {
           active: userData.active,
         })
 
-        // extract selected school IDs from the user object
         const userSchoolIds = (userData.schools || []).map(
           (school) => school.school_id
         )
@@ -43,7 +41,6 @@ const EditUser = () => {
   }, [userId])
 
 
-  // Load roles
   useEffect(() => {
     const fetchRoles = async () => {
       try {
@@ -56,7 +53,6 @@ const EditUser = () => {
     fetchRoles()
   }, [])
 
-  // Load schools
   useEffect(() => {
     const fetchSchools = async () => {
       try {
@@ -69,7 +65,6 @@ const EditUser = () => {
     fetchSchools()
   }, [])
 
-  // Handle form inputs
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target
     setFormData((prev) => ({
@@ -78,7 +73,6 @@ const EditUser = () => {
     }))
   }
 
-  // Handle checkbox toggle for schools
   const toggleSchool = (schoolId) => {
     setSelectedSchools((prev) =>
       prev.includes(schoolId)
@@ -130,7 +124,6 @@ const EditUser = () => {
         <input type="password" name="password" value={formData.password} onChange={handleChange} placeholder="Password (leave blank to keep current)" className="w-full p-2 border rounded" />
         <input name="job_title" value={formData.job_title} onChange={handleChange} placeholder="Job Title" className="w-full p-2 border rounded" />
 
-        {/* Role dropdown */}
         <select name="role_id" value={formData.role_id} onChange={handleChange} className="w-full p-2 border rounded ">
           <option value="">Select Role</option>
           {roles.map((role) => (
@@ -140,13 +133,11 @@ const EditUser = () => {
           ))}
         </select>
 
-        {/* Active toggle */}
         <label className="flex items-center gap-2 dark:text-white">
           <input type="checkbox" name="active" checked={formData.active} onChange={handleChange} />
           Active
         </label>
 
-        {/* Schools checkboxes */}
         <div className="border-t pt-4 dark:text-white">
           <h4 className="font-semibold">Assign Schools</h4>
           <div className="grid grid-cols-2 gap-2 max-h-60 overflow-y-auto">

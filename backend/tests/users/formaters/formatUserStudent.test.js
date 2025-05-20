@@ -58,13 +58,11 @@ describe('formatUserStudents', () => {
 
     const formattedUser = formatUserStudents(mockUser)
 
-    // Check user info
     expect(formattedUser.user.id).toBe(1)
     expect(formattedUser.user.prefix).toBe('Dr')
     expect(formattedUser.user.forename).toBe('John')
     expect(formattedUser.user.surname).toBe('Doe')
 
-    // Check students
     expect(formattedUser.students).toHaveLength(3)
 
     const firstStudent = formattedUser.students[0]
@@ -83,7 +81,7 @@ describe('formatUserStudents', () => {
     expect(thirdStudent.surname).toBe('Davis')
   })
 
-  it('should handle missing student modules gracefully', () => {
+  it('should handle missing student modules', () => {
     const mockUser = {
       id: 2,
       prefix: 'Ms',
@@ -98,7 +96,7 @@ describe('formatUserStudents', () => {
               code: 'PHYS101',
               years: [2021]
             },
-            module_year_student_module: [] // No students in this module
+            module_year_student_module: []
           }
         }
       ]
@@ -106,27 +104,25 @@ describe('formatUserStudents', () => {
 
     const formattedUser = formatUserStudents(mockUser)
 
-    // Check user info
     expect(formattedUser.user.id).toBe(2)
     expect(formattedUser.user.prefix).toBe('Ms')
     expect(formattedUser.user.forename).toBe('Jane')
     expect(formattedUser.user.surname).toBe('Smith')
 
-    // Check students (should be empty)
     expect(formattedUser.students).toHaveLength(0)
   })
 
-  it('should handle missing user_module_user gracefully', () => {
+  it('should handle missing user_module_user', () => {
     const mockUser = {
       id: 3,
       prefix: 'Dr',
       forename: 'George',
       surname: 'Williams',
-      user_module_user: [] // No modules
+      user_module_user: []
     }
 
     const formattedUser = formatUserStudents(mockUser)
 
-    expect(formattedUser.students).toHaveLength(0) // No students
+    expect(formattedUser.students).toHaveLength(0)
   })
 })

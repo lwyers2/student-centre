@@ -1,6 +1,6 @@
 const supertest = require('supertest')
 const bcrypt = require('bcrypt')
-const app = require('../../app') // Adjust path as needed
+const app = require('../../app')
 const {
   User,
   AuthenticationUser,

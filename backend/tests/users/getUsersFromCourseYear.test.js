@@ -20,11 +20,9 @@ describe('GET /api/users/course-year/:courseYear', () => {
   beforeAll(async () => {
     const hashedPassword = await bcrypt.hash('password123', 10)
 
-    // Create Roles
     const adminRole = await Role.create({ name: 'Admin' })
     const teacherRole = await Role.create({ name: 'Teacher' })
 
-    // Create Users
     adminUser = await User.create({
       email: 'admin@qub.ac.uk',
       password: hashedPassword,
@@ -58,11 +56,9 @@ describe('GET /api/users/course-year/:courseYear', () => {
       job_title: 'Lecturer',
     })
 
-    // Authenticate (optional)
     const result = await authenticateUser(superAdminUser.email, 'password123')
     token = result.token
 
-    // Qualification and Course setup (minimal)
     const qualification = await QualificationLevel.create({ qualification: 'BSc', level_id: 1 })
     const course = await Course.create({
       title: 'Computer Science',
@@ -80,7 +76,6 @@ describe('GET /api/users/course-year/:courseYear', () => {
       course_coordinator: adminUser.id,
     })
 
-    // Associate users to course year
     await UserCourse.create({ user_id: adminUser.id, course_year_id: courseYear.id, course_id: course.id })
     await UserCourse.create({ user_id: teacherUser.id, course_year_id: courseYear.id, course_id: course.id })
   })

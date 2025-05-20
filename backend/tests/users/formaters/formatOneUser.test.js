@@ -13,7 +13,7 @@ describe('formatOneUser', () => {
       is_active: true,
       user_user_school: [
         {
-          user_school_school: { school_name: 'University A', id: 1 }
+          user_school_school: { school_name: 'School A', id: 1 }
         }
       ],
       user_role: { name: 'Admin' },
@@ -25,7 +25,7 @@ describe('formatOneUser', () => {
             years: '2023-2024',
             code: 'C101',
             part_time: false,
-            course_qualification_level: { qualification: 'Bachelor' },
+            course_qualification_level: { qualification: 'BSC' },
           },
           user_course_course_year: {
             id: 1,
@@ -50,7 +50,7 @@ describe('formatOneUser', () => {
               CATs: 10,
               year: 2023,
             },
-            module_year_semester: { name: 'Semester 1' },
+            module_year_semester: { name: 'Spring' },
             year_start: '2023',
             module_year_module_coordinator: {
               prefix: 'Dr',
@@ -64,33 +64,26 @@ describe('formatOneUser', () => {
 
     const formattedUser = formatOneUser(mockUser)
 
-    // Check if the formatted user contains the expected properties
     expect(formattedUser).toHaveProperty('id', 1)
     expect(formattedUser).toHaveProperty('forename', 'John')
     expect(formattedUser.role).toHaveProperty('name', 'Admin')
     expect(formattedUser).toHaveProperty('courses')
-    expect(formattedUser.courses).toHaveLength(1) // Check if courses array has the expected number of items
+    expect(formattedUser.courses).toHaveLength(1)
     expect(formattedUser.courses[0]).toHaveProperty('course_id', 101)
     expect(formattedUser.courses[0]).toHaveProperty('title', 'Course A')
-
-    // Check if the formatted user contains the correct school info
     expect(formattedUser.schools).toHaveLength(1)
-    expect(formattedUser.schools[0]).toHaveProperty('school', 'University A')
+    expect(formattedUser.schools[0]).toHaveProperty('school', 'School A')
     expect(formattedUser.schools[0]).toHaveProperty('school_id', 1)
-
-    // Check if the module is formatted properly
     expect(formattedUser.modules).toHaveLength(1)
     expect(formattedUser.modules[0]).toHaveProperty('module_id', 1)
     expect(formattedUser.modules[0]).toHaveProperty('title', 'Module A')
     expect(formattedUser.modules[0]).toHaveProperty('module_coordinator', 'Dr. Bob Johnson')
-
-    // Check if the course_years have been properly formatted
     expect(formattedUser.courses[0].course_years).toHaveLength(1)
     expect(formattedUser.courses[0].course_years[0]).toHaveProperty('year_start', '2023')
     expect(formattedUser.courses[0].course_years[0]).toHaveProperty('course_coordinator', 'Dr. Alice Smith')
   })
 
-  it('should handle empty user_user_course gracefully', () => {
+  it('should handle empty user_user_course ', () => {
     const mockUser = {
       id: 2,
       forename: 'Jane',
@@ -102,7 +95,6 @@ describe('formatOneUser', () => {
 
     const formattedUser = formatOneUser(mockUser)
 
-    // Ensure courses is an empty array if no user_user_course
     expect(formattedUser.courses).toHaveLength(0)
   })
 
@@ -113,14 +105,13 @@ describe('formatOneUser', () => {
       surname: 'Taylor',
       email: 'anna.taylor@example.com',
       user_role: { name: 'Student' },
-      user_user_school: [{ user_school_school: { school_name: 'University B', id: 2 } }]
-      // user_user_course is missing
+      user_user_school: [{ user_school_school: { school_name: 'School B', id: 2 } }]
     }
 
     const formattedUser = formatOneUser(mockUser)
 
     expect(formattedUser).toHaveProperty('courses')
-    expect(formattedUser.courses).toEqual([]) // Should be an empty array
+    expect(formattedUser.courses).toEqual([])
   })
 
   it('should return an empty modules array if user_module_user is missing', () => {
@@ -130,7 +121,7 @@ describe('formatOneUser', () => {
       surname: 'Wilson',
       email: 'jake.wilson@example.com',
       user_role: { name: 'Lecturer' },
-      user_user_school: [{ user_school_school: { school_name: 'University C', id: 3 } }],
+      user_user_school: [{ user_school_school: { school_name: 'School C', id: 3 } }],
       user_user_course: [
         {
           user_course_course: {
@@ -139,7 +130,7 @@ describe('formatOneUser', () => {
             years: '2023-2024',
             code: 'PHY101',
             part_time: false,
-            course_qualification_level: { qualification: 'Bachelor' },
+            course_qualification_level: { qualification: 'BSC' },
           },
           user_course_course_year: {
             id: 2,
@@ -153,47 +144,46 @@ describe('formatOneUser', () => {
           },
         },
       ],
-      // user_module_user is missing
     }
 
     const formattedUser = formatOneUser(mockUser)
 
     expect(formattedUser).toHaveProperty('modules')
-    expect(formattedUser.modules).toEqual([]) // Should be an empty array
+    expect(formattedUser.modules).toEqual([])
   })
 
-  it('should handle missing user_module_module_year gracefully', () => {
+  it('should handle missing user_module_module_year ', () => {
     const mockUser = {
       id: 6,
       forename: 'Sarah',
       surname: 'Connor',
       email: 'sarah.connor@example.com',
       user_role: { name: 'Professor' },
-      user_user_school: [{ user_school_school: { school_name: 'Tech University', id: 4 } }],
+      user_user_school: [{ user_school_school: { school_name: 'School Name', id: 4 } }],
       user_module_user: [
         {
           module_id: 3,
           module_year_id: 2,
-          user_module_module_year: null, // Missing module details
+          user_module_module_year: null,
         },
       ],
     }
     const formattedUser = formatOneUser(mockUser)
 
     expect(formattedUser).toHaveProperty('modules')
-    expect(formattedUser.modules).toEqual([]) // Modules should be an empty array
+    expect(formattedUser.modules).toEqual([])
   })
 
-  it('should handle null or undefined values gracefully', () => {
+  it('should handle null or undefined values ', () => {
     const mockUser = {
       id: 8,
       forename: 'Bob',
       surname: 'Johnson',
       email: 'bob.johnson@example.com',
-      user_role: null,  // null role
-      user_user_school: undefined,  // undefined school
-      user_user_course: null,  // null courses
-      user_module_user: undefined,  // undefined modules
+      user_role: null,
+      user_user_school: undefined,
+      user_user_course: null,
+      user_module_user: undefined,
     }
 
     const formattedUser = formatOneUser(mockUser)
@@ -212,10 +202,10 @@ describe('formatOneUser', () => {
       role: null,
       courses: [],
       modules: [],
-    }) // Should return the object with the correct format, handling nulls and undefined values
+    })
   })
 
-  it('should handle empty string values gracefully', () => {
+  it('should handle empty string values ', () => {
     const mockUser = {
       id: 9,
       forename: '',
@@ -228,14 +218,14 @@ describe('formatOneUser', () => {
     }
 
     const formattedUser = formatOneUser(mockUser)
-    expect(formattedUser.forename).toBe('')  // Check if the forename is an empty string
-    expect(formattedUser.surname).toBe('')   // Check if the surname is an empty string
-    expect(formattedUser.email).toBe('')     // Check if the email is an empty string
-    expect(formattedUser.schools[0].school_name).toBe(undefined)  // Check if school name is an empty string
-    expect(formattedUser.courses[0].title).toBe('')         // Check if course title is an empty string
+    expect(formattedUser.forename).toBe('')
+    expect(formattedUser.surname).toBe('')
+    expect(formattedUser.email).toBe('')
+    expect(formattedUser.schools[0].school_name).toBe(undefined)
+    expect(formattedUser.courses[0].title).toBe('')
   })
 
-  it('should handle null or undefined values for module_id and module_year_id gracefully', () => {
+  it('should handle null or undefined values for module_id and module_year_id ', () => {
     const mockUser = {
       id: 10,
       forename: 'Charlie',
@@ -246,8 +236,8 @@ describe('formatOneUser', () => {
       user_user_course: [],
       user_module_user: [
         {
-          module_id: null,  // null module_id
-          module_year_id: undefined,  // undefined module_year_id
+          module_id: null,
+          module_year_id: undefined,
           user_module_module_year: null
         }
       ],
@@ -257,7 +247,7 @@ describe('formatOneUser', () => {
     expect(formattedUser.modules).toEqual([])
   })
 
-  it('should handle missing course ID gracefully', () => {
+  it('should handle missing course ID ', () => {
     const mockUser = {
       id: 1,
       forename: 'John',
@@ -271,7 +261,7 @@ describe('formatOneUser', () => {
             years: '2023-2024',
             code: 'C101',
             part_time: false,
-            course_qualification_level: { qualification: 'Bachelor' },
+            course_qualification_level: { qualification: 'BSC' },
           },
           user_course_course_year: {
             id: 1,
@@ -289,11 +279,10 @@ describe('formatOneUser', () => {
 
     const formattedUser = formatOneUser(mockUser)
 
-    // Check if the course ID is 0 when missing
     expect(formattedUser.courses[0].course_id).toBe(0)
   })
 
-  it('should handle missing course title gracefully', () => {
+  it('should handle missing course title ', () => {
     const mockUser = {
       id: 1,
       forename: 'John',
@@ -307,7 +296,7 @@ describe('formatOneUser', () => {
             years: '2023-2024',
             code: 'C101',
             part_time: false,
-            course_qualification_level: { qualification: 'Bachelor' },
+            course_qualification_level: { qualification: 'BSC' },
           },
           user_course_course_year: {
             id: 1,
@@ -325,7 +314,6 @@ describe('formatOneUser', () => {
 
     const formattedUser = formatOneUser(mockUser)
 
-    // Check if the course title is an empty string when missing
     expect(formattedUser.courses[0].title).toBe('')
   })
 
@@ -344,7 +332,7 @@ describe('formatOneUser', () => {
             years: '2023-2024',
             code: 'C101',
             part_time: false,
-            course_qualification_level: { qualification: 'Bachelor' },
+            course_qualification_level: { qualification: 'BSC' },
           },
           user_course_course_year: {
             id: 1,
@@ -362,12 +350,11 @@ describe('formatOneUser', () => {
 
     const formattedUser = formatOneUser(mockUser)
 
-    // Check if the course years are added correctly
     expect(formattedUser.courses[0].course_years).toHaveLength(1)
     expect(formattedUser.courses[0].course_years[0]).toHaveProperty('course_coordinator', 'Dr. Alice Smith')
   })
 
-  it('should handle missing user_module_module_year gracefully', () => {
+  it('should handle missing user_module_module_year ', () => {
     const mockUser = {
       id: 1,
       forename: 'John',
@@ -378,19 +365,18 @@ describe('formatOneUser', () => {
         {
           module_id: 1,
           module_year_id: 1,
-          user_module_module_year: null, // Missing module_year
+          user_module_module_year: null,
         }
       ],
     }
 
     const formattedUser = formatOneUser(mockUser)
 
-    // Ensure modules array is empty when module_year is missing
     expect(formattedUser.modules).toEqual([])
   })
 
 
-  it('should handle missing module coordinator gracefully', () => {
+  it('should handle missing module coordinator ', () => {
     const mockUser = {
       id: 1,
       forename: 'John',
@@ -408,9 +394,9 @@ describe('formatOneUser', () => {
               CATs: 10,
               year: 2023,
             },
-            module_year_semester: { name: 'Semester 1' },
+            module_year_semester: { name: 'Spring' },
             year_start: '2023',
-            module_year_module_coordinator: null, // Missing coordinator
+            module_year_module_coordinator: null,
           }
         }
       ],
@@ -418,7 +404,6 @@ describe('formatOneUser', () => {
 
     const formattedUser = formatOneUser(mockUser)
 
-    // Check if module coordinator is null when missing
     expect(formattedUser.modules[0].module_coordinator).toBe('.')
   })
 

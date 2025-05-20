@@ -126,7 +126,6 @@ usersRouter.post(
 usersRouter.get(
   '/course-year/:courseYear',
   tokenVerification,
-  roleAndIdAuthorization(['Super User'], true),
   async (req, res) => {
     const courseYearId = req.params.courseYear
     const users = await userService.getUsersFromCourseYear(courseYearId)
@@ -172,7 +171,6 @@ usersRouter.get(
   validateId('moduleId'),
   validate,
   tokenVerification,
-  roleAndIdAuthorization(['Super User'], true),
   async (req, res) => {
     const moduleId = req.params.moduleId
     const users = await userService.getUsersFromModule(moduleId)
@@ -190,7 +188,6 @@ usersRouter.get(
   validateId('userId'),
   validate,
   tokenVerification,
-  roleAndIdAuthorization(['Super User'], true),
   async (req, res) => {
     const userId = req.params.userId
     const user = await userService.getOneUserDetails(userId)
@@ -207,7 +204,6 @@ usersRouter.put(
   '/:user',
   validate,
   tokenVerification,
-  roleAndIdAuthorization(['Super User'], true),
   async (req, res) => {
     const userId = req.params.user
     const updatedUser = await userService.updateUser(userId, req.body)

@@ -12,7 +12,7 @@ const {
 } = require('../../models')
 const { authenticateUser } = require('../../services/authenticateUser')
 
-describe('POST & DELETE /api/courses (assign/remove user from course)', () => {
+describe('POST and DELETE /api/courses', () => {
   let superUser
   let targetUser
   let token
@@ -89,7 +89,6 @@ describe('POST & DELETE /api/courses (assign/remove user from course)', () => {
     )
   })
 
-  // ✅ Assign course year to user
   it('should assign a course year to a user', async () => {
     const response = await supertest(app)
       .post('/api/courses/assign-course-year-to-user')
@@ -113,7 +112,7 @@ describe('POST & DELETE /api/courses (assign/remove user from course)', () => {
     expect(record).not.toBeNull()
   })
 
-  // 🚫 Duplicate assignment
+
   it('should return 400 if user is already in the course year', async () => {
     const response = await supertest(app)
       .post('/api/courses/assign-course-year-to-user')
@@ -128,7 +127,7 @@ describe('POST & DELETE /api/courses (assign/remove user from course)', () => {
     expect(response.body.error).toBe('User already in course year')
   })
 
-  // 🚫 Missing fields on assign
+
   it('should return 400 if required fields are missing on assign', async () => {
     const response = await supertest(app)
       .post('/api/courses/assign-course-year-to-user')
@@ -141,7 +140,7 @@ describe('POST & DELETE /api/courses (assign/remove user from course)', () => {
     expect(response.body.error).toBe('Missing required fields')
   })
 
-  // 🚫 Assign with invalid user
+
   it('should return 404 if user does not exist on assign', async () => {
     const response = await supertest(app)
       .post('/api/courses/assign-course-year-to-user')
@@ -156,7 +155,6 @@ describe('POST & DELETE /api/courses (assign/remove user from course)', () => {
     expect(response.body.error).toBe('User not found')
   })
 
-  // ✅ Remove user from course year
   it('should remove the user from the course year', async () => {
     const response = await supertest(app)
       .delete('/api/courses/remove-user-from-course')
@@ -180,7 +178,6 @@ describe('POST & DELETE /api/courses (assign/remove user from course)', () => {
     expect(record).toBeNull()
   })
 
-  // 🚫 Remove user not in course year
   it('should return 400 if user is not in the course year', async () => {
     const response = await supertest(app)
       .delete('/api/courses/remove-user-from-course')
@@ -195,7 +192,6 @@ describe('POST & DELETE /api/courses (assign/remove user from course)', () => {
     expect(response.body.error).toBe('User not in courseYears')
   })
 
-  // 🚫 Remove with missing fields
   it('should return 400 if required fields are missing on remove', async () => {
     const response = await supertest(app)
       .delete('/api/courses/remove-user-from-course')
@@ -208,7 +204,6 @@ describe('POST & DELETE /api/courses (assign/remove user from course)', () => {
     expect(response.body.error).toBe('Missing required fields')
   })
 
-  // 🚫 Remove with invalid user
   it('should return 404 if user does not exist on remove', async () => {
     const response = await supertest(app)
       .delete('/api/courses/remove-user-from-course')
@@ -223,7 +218,6 @@ describe('POST & DELETE /api/courses (assign/remove user from course)', () => {
     expect(response.body.error).toBe('User not found')
   })
 
-  // 🚫 Remove with invalid courseYear
   it('should return 404 if course year does not exist on remove', async () => {
     const response = await supertest(app)
       .delete('/api/courses/remove-user-from-course')

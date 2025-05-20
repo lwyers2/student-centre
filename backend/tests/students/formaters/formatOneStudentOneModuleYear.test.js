@@ -43,10 +43,10 @@ describe('formatOneStudentOneModuleYear', () => {
         student_code: 'S12345',
         forename: 'Jane',
         surname: 'Smith',
-        letter_count_for_academic_year: undefined, // assuming letter count is not provided in this test
+        letter_count_for_academic_year: undefined,
       },
       course: {
-        id: undefined, // assuming course is undefined in this test
+        id: undefined,
         course_year_id: undefined,
         year_start: undefined,
         year_end: undefined,
@@ -63,11 +63,11 @@ describe('formatOneStudentOneModuleYear', () => {
         CATs: 20,
         year: 2,
         result: 'Pass',
-        result_descriptor: undefined, // Assuming no descriptor in this test case
+        result_descriptor: undefined,
         flagged: false,
         resit: false,
       },
-      letter: {}, // Assuming no letter data in this case
+      letter: {},
     }
 
     const result = formatOneStudentOneModuleYear(mockStudent, undefined, undefined)

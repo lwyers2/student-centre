@@ -1,6 +1,6 @@
 const supertest = require('supertest')
 const bcrypt = require('bcrypt')
-const app = require('../../app') // Adjust based on project structure
+const app = require('../../app')
 const { User, AuthenticationUser, Course, QualificationLevel, School } = require('../../models')
 const { authenticateUser } = require('../../services/authenticateUser')
 
@@ -10,7 +10,6 @@ describe('Courses API Endpoints', () => {
   let authenticationUser
 
   beforeAll(async () => {
-    // Hash password and create test user
     const hashedPassword = await bcrypt.hash('password123', 10)
     testUser = await User.create({
       email: 'test@qub.ac.uk',
@@ -20,10 +19,9 @@ describe('Courses API Endpoints', () => {
       active: 1,
       prefix: 'Prof',
       job_title: 'Professor',
-      role_id: 3, // Assuming this is a role with access to courses
+      role_id: 3,
     })
 
-    // Authenticate user and get token
     const result = await authenticateUser(testUser.email, 'password123')
     token = result.token
     authenticationUser = await AuthenticationUser.findOne({ where: { token } })
@@ -44,9 +42,8 @@ describe('Courses API Endpoints', () => {
     )
   })
 
-  // Test GET /api/courses
-  it('should fetch all courses if authorized', async () => {
-    // Mock database response (create some courses)
+  it('should get all courses if authorized', async () => {
+    //set up for this test
     await QualificationLevel.create({ qualification: 'BSc', level_id: 1 })
     await School.create({ school_name: 'School of Computing' })
 
@@ -70,7 +67,6 @@ describe('Courses API Endpoints', () => {
       school_id: school.id,
     })
 
-    // Make the request to the API
     const response = await supertest(app)
       .get('/api/courses')
       .set('Authorization', `Bearer ${token}`)
@@ -85,10 +81,8 @@ describe('Courses API Endpoints', () => {
   })
 
   it('should return 404 if no courses are found', async () => {
-    // Clear courses from the database
     await Course.destroy({ where: {} })
 
-    // Make the request to the API
     const response = await supertest(app)
       .get('/api/courses')
       .set('Authorization', `Bearer ${token}`)
@@ -115,7 +109,6 @@ describe('Courses API Endpoints', () => {
   })
 
   it('should return 403 if user does not have required role', async () => {
-    // Create a user without permission
     const unauthorizedUser = await User.create({
       email: 'unauthorized@qub.ac.uk',
       password: await bcrypt.hash('password123', 10),
@@ -124,7 +117,7 @@ describe('Courses API Endpoints', () => {
       active: 1,
       prefix: 'Mr',
       job_title: 'Visitor',
-      role_id: 1, // Unauthorized role
+      role_id: 1,
     })
 
     const result = await authenticateUser(unauthorizedUser.email, 'password123')

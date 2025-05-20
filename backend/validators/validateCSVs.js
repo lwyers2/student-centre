@@ -1,10 +1,11 @@
 const fs = require('fs')
 const csvParser = require('csv-parser')
 
-// Reusable function to validate CSV with dynamic required fields
+
 async function validateCSVs(filePath, requiredFields) {
   const missingDataRows = []
 
+  // Check if the file exists
   return new Promise((resolve, reject) => {
     fs.createReadStream(filePath)
       .pipe(csvParser())
@@ -18,28 +19,28 @@ async function validateCSVs(filePath, requiredFields) {
           }
         })
 
-        // If there are missing fields, add this row to the missingDataRows array
+        // If there are missing fields, add them to the missingDataRows array
         if (missingFields.length > 0) {
           missingDataRows.push({ row, missingFields })
         }
       })
       .on('end', () => {
         if (missingDataRows.length > 0) {
-          // Return structured error message
+          //return a structured error object
           const errorResponse = {
             message: 'Missing data found in some rows.',
             errors: missingDataRows.map((rowData, index) => ({
-              row: index + 1,  // Row numbers are 1-based
+              row: index + 1,
               missingFields: rowData.missingFields,
             }))
           }
-          reject(errorResponse) // Reject with the structured error object
+          reject(errorResponse)
         } else {
           resolve('CSV is valid - no missing data')
         }
       })
       .on('error', (err) => {
-        reject({ message: 'Error while processing the file', error: err }) // Handle stream error
+        reject({ message: 'Error while processing the file', error: err })
       })
   })
 }

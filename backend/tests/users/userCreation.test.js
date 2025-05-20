@@ -1,6 +1,6 @@
 const supertest = require('supertest')
 const bcrypt = require('bcrypt')
-const app = require('../../app') // Adjust the path based on your structure
+const app = require('../../app')
 const { User, Role, AuthenticationUser } = require('../../models')
 const { authenticateUser } = require('../../services/authenticateUser')
 
@@ -11,13 +11,11 @@ describe('User Creation API Endpoints', () => {
   let superUserRole
 
   beforeAll(async () => {
-    // Ensure Super User role exists
     superUserRole = await Role.findOrCreate({
       where: { name: 'Super User' },
       defaults: { name: 'Super User' },
     }).then(([role]) => role)
 
-    // Create an admin user with Super User role
     const hashedPassword = await bcrypt.hash('adminpassword', 10)
     adminUser = await User.create({
       email: 'admin@qub.ac.uk',
@@ -30,7 +28,6 @@ describe('User Creation API Endpoints', () => {
       prefix: 'Mr'
     })
 
-    // Authenticate to get token
     const result = await authenticateUser(adminUser.email, 'adminpassword')
     token = result.token
     authenticationUser = await AuthenticationUser.findOne({ where: { token } })
@@ -51,7 +48,6 @@ describe('User Creation API Endpoints', () => {
     )
   })
 
-  // ✅ Test: Successfully create a new user
   it('should create a new user successfully', async () => {
     const newUser = {
       forename: 'Test',
@@ -75,18 +71,16 @@ describe('User Creation API Endpoints', () => {
     expect(response.body).toHaveProperty('id')
     expect(response.body.email).toBe(newUser.email)
 
-    // Cleanup created user
     await User.destroy({ where: { email: newUser.email }, force: true })
   })
 
-  // 🚫 Test: Missing required fields
   it('should return 400 if required fields are missing', async () => {
     const invalidUser = {
       surname: 'Doe',
       email: 'invalid@qub.ac.uk',
       password: 'password123',
       roleName: 'Super User',
-    } // Missing 'forename'
+    }
 
     const response = await supertest(app)
       .post('/api/users')
@@ -97,7 +91,6 @@ describe('User Creation API Endpoints', () => {
     expect(response.body.error).toBe('Missing required fields')
   })
 
-  // 🚫 Test: Role not found
   it('should return 400 if the specified role does not exist', async () => {
     const userWithInvalidRole = {
       forename: 'Jane',
@@ -118,9 +111,7 @@ describe('User Creation API Endpoints', () => {
     expect(response.body.error).toBe('Missing required fields')
   })
 
-  // 🚫 Test: Unauthorized user trying to create a user
   it('should return 403 if the user does not have the Super User role', async () => {
-    // Create a non-admin user
     const normalUserRole = await Role.findOrCreate({
       where: { name: 'User' },
       defaults: { name: 'User' },
@@ -138,7 +129,6 @@ describe('User Creation API Endpoints', () => {
       prefix: 'Mr',
     })
 
-    // Authenticate as normal user
     const result = await authenticateUser(normalUser.email, 'userpassword')
     const normalUserToken = result.token
 
@@ -160,17 +150,15 @@ describe('User Creation API Endpoints', () => {
     expect(response.status).toBe(403)
     expect(response.body.error).toBe('You are not authorized to access this resource')
 
-    // Cleanup
     await AuthenticationUser.destroy({ where: { user_id: normalUser.id } })
     await User.destroy({ where: { id: normalUser.id }, force: true })
   })
 
-  // 🚫 Test: Unauthorized request (No token)
   it('should return 401 if no token is provided', async () => {
     const newUser = {
-      forename: 'Alex',
-      surname: 'Brown',
-      email: 'alex@qub.ac.uk',
+      forename: 'John',
+      surname: 'Smith',
+      email: 'j.smith@qub.ac.uk',
       password: 'password123',
       roleName: 'Super User',
       jobTitle: 'Teacer',

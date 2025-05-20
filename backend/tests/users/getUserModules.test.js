@@ -20,13 +20,11 @@ describe('GET /api/users/:user/modules', () => {
   let token
 
 
-  // Associated data
   let module,  course,  moduleYear, courseYear, qualificationLevel
 
   beforeAll(async () => {
     const hashedPassword = await bcrypt.hash('password123', 10)
 
-    // Create Super User
     superUser = await User.create({
       email: 'superuser@qub.ac.uk',
       password: hashedPassword,
@@ -35,7 +33,7 @@ describe('GET /api/users/:user/modules', () => {
       active: 1,
       prefix: 'Dr',
       job_title: 'Lecturer',
-      role_id: 3, // Super User
+      role_id: 3,
     })
 
     // Auth and token

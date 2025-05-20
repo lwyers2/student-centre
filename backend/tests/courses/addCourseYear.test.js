@@ -1,6 +1,6 @@
 const supertest = require('supertest')
 const bcrypt = require('bcrypt')
-const app = require('../../app') // Adjust path as needed
+const app = require('../../app')
 const {
   User,
   Course,
@@ -25,7 +25,7 @@ describe('POST /api/courses/add-course-year/course/:courseId', () => {
       surname: 'Doe',
       prefix: 'Dr',
       job_title: 'Professor',
-      role_id: 3, // Assume 4 = Super User role ID
+      role_id: 3,
       active: 1
     })
 
@@ -84,7 +84,7 @@ describe('POST /api/courses/add-course-year/course/:courseId', () => {
     const response = await supertest(app)
       .post(`/api/courses/add-course-year/course/${courseInstance.id}`)
       .set('Authorization', `Bearer ${token}`)
-      .send({}) // missing fields
+      .send({})
 
     expect(response.status).toBe(400)
     expect(response.body.error).toBe('Missing required fields: yearStart or courseYears')
@@ -143,7 +143,7 @@ describe('POST /api/courses/add-course-year/course/:courseId', () => {
       surname: 'User',
       prefix: 'Mr',
       job_title: 'Visitor',
-      role_id: 1, // Assume 1 = basic role
+      role_id: 1,
       active: 1
     })
 

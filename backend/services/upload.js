@@ -131,24 +131,25 @@ async function processChunk(chunk) {
   }
 }
 
-// Function to process the CSV in batches
+// split csv into chucks and process individually
 async function processStudentCSV(filePath) {
-  // Parse the CSV into chunks
+
   const students = await parseCSVIntoChunks(filePath)
 
-  // Split students into batches (chunk size = BATCH_SIZE)
+  // split the students into seperate chunks
   const chunkedStudents = []
   for (let i = 0; i < students.length; i += BATCH_SIZE) {
     chunkedStudents.push(students.slice(i, i + BATCH_SIZE))
   }
 
-  // Process each chunk sequentially
+  //stats to return for reporting
   let totalStats = {
     studentsAdded: 0,
     studentCourseLinks: 0,
     studentModuleAssignments: 0
   }
 
+  //loop through chunks and process them.
   for (const chunk of chunkedStudents) {
     const stats = await processChunk(chunk)
     totalStats.studentsAdded += stats.studentsAdded
@@ -156,7 +157,7 @@ async function processStudentCSV(filePath) {
     totalStats.studentModuleAssignments += stats.studentModuleAssignments
   }
 
-  // Delete the file after processing
+  // delete the file after spliting
   fs.unlink(filePath, (err) => {
     if (err) console.error('File deletion error:', err)
   })

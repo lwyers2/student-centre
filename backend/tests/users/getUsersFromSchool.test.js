@@ -18,11 +18,9 @@ describe('GET /api/users/school/:schoolId', () => {
   beforeAll(async () => {
     const hashedPassword = await bcrypt.hash('password123', 10)
 
-    // Create Roles
     const adminRole = await Role.create({ name: 'Admin' })
     const teacherRole = await Role.create({ name: 'Teacher' })
 
-    // Create Users
     adminUser = await User.create({
       email: 'admin@qub.ac.uk',
       password: hashedPassword,
@@ -45,14 +43,11 @@ describe('GET /api/users/school/:schoolId', () => {
       job_title: 'Lecturer',
     })
 
-    // Auth
     const result = await authenticateUser(adminUser.email, 'password123')
     token = result.token
 
-    // Create school
     school = await School.create({ school_name: 'Engineering & CS' })
 
-    // Link users to school
     await UserSchool.create({ user_id: adminUser.id, school_id: school.id })
     await UserSchool.create({ user_id: teacherUser.id, school_id: school.id })
   })
@@ -95,19 +90,5 @@ describe('GET /api/users/school/:schoolId', () => {
     )
   })
 
-  // it('should return 404 if no users are found', async () => {
-  //   const res = await supertest(app)
-  //     .get('/api/users/school/99999')
-  //     .set('Authorization', `Bearer ${token}`)
 
-  //   expect(res.status).toBe(404)
-  //   expect(res.body.message || res.text).toMatch(/No users found/i)
-  // })
-
-  // it('should return 401 if token is missing', async () => {
-  //   const res = await supertest(app).get(`/api/users/school/${school.id}`)
-
-  //   expect(res.status).toBe(401)
-  //   expect(res.body.error).toBe('Missing or invalid token')
-  // })
 })

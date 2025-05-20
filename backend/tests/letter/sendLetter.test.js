@@ -20,20 +20,19 @@ describe('POST /letters/send-letter', () => {
   let token, staffUser, student, moduleYear, studentModule
 
   beforeAll(async () => {
-    // Create users and auth
-    const hashedPassword = await bcrypt.hash('securepass', 10)
+    const hashedPassword = await bcrypt.hash('password', 10)
     staffUser = await User.create({
-      email: 'staff@qub.ac.uk',
+      email: 'u.staff@qub.ac.uk',
       password: hashedPassword,
-      forename: 'Staffy',
-      surname: 'McStaff',
+      forename: 'User',
+      surname: 'Staff',
       prefix: 'Dr.',
       active: 1,
       role_id: 3,
       job_title: 'Lecturer',
     })
 
-    const auth = await authenticateUser(staffUser.email, 'securepass')
+    const auth = await authenticateUser(staffUser.email, 'password')
     token = auth.token
 
     // Setup letter types
@@ -54,9 +53,9 @@ describe('POST /letters/send-letter', () => {
     })
 
     student = await Student.create({
-      forename: 'Testy',
+      forename: 'Test',
       surname: 'Student',
-      email: 'test@student.com',
+      email: 't.student@qub.ac.uk',
       student_code: 'S1234567'
     })
 

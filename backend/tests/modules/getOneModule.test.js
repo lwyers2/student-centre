@@ -16,31 +16,31 @@ describe('GET /api/modules/:moduleId', () => {
   let superUser, token, module,  semester
 
   beforeAll(async () => {
-    const hashedPassword = await bcrypt.hash('superpass', 10)
+    const hashedPassword = await bcrypt.hash('password', 10)
 
     superUser = await User.create({
       email: 'super@qub.ac.uk',
       password: hashedPassword,
-      forename: 'Sam',
+      forename: 'User',
       surname: 'Super',
-      prefix: 'Mx',
+      prefix: 'Mr',
       active: 1,
-      role_id: 3, // Super User role
-      job_title: 'System Admin'
+      role_id: 3,
+      job_title: 'Site Administrator'
     })
 
-    const auth = await authenticateUser(superUser.email, 'superpass')
+    const auth = await authenticateUser(superUser.email, 'password')
     token = auth.token
 
     module = await Module.create({
-      title: 'Quantum Logic',
-      code: 'QL404',
+      title: 'Quantum Computing',
+      code: 'QC404',
       year: 4,
       CATs: '40'
     })
 
     semester = await Semester.create({
-      name: 'Semester 2'
+      name: 'Winter'
     })
 
     await ModuleYear.create({
@@ -74,15 +74,15 @@ describe('GET /api/modules/:moduleId', () => {
 
     expect(res.status).toBe(200)
     expect(res.body.module).toHaveProperty('id', module.id)
-    expect(res.body.module).toHaveProperty('title', 'Quantum Logic')
+    expect(res.body.module).toHaveProperty('title', 'Quantum Computing')
     expect(res.body.module_years[0]).toHaveProperty('year_start', 2024)
-    expect(res.body.module_years[0].coordinator).toBe('Mx. Sam Super')
-    expect(res.body.module_years[0].semester).toBe('Semester 2')
+    expect(res.body.module_years[0].coordinator).toBe('Mr. User Super')
+    expect(res.body.module_years[0].semester).toBe('Winter')
   })
 
   it('should return 404 if module is not found', async () => {
     const res = await supertest(app)
-      .get('/api/modules/99999') // assuming this ID won't exist
+      .get('/api/modules/99999')
       .set('Authorization', `Bearer ${token}`)
 
     expect(res.status).toBe(404)
@@ -90,15 +90,14 @@ describe('GET /api/modules/:moduleId', () => {
   })
 
   it('should block access for non-super users', async () => {
-    // Create a normal academic user
     const normalUser = await User.create({
-      email: 'not@ads.qub.ac.uk',
+      email: 'user@ads.qub.ac.uk',
       password: await bcrypt.hash('nopepass', 10),
-      forename: 'Nina',
-      surname: 'Normal',
+      forename: 'User',
+      surname: 'Teacher',
       prefix: 'Dr.',
       active: 1,
-      role_id: 1, // Not Super User
+      role_id: 1,
       job_title: 'Lecturer'
     })
 

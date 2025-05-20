@@ -14,7 +14,7 @@ const tokenVerification = async (req, res, next) => {
 
   const token = authHeader.split(' ')[1]
 
-  // Now no need for try-catch, express-async-errors handles errors automatically
+  // no need for try-catch, express-async-errors handles errors automatically
   const storedToken = await AuthenticationUser.findOne({
     where: { token },
     include: [
@@ -42,7 +42,7 @@ const tokenVerification = async (req, res, next) => {
       })
   }
 
-  // Handle case where token is not found or expired
+  // Handle all the cases for the token like expiry, token is active, not found, etc.
   if (new Date(storedToken.expires_at) < new Date()) {
     return res.status(401).json(
       { error: 'Token expired',

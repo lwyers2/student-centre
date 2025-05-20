@@ -1,6 +1,6 @@
 const supertest = require('supertest')
 const bcrypt = require('bcrypt')
-const app = require('../../app') // Adjust the path based on your structure
+const app = require('../../app')
 const { User, AuthenticationUser, UserSchool, School, Role } = require('../../models')
 const { authenticateUser } = require('../../services/authenticateUser')
 
@@ -10,7 +10,6 @@ describe('One User', () => {
   let authenticationUser
 
   beforeAll(async () => {
-    // Hash password and create test user
     const hashedPassword = await bcrypt.hash('password123', 10)
     testUser = await User.create({
       email: 'test@qub.ac.uk',
@@ -20,33 +19,26 @@ describe('One User', () => {
       active: 1,
       prefix: 'Prof',
       job_title: 'Professor',
-      role_id: 3, // Ensure role with ID 3 exists in your DB
+      role_id: 3,
     })
 
-    // Ensure a role exists for this test user (optional, depending on your setup)
-    const role = await Role.findByPk(3)  // Fetch role with ID 3
+    const role = await Role.findByPk(3)
     if (!role) {
       throw new Error('Role with ID 3 not found')
     }
 
-    // Create a school and associate it with the user (assuming `UserSchool` exists)
     const school = await School.create({
       school_name: 'Test School',
-      // Add any other necessary fields for the School model
     })
 
-    // Create UserSchool relationship
     await UserSchool.create({
       user_id: testUser.id,
       school_id: school.id,
-      // Add other necessary fields for the UserSchool relationship
     })
 
-    // Authenticate the user and generate a token
     const result = await authenticateUser(testUser.email, 'password123')
     token = result.token
 
-    // Fetch the AuthenticationUser by token
     authenticationUser = await AuthenticationUser.findOne({ where: { token } })
 
   })
@@ -87,7 +79,7 @@ describe('One User', () => {
       active: 1,
       prefix: 'Dr',
       job_title: 'Lecturer',
-      role_id: 2, // Non-Super User role
+      role_id: 2,
     })
 
     await normalUser.reload()

@@ -1,7 +1,7 @@
 const { formatAllCourses } = require('../../../helper/formaters/course/formatAllCourses')
 
 describe('formatAllCourses', () => {
-  it('should correctly format an array of courses', () => {
+  it('should correctly format the response of courses', () => {
     const mockCourses = [
       {
         id: 1,
@@ -79,8 +79,8 @@ describe('formatAllCourses', () => {
         course_school: {
           school_name: 'School of Law',
         },
-        part_time: undefined, // part_time is undefined
-        years: undefined, // years is undefined
+        part_time: undefined,
+        years: undefined,
       },
     ]
 
@@ -91,8 +91,8 @@ describe('formatAllCourses', () => {
         code: 'LAW101',
         qualification: 'LLB',
         school: 'School of Law',
-        part_time: undefined, // part_time is undefined
-        years: undefined, // years is undefined
+        part_time: undefined,
+        years: undefined,
       },
     ]
 

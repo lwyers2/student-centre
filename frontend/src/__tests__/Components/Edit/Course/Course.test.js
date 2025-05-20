@@ -68,7 +68,7 @@ describe('<Course /> - CourseList view', () => {
       </MemoryRouter>
     )
 
-    // Should render 2 rows (excluding the header)
+    // Should make 2 rows (excluding the header)
     expect(screen.getAllByText(/View/i)).toHaveLength(2)
   })
 

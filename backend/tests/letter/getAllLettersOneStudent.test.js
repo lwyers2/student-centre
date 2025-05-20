@@ -26,8 +26,8 @@ describe('GET /api/letters?studentId=&moduleYearId=', () => {
     staffUser = await User.create({
       email: 'staff3@qub.ac.uk',
       password: hashedPassword,
-      forename: 'Maggie',
-      surname: 'Moduletest',
+      forename: 'User',
+      surname: 'Staff',
       prefix: 'Dr.',
       active: 1,
       role_id: 3,
@@ -53,10 +53,10 @@ describe('GET /api/letters?studentId=&moduleYearId=', () => {
     })
 
     student = await Student.create({
-      forename: 'Marty',
-      surname: 'McModule',
-      email: 'marty@student.com',
-      student_code: 'S9876543'
+      forename: 'Simon',
+      surname: 'Smith',
+      email: 's.smith@qub.ac.uk',
+      student_code: '1234567'
     })
 
     studentModule = await StudentModule.create({
@@ -119,7 +119,7 @@ describe('GET /api/letters?studentId=&moduleYearId=', () => {
 
   it('should return 400 if query params are missing', async () => {
     const response = await supertest(app)
-      .get('/api/letters') // No query params
+      .get('/api/letters')
       .set('Authorization', `Bearer ${token}`)
 
     expect(response.status).toBe(400)

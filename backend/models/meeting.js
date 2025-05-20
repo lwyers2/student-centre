@@ -44,8 +44,8 @@ const Meeting = db.define('Meeting', {
     allowNull: false,
   }
 }, {
-  tableName: 'meeting', // specify the table name
-  timestamps: false,    // disable timestamps if not present in your table
+  tableName: 'meeting',
+  timestamps: false,
 })
 
 module.exports = Meeting

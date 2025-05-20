@@ -11,7 +11,6 @@ describe('User Modules API Endpoints', () => {
   let courseYearId
 
   beforeAll(async () => {
-    // Create a test user
     const hashedPassword = await bcrypt.hash('password123', 10)
     testUser = await User.create({
       email: 'testuser@qub.ac.uk',
@@ -24,7 +23,6 @@ describe('User Modules API Endpoints', () => {
       role_id: 3,
     })
 
-    // Authenticate user
     const result = await authenticateUser(testUser.email, 'password123')
     token = result.token
     authenticationUser = await AuthenticationUser.findOne({ where: { token } })
@@ -38,7 +36,6 @@ describe('User Modules API Endpoints', () => {
       year: 3,
     })
 
-    // Create associated module data
     const moduleYear = await ModuleYear.create({
       year_start: 2023,
       semester_id: 1,
@@ -113,7 +110,6 @@ describe('User Modules API Endpoints', () => {
     )
   })
 
-  // ✅ Test successful retrieval of user modules
   it('should fetch user modules for a valid user and course year', async () => {
     const response = await supertest(app)
       .get(`/api/users/${testUser.id}/modules/${courseYearId}`)
@@ -125,17 +121,15 @@ describe('User Modules API Endpoints', () => {
     expect(response.body.modules[0]).toHaveProperty('title', 'Software Engineering')
   })
 
-  // 🚫 User Not Found (404)
   it('should return 404 if user does not exist', async () => {
     const response = await supertest(app)
-      .get('/api/users/99999/modules/1') // Non-existent user ID
+      .get('/api/users/99999/modules/1')
       .set('Authorization', `Bearer ${token}`)
 
     expect(response.status).toBe(404)
     expect(response.body.error).toBe('User not found')
   })
 
-  // 🚫 Missing Authorization Token (401)
   it('should return 401 if no token is provided', async () => {
     const response = await supertest(app)
       .get(`/api/users/${testUser.id}/modules/${courseYearId}`)
@@ -144,10 +138,9 @@ describe('User Modules API Endpoints', () => {
     expect(response.body.error).toBe('Missing or invalid token')
   })
 
-  // 🚫 Invalid Parameters (400)
   it('should return 400 for invalid user ID or course year format', async () => {
     const response = await supertest(app)
-      .get('/api/users/invalidUser/modules/invalidYear') // Non-numeric IDs
+      .get('/api/users/invalidUser/modules/invalidYear')
       .set('Authorization', `Bearer ${token}`)
 
     expect(response.status).toBe(400)

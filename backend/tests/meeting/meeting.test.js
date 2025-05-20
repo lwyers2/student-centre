@@ -17,17 +17,17 @@ const {
 } = require('../../models')
 const { authenticateUser } = require('../../services/authenticateUser')
 
-describe('Meeting API routes', () => {
+describe('GET, POST, DELETE, PUT /api/meetings - Meeting Routes', () => {
   let token, academicUser, adminUser, student, courseYear, moduleYear, studentModule, createdMeeting
 
   beforeAll(async () => {
-    const hashedPassword = await bcrypt.hash('securepass', 10)
+    const hashedPassword = await bcrypt.hash('password', 10)
 
     academicUser = await User.create({
-      email: 'acad@qub.ac.uk',
+      email: 'u.super@qub.ac.uk',
       password: hashedPassword,
-      forename: 'Alex',
-      surname: 'Academia',
+      forename: 'User',
+      surname: 'Super',
       prefix: 'Dr.',
       active: 1,
       role_id: 3,
@@ -35,9 +35,9 @@ describe('Meeting API routes', () => {
     })
 
     adminUser = await User.create({
-      email: 'admin@qub.ac.uk',
+      email: 'u.admin@qub.ac.uk',
       password: hashedPassword,
-      forename: 'Ada',
+      forename: 'User',
       surname: 'Admin',
       prefix: 'Ms.',
       active: 1,
@@ -45,12 +45,12 @@ describe('Meeting API routes', () => {
       job_title: 'Admin Staff'
     })
 
-    const auth = await authenticateUser(academicUser.email, 'securepass')
+    const auth = await authenticateUser(academicUser.email, 'password')
     token = auth.token
 
     const course = await Course.create({
-      title: 'Discipline Studies',
-      code: 'DS101',
+      title: 'Computing',
+      code: 'CS101',
       years: 3,
       qualification_id: 1,
       school_id: 1,
@@ -65,8 +65,8 @@ describe('Meeting API routes', () => {
     })
 
     const module = await Module.create({
-      title: 'Discipline Theory',
-      code: 'DT101',
+      title: 'Foundations of Computing',
+      code: 'FCS101',
       year: 1,
       CATs: 20
     })
@@ -86,10 +86,10 @@ describe('Meeting API routes', () => {
     })
 
     student = await Student.create({
-      forename: 'Disco',
-      surname: 'Student',
-      email: 'disco@student.com',
-      student_code: 'S9999999'
+      forename: 'Student',
+      surname: 'Name',
+      email: 's.name@qub.ac.uk',
+      student_code: 'S123456789'
     })
 
     studentModule = await StudentModule.create({

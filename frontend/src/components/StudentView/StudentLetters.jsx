@@ -14,7 +14,7 @@ const StudentLetters = ({ letters, student }) => {
     'academic year': letter.module?.year,
     'sent by': letter.sent_by,
     id: letter.id,
-    view: `/student/${student.id}/module-year/${letter.module.module_year_id}`, // ✅ View path
+    view: `/student/${student.id}/module-year/${letter.module.module_year_id}`,
   }))
 
   const labels = {
@@ -24,7 +24,7 @@ const StudentLetters = ({ letters, student }) => {
   const content = {
     headers: ['Type', 'Date', 'Module', 'Academic Year', 'Sent By'],
     data: formattedData,
-    view: (row) => row.view, // ✅ Let Table render the "View" button with the right path
+    view: (row) => row.view,
   }
 
   return <Table labels={labels} content={content} />

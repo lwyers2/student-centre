@@ -1,7 +1,7 @@
 const supertest = require('supertest')
 const path = require('path')
 const fs = require('fs')
-const app = require('../../app') // adjust path if needed
+const app = require('../../app')
 const { Meeting, User, Student, Module, ModuleYear, Course, CourseYear } = require('../../models')
 
 
@@ -93,12 +93,10 @@ describe('POST /upload/meeting-minutes', () => {
   })
 
   afterAll(async () => {
-    // Cleanup DB entry
     if (testMeeting) {
       await Meeting.destroy({ where: { id: testMeeting.id }, force: true })
     }
 
-    // Delete uploaded file if exists
     if (uploadedFilePath && fs.existsSync(uploadedFilePath)) {
       fs.unlinkSync(uploadedFilePath)
     }
@@ -115,14 +113,14 @@ describe('POST /upload/meeting-minutes', () => {
     expect(res.body.filePath).toContain('/uploads/')
     expect(res.body.meeting.id).toBe(testMeeting.id)
 
-    // Save path for cleanup
+    // save path for cleanup
     uploadedFilePath = path.join(__dirname, '../../', res.body.filePath)
   })
 
   it('should return 404 if meeting not found', async () => {
     const res = await supertest(app)
       .post('/api/upload/meeting-minutes')
-      .field('meetingId', '999999') // non-existent meeting
+      .field('meetingId', '999999')
       .attach('file', path.join(__dirname, '../testFiles/minutes_sample.docx'))
 
     expect(res.statusCode).toBe(404)

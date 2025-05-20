@@ -67,7 +67,7 @@ describe('formatModulesFromCourseYear', () => {
     ])
   })
 
-  it('should handle missing semester name gracefully', () => {
+  it('should handle missing semester name', () => {
     const mockModules = [
       {
         module_id: 3,
@@ -75,7 +75,7 @@ describe('formatModulesFromCourseYear', () => {
         required: true,
         module_course_module_year: {
           year_start: 2025,
-          module_year_semester: null // missing semester
+          module_year_semester: null
         },
         module_course_module: {
           title: 'Calculus',
@@ -94,7 +94,7 @@ describe('formatModulesFromCourseYear', () => {
         module_year_id: 103,
         required: true,
         year_start: 2025,
-        semester: undefined, // gracefully handled
+        semester: undefined,
         title: 'Calculus',
         code: 'CALC100',
         year: 1,

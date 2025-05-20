@@ -51,7 +51,6 @@ const EditModules = () => {
         Find Module to Edit
       </h2>
 
-      {/* Search Block */}
       <div className="border border-slate-300 dark:border-slate-700 bg-white dark:bg-gray-900 p-4 sm:p-6 rounded-3xl shadow-md mb-10 transition-all duration-300">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4">
           <h3 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white mb-2 sm:mb-0">Search Modules</h3>
@@ -76,7 +75,6 @@ const EditModules = () => {
         )}
       </div>
 
-      {/* One Sample Module Record */}
       <div className="space-y-4">
         {filteredModules.length > 0 ? (
           <Module modules={filteredModules}  />

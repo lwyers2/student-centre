@@ -1,6 +1,6 @@
 const supertest = require('supertest')
 const bcrypt = require('bcrypt')
-const app = require('../../app') // Adjust based on your project structure
+const app = require('../../app')
 const { CourseYear, User, Student, StudentModule, ModuleYear, Module, Semester, AuthenticationUser, UserModule, ModuleCourse, Course, StudentCourse } = require('../../models')
 const { authenticateUser } = require('../../services/authenticateUser')
 
@@ -8,7 +8,6 @@ describe('GET /:student/module-year/:moduleYearId', () => {
   let testUser, token, testStudent, testModuleYear, testModule, testStudentModule, authenticationUser, semester, testCourse, testCourseYear
 
   beforeAll(async () => {
-    // Create test user
     const hashedPassword = await bcrypt.hash('password123', 10)
     testUser = await User.create({
       email: 'test@qub.ac.uk',
@@ -21,7 +20,6 @@ describe('GET /:student/module-year/:moduleYearId', () => {
       role_id: 1,
     })
 
-    // Authenticate user and get token
     const result = await authenticateUser(testUser.email, 'password123')
     token = result.token
     authenticationUser = await AuthenticationUser.findOne({ where: { token } })
@@ -30,7 +28,6 @@ describe('GET /:student/module-year/:moduleYearId', () => {
       name: 'Winter'
     })
 
-    // Create test student
     testStudent = await Student.create({
       forename: 'John',
       surname: 'Doe',
@@ -38,7 +35,6 @@ describe('GET /:student/module-year/:moduleYearId', () => {
       email: 'john.doe@qub.ac.uk',
     })
 
-    // Create test module
     testModule = await Module.create({
       title: 'Mathematics',
       year: 1,
@@ -47,7 +43,6 @@ describe('GET /:student/module-year/:moduleYearId', () => {
       semester_id: semester.id
     })
 
-    // Create test module year
     testModuleYear = await ModuleYear.create({
       year_start: 2024,
       semester_id: 1,
@@ -82,7 +77,6 @@ describe('GET /:student/module-year/:moduleYearId', () => {
 
 
 
-    // Create student-module association
     testStudentModule = await StudentModule.create({
       student_id: testStudent.id,
       module_year_id: testModuleYear.id,
@@ -151,7 +145,6 @@ describe('GET /:student/module-year/:moduleYearId', () => {
   })
 
   it('should return 403 if user does not have access to the module', async () => {
-    // Create unauthorized user
     const unauthorizedUser = await User.create({
       email: 'unauthorized@qub.ac.uk',
       password: await bcrypt.hash('password123', 10),

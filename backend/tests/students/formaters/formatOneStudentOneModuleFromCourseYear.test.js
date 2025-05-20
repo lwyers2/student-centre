@@ -1,4 +1,4 @@
-const { formatOneStudentOneModuleFromCourseYear } = require('../../../helper/formaters/student/formatOneStudentOneModuleFromCourseYear') // Adjust the import based on your file structure
+const { formatOneStudentOneModuleFromCourseYear } = require('../../../helper/formaters/student/formatOneStudentOneModuleFromCourseYear')
 
 describe('formatOneStudentOneModuleFromCourseYear', () => {
   it('should return an empty object if student has no course data', () => {
@@ -29,7 +29,7 @@ describe('formatOneStudentOneModuleFromCourseYear', () => {
               code: 'CS101',
               part_time: false,
               course_qualification_level: {
-                qualification: 'Bachelor'
+                qualification: 'BCS'
               }
             },
             course_year_module_course: [
@@ -43,11 +43,11 @@ describe('formatOneStudentOneModuleFromCourseYear', () => {
                   year: 2021,
                   module_student_module: [
                     {
-                      result: 'A',
+                      result: 14,
                       flagged: 0,
                       resit: 0,
                       student_module_result_descriptor: {
-                        descriptor: 'Excellent'
+                        descriptor: 'P'
                       }
                     }
                   ]
@@ -63,11 +63,11 @@ describe('formatOneStudentOneModuleFromCourseYear', () => {
                   year: 2021,
                   module_student_module: [
                     {
-                      result: 'B',
+                      result: 64,
                       flagged: 1,
                       resit: 0,
                       student_module_result_descriptor: {
-                        descriptor: 'Good'
+                        descriptor: 'ABS'
                       }
                     }
                   ]
@@ -108,10 +108,10 @@ describe('formatOneStudentOneModuleFromCourseYear', () => {
     expect(module1).toHaveProperty('code', 'CS200')
     expect(module1).toHaveProperty('CATs', 20)
     expect(module1).toHaveProperty('year', 2021)
-    expect(module1).toHaveProperty('result', 'A')
+    expect(module1).toHaveProperty('result', 14)
     expect(module1).toHaveProperty('flagged', 0)
     expect(module1).toHaveProperty('resit', 0)
-    expect(module1).toHaveProperty('result_descriptor', 'Excellent')
+    expect(module1).toHaveProperty('result_descriptor', 'P')
 
     const module2 = result.modules[1]
     expect(module2).toHaveProperty('module_id', 2)
@@ -120,13 +120,13 @@ describe('formatOneStudentOneModuleFromCourseYear', () => {
     expect(module2).toHaveProperty('code', 'CS201')
     expect(module2).toHaveProperty('CATs', 20)
     expect(module2).toHaveProperty('year', 2021)
-    expect(module2).toHaveProperty('result', 'B')
+    expect(module2).toHaveProperty('result', 64)
     expect(module2).toHaveProperty('flagged', 1)
     expect(module2).toHaveProperty('resit', 0)
-    expect(module2).toHaveProperty('result_descriptor', 'Good')
+    expect(module2).toHaveProperty('result_descriptor', 'ABS')
   })
 
-  it('should handle modules with missing data gracefully', () => {
+  it('should handle modules with missing data', () => {
     const student = {
       id: 2,
       forename: 'Jane',
@@ -144,7 +144,7 @@ describe('formatOneStudentOneModuleFromCourseYear', () => {
               code: 'MATH101',
               part_time: true,
               course_qualification_level: {
-                qualification: 'Master'
+                qualification: 'MSC'
               }
             },
             course_year_module_course: [

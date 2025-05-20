@@ -1,4 +1,3 @@
-// components/Edit/Course/FilteredCourseList.jsx
 import React from 'react'
 import Course from './Course'
 

@@ -25,7 +25,7 @@ describe('formatStudentCourses', () => {
               years: 3,
               code: 'CS101',
               part_time: false,
-              course_qualification_level: { qualification: 'Bachelor' },
+              course_qualification_level: { qualification: 'BSC' },
 
             }
           }
@@ -46,7 +46,7 @@ describe('formatStudentCourses', () => {
               years: 3,
               code: 'MATH101',
               part_time: true,
-              course_qualification_level: { qualification: 'Master' },
+              course_qualification_level: { qualification: 'MSC' },
             }
           }
         }
@@ -69,7 +69,7 @@ describe('formatStudentCourses', () => {
           years: 3,
           code: 'CS101',
           part_time: false,
-          qualification: 'Bachelor',
+          qualification: 'BSC',
           course_coordinator: 'Dr. Alice Smith',
         },
         {
@@ -81,7 +81,7 @@ describe('formatStudentCourses', () => {
           years: 3,
           code: 'MATH101',
           part_time: true,
-          qualification: 'Master',
+          qualification: 'MSC',
           course_coordinator: 'Prof. Bob Johnson',
         }
       ]
@@ -116,7 +116,7 @@ describe('formatStudentCourses', () => {
     expect(result).toEqual(expectedOutput)
   })
 
-  it('should gracefully handle missing coordinator', () => {
+  it('should handle missing coordinator', () => {
     const student = {
       id: 1,
       email: 'student@example.com',
@@ -135,7 +135,7 @@ describe('formatStudentCourses', () => {
               years: 3,
               code: 'CS101',
               part_time: false,
-              course_qualification_level: { qualification: 'Bachelor' },
+              course_qualification_level: { qualification: 'BSC' },
 
             }
           }
@@ -151,7 +151,7 @@ describe('formatStudentCourses', () => {
               years: 3,
               code: 'MATH101',
               part_time: true,
-              course_qualification_level: { qualification: 'Master' },
+              course_qualification_level: { qualification: 'MSC' },
             }
           }
         }
@@ -174,7 +174,7 @@ describe('formatStudentCourses', () => {
           years: 3,
           code: 'CS101',
           part_time: false,
-          qualification: 'Bachelor',
+          qualification: 'BSC',
           course_coordinator: '.',
         },
         {
@@ -186,7 +186,7 @@ describe('formatStudentCourses', () => {
           years: 3,
           code: 'MATH101',
           part_time: true,
-          qualification: 'Master',
+          qualification: 'MSC',
           course_coordinator: '.',
         }
       ]

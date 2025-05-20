@@ -130,6 +130,7 @@ async function getUser(userId) {
     ],
   })
   return formatOneUser(user)
+  //return user
 }
 
 async function getOneUserDetails(userId) {
@@ -206,14 +207,13 @@ async function getUserCourses(userId) {
 }
 
 const createUser = async ({ forename, surname, email, password, active,  role_id, job_title, prefix }) => {
-  // Validate required fields
+
   if (!forename || !surname || !email || !password || !role_id) {
     const error = new Error('Missing required fields')
     error.status = 400
     throw error
   }
 
-  // Find the role by name
   const role = await Role.findOne({ where: { id: role_id } })
   if (!role) {
     const error = new Error('Role not found')
@@ -221,10 +221,9 @@ const createUser = async ({ forename, surname, email, password, active,  role_id
     throw error
   }
 
-  // Hash password
+  //hash password
   const passwordHash = await bcrypt.hash(password, 10)
 
-  // Create the new user
   return await User.create({
     forename,
     surname,
@@ -547,17 +546,17 @@ async function updateUser(userId, { forename, surname, email, password, active, 
   }
 
   if(schools) {
-    // Remove all existing schools for the user
+    // remove all the scholls
     await UserSchool.destroy({ where: { user_id: userId } })
 
-    // Add the new schools
+    // Then add them all back that have been passed.
     for (const schoolId of schools) {
       await UserSchool.create({ user_id: userId, school_id: schoolId })
     }
   }
 
 
-  // Update the user with the new values
+  // update the user details
   user.forename = forename
   user.surname = surname
   user.email = email
@@ -567,7 +566,7 @@ async function updateUser(userId, { forename, surname, email, password, active, 
   user.prefix = prefix
 
   if (password) {
-    // Hash the new password before saving it
+    // hash the password before saving
     const passwordHash = await bcrypt.hash(password, 10)
     user.password = passwordHash
   }

@@ -34,20 +34,18 @@ describe('formatUsersFromModule', () => {
 
     const formattedUsers = formatUsersFromModule(mockUsers)
 
-    // Check admin staff
     expect(formattedUsers.admin_staff).toHaveLength(2)
     expect(formattedUsers.admin_staff[0].id).toBe(1)
     expect(formattedUsers.admin_staff[0].name).toBe('Dr John Doe')
     expect(formattedUsers.admin_staff[1].id).toBe(3)
     expect(formattedUsers.admin_staff[1].name).toBe('Mr George Williams')
 
-    // Check teaching staff
     expect(formattedUsers.teaching_staff).toHaveLength(1)
     expect(formattedUsers.teaching_staff[0].id).toBe(2)
     expect(formattedUsers.teaching_staff[0].name).toBe('Ms Jane Smith')
   })
 
-  it('should handle users with missing roles gracefully', () => {
+  it('should handle users with missing roles', () => {
     const mockUsers = [
       {
         id: 1,
@@ -63,27 +61,24 @@ describe('formatUsersFromModule', () => {
         prefix: 'Ms',
         forename: 'Jane',
         surname: 'Smith',
-        user_role: {} // Missing role
+        user_role: {}
       }
     ]
 
     const formattedUsers = formatUsersFromModule(mockUsers)
 
-    // Check admin staff
     expect(formattedUsers.admin_staff).toHaveLength(1)
     expect(formattedUsers.admin_staff[0].id).toBe(1)
     expect(formattedUsers.admin_staff[0].name).toBe('Dr John Doe')
 
-    // Check teaching staff (should be empty as role is missing)
     expect(formattedUsers.teaching_staff).toHaveLength(0)
   })
 
-  it('should handle empty user array gracefully', () => {
-    const mockUsers = [] // No users
+  it('should handle empty user array', () => {
+    const mockUsers = []
 
     const formattedUsers = formatUsersFromModule(mockUsers)
 
-    // Check both admin and teaching staff (should be empty arrays)
     expect(formattedUsers.admin_staff).toHaveLength(0)
     expect(formattedUsers.teaching_staff).toHaveLength(0)
   })

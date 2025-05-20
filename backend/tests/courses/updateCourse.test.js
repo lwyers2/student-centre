@@ -1,6 +1,6 @@
 const supertest = require('supertest')
 const bcrypt = require('bcrypt')
-const app = require('../../app') // Your main app file
+const app = require('../../app')
 const { User, Course, Role, AuthenticationUser, QualificationLevel } = require('../../models')
 const { authenticateUser } = require('../../services/authenticateUser')
 
@@ -14,7 +14,6 @@ describe('PUT /api/courses/edit-course/:courseId', () => {
   beforeAll(async () => {
     const hashedPassword = await bcrypt.hash('password123', 10)
 
-    // Create test user (Super User role)
     role = await Role.create({ name: 'Super User' })
 
     testUser = await User.create({
@@ -28,7 +27,6 @@ describe('PUT /api/courses/edit-course/:courseId', () => {
       active: 1
     })
 
-    // Authenticate and get token
     const result = await authenticateUser(testUser.email, 'password123')
     token = result.token
     await AuthenticationUser.findOne({ where: { token } })
@@ -40,13 +38,11 @@ describe('PUT /api/courses/edit-course/:courseId', () => {
       { where: { token } }
     )
 
-    // Create a qualification level
     qualificationLevel = await QualificationLevel.create({
       qualification: 'BEng',
       level_id: 1
     })
 
-    // Create a course
     courseInstance = await Course.create({
       title: 'Civil Engineering',
       code: 'CIV100',
@@ -76,7 +72,7 @@ describe('PUT /api/courses/edit-course/:courseId', () => {
 
   it('should return 404 if course does not exist', async () => {
     const response = await supertest(app)
-      .put('/api/courses/edit-course/999999') // Non-existent ID
+      .put('/api/courses/edit-course/999999')
       .set('Authorization', `Bearer ${token}`)
       .send({
         title: 'Ghost Course',

@@ -12,7 +12,7 @@ const CourseYearsList = ({ courseId, courseYears, setCourseYears, editingYears, 
         {courseYears.map(year => {
           const isEditing = editingYears[year.id]
 
-          // Default name to display
+
           const coordinatorName = year.course_coordinator || 'Not assigned'
 
           return (
@@ -86,7 +86,6 @@ const CourseYearsList = ({ courseId, courseYears, setCourseYears, editingYears, 
                               selectedUser.id
                             )
 
-                            // 🛠 Update the courseYears state locally
                             const updatedCourseYears = courseYears.map(y => {
                               if (y.id === year.id) {
                                 return {

@@ -1,7 +1,7 @@
 const { formatAllCoursesFromSchool } = require('../../../helper/formaters/course/formatAllCoursesFromSchool')
 
 describe('formatAllCoursesFromSchool', () => {
-  it('should correctly format an array of courses from a school', () => {
+  it('should correctly format courses retrieved when querying school', () => {
     const mockCourses = [
       {
         id: 1,
@@ -113,7 +113,7 @@ describe('formatAllCoursesFromSchool', () => {
     expect(result).toEqual(expectedOutput)
   })
 
-  it('should handle courses with missing course years gracefully', () => {
+  it('should handle courses with missing course years', () => {
     const mockCourses = [
       {
         id: 3,
@@ -149,7 +149,7 @@ describe('formatAllCoursesFromSchool', () => {
     expect(result).toEqual(expectedOutput)
   })
 
-  it('should handle missing course school name gracefully', () => {
+  it('should handle missing course school name', () => {
     const mockCourses = [
       {
         id: 4,
@@ -158,7 +158,7 @@ describe('formatAllCoursesFromSchool', () => {
         course_qualification_level: {
           qualification: 'PhD',
         },
-        course_school: {}, // Missing school name
+        course_school: {},
         part_time: false,
         years: 4,
         course_course_year: [
@@ -182,7 +182,7 @@ describe('formatAllCoursesFromSchool', () => {
         title: 'Chemistry',
         code: 'CHEM101',
         qualification: 'PhD',
-        school: undefined, // School name is undefined
+        school: undefined,
         part_time: false,
         years: 4,
         course_years: [
@@ -201,34 +201,34 @@ describe('formatAllCoursesFromSchool', () => {
     expect(result).toEqual(expectedOutput)
   })
 
-  it('should handle courses with no years and users gracefully', () => {
+  it('should handle courses with no years and users', () => {
     const mockCourses = [
       {
         id: 5,
-        title: 'Astronomy',
-        code: 'ASTRO101',
+        title: 'Computing Foundations',
+        code: 'CSO101',
         course_qualification_level: {
           qualification: 'BSc',
         },
         course_school: {
-          school_name: 'School of Astronomy',
+          school_name: 'School of Computing',
         },
         part_time: true,
         years: 3,
-        course_course_year: [], // No course years
+        course_course_year: [],
       },
     ]
 
     const expectedOutput = [
       {
         id: 5,
-        title: 'Astronomy',
-        code: 'ASTRO101',
+        title: 'Computing Foundations',
+        code: 'CSO101',
         qualification: 'BSc',
-        school: 'School of Astronomy',
+        school: 'School of Computing',
         part_time: true,
         years: 3,
-        course_years: [], // No course years
+        course_years: [],
       },
     ]
 

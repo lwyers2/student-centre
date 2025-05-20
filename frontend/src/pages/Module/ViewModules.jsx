@@ -32,7 +32,6 @@ const Modules = () => {
         setCourses(response.courses)
         setModules(response.modules)
 
-        // Group modules by year
         const grouped = response.modules.reduce((acc, module) => {
           const year = module.year || 0
           if (!acc[year]) {
@@ -62,7 +61,6 @@ const Modules = () => {
     return <div>Loading... modules</div>
   }
 
-  // Ensure the groupedModules is an array for mapping
   const groupedModulesArray = Object.entries(groupedModules).map(([year, modulesForYear]) => ({
     year,
     modulesForYear
@@ -98,10 +96,9 @@ const Modules = () => {
           {groupedModulesArray.length > 0 ? (
             groupedModulesArray.map((group) => (
               <div key={group.year}>
-                {/* Pass the modules for this year to AllModules */}
                 <AllModules
-                  key={group.year} // Use year as key for the group
-                  modules={group.modulesForYear} // Pass the array of modules for the year
+                  key={group.year}
+                  modules={group.modulesForYear}
                   year={group.year}
                   search={search}
                 />

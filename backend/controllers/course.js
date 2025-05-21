@@ -131,7 +131,7 @@ coursesRouter.put(
     res.json(updatedCourse)
   }
 )
-
+console.log('hello')
 coursesRouter.post(
   '/assign-course-year-to-user',
   tokenVerification,

@@ -1,4 +1,4 @@
-const { formatAllLettersOneStudent } = require('../../../helper/formaters/letter/formatAllLettersOneStudent') // adjust path as needed
+const { formatAllLettersOneStudent } = require('../../../helper/formaters/letter/formatAllLettersOneStudent')
 
 describe('formatAllLettersOneStudent', () => {
   it('should correctly format a nested letter object', () => {

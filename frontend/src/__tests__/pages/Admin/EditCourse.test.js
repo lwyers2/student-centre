@@ -3,7 +3,7 @@ import { render, screen, waitFor } from '@testing-library/react'
 import { Provider } from 'react-redux'
 import { MemoryRouter } from 'react-router-dom'
 import configureStore from 'redux-mock-store'
-import EditCourses from '../../../pages/Admin/EditCourses' // adjust path
+import EditCourses from '../../../pages/Admin/EditCourses'
 import courseService from '../../../services/course'
 
 // Mocks

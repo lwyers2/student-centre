@@ -1,4 +1,4 @@
-const { formatModulesFromCourseYear } = require('../../../helper/formaters/module/formatModulesFromCourseYear') // adjust path as needed
+const { formatModulesFromCourseYear } = require('../../../helper/formaters/module/formatModulesFromCourseYear')
 
 describe('formatModulesFromCourseYear', () => {
   it('should format a list of module-course relationships correctly', () => {
